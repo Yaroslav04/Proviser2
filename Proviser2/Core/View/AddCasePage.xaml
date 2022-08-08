@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+              xmlns:viewmodel="clr-namespace:Proviser2.Core.ViewModel"
+             xmlns:model="clr-namespace:Proviser2.Core.Model"
+             x:Class="Proviser2.Core.View.AddCasePage"
+             x:DataType="viewmodel:AddCaseViewModel">
+    <ContentPage.Content>
+        <StackLayout Spacing="3">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"></RowDefinition>
+                    <RowDefinition Height="4"></RowDefinition>
+                    <RowDefinition Height="2*"></RowDefinition>
+                </Grid.RowDefinitions>
+            </Grid>
+
+            <StackLayout Grid.Row="0">
+                <Label Text="Введіть номер судової справи" FontSize="Medium"/>
+                <Entry Text="{Binding CaseSearchPanel , Mode=TwoWay}" FontSize="Medium"/>
+
+                <Label Text="Заголовок справи" FontSize="Medium" />
+                <Editor Text="{Binding HeaderEditPanel, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium"/>
+
+                <Label Text="Введіть учасника судового засідання" FontSize="Medium" />
+                <Entry Text="{Binding LittigansSerachPanel, Mode=TwoWay}" FontSize="Medium" />
+            </StackLayout>
+
+            <CollectionView Grid.Row="1" x:Name="ItemsListView" 
+                ItemsSource="{Binding Items}"
+                SelectedItem="{Binding SelectedItem}"
+                SelectionMode="Single">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <ContentView>
+                            <Frame HasShadow="True" CornerRadius="15" Margin="2" Padding="20" BackgroundColor="Lavender">
+                                <StackLayout x:DataType="model:CourtClass">
+
+                                    <Label Text="{Binding Case}" 
+                            LineBreakMode="NoWrap"
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="12" />
+
+                                    <Label Text="{Binding Court}"
+                            LineBreakMode="NoWrap"
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="12" />
+
+                                    <Label Text="{Binding Judge}" 
+                            LineBreakMode="NoWrap"
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="12" />
+
+                                    <Label Text="{Binding Littigans}"                         
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="12" />
+
+                                </StackLayout>
+                            </Frame>
+                        </ContentView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <StackLayout Grid.Row="2">
+                <Button Text="Пошук" Command="{Binding SearchCommand}" CornerRadius="15"></Button>
+            </StackLayout>
+            
+            <StackLayout Grid.Row="2">
+                <Button Text="Зберегти" Command="{Binding SaveCommand}" CornerRadius="15"></Button>
+            </StackLayout>
+                
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
