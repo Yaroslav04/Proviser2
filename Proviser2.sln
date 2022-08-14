@@ -5,7 +5,7 @@ VisualStudioVersion = 17.3.32728.150
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Proviser2.Android", "Proviser2.Android\Proviser2.Android.csproj", "{E41BA77C-7766-44AC-9A87-FED3C4ACC02E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Proviser2", "Proviser2\Proviser2.csproj", "{C9742923-3BFB-46DF-8977-705FBC26527B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proviser2", "Proviser2\Proviser2.csproj", "{C9742923-3BFB-46DF-8977-705FBC26527B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -27,13 +27,13 @@
 
                 <Button Text="Журнал судових подій" Command="{Binding OpenEventsCommand}"
                     CornerRadius="15" Margin="3,3,3,3" />
-                <Button Text="Судові засідання" Command="{Binding OpenEventsCommand}"
+                <Button Text="Судові засідання" Command="{Binding OpenDecisionCommand}"
                     CornerRadius="15" Margin="3,3,3,3" />
-                <Button Text="Судові рішення" Command="{Binding OpenEventsCommand}"
+                <Button Text="Судові рішення" Command="{Binding OpenDecisionCommand}"
                     CornerRadius="15" Margin="3,3,3,3" />
-                <Button Text="Редагувати судову справу" Command="{Binding OpenEventsCommand}"
+                <Button Text="Редагувати судову справу" Command="{Binding UpdateCommand}"
                     CornerRadius="15" Margin="3,3,3,3" />
-                <Button Text="Видалити судову справу" Command="{Binding OpenEventsCommand}"
+                <Button Text="Видалити судову справу" Command="{Binding DeleteCommand}"
                     CornerRadius="15" Margin="3,3,3,3" />
             </StackLayout>
         </ScrollView>

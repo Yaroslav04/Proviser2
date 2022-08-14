@@ -199,7 +199,7 @@ namespace Proviser2.Core.Servises
             }
         }
 
-        public Task<int> UpdateCasesAsync(CaseClass _case)
+        public Task<int> UpdateCaseAsync(CaseClass _case)
         {
             try
             {
@@ -288,6 +288,57 @@ namespace Proviser2.Core.Servises
         public async Task<EventClass> GetEventAsync(int _id)
         {
             return await eventsDataBase.Table<EventClass>().Where(x => x.N == _id).FirstOrDefaultAsync();
+        }
+
+        #endregion
+
+
+        #region Decisions
+
+        public Task<int> SaveDecisionAsync(DecisionClass _decision)
+        {
+            try
+            {
+                return decisionsDataBase.InsertAsync(_decision);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public Task<int> DeleteDecisionAsync(DecisionClass _decision)
+        {
+            try
+            {
+                return decisionsDataBase.DeleteAsync(_decision);
+            }
+            catch
+            {
+                return null;
+            }
+
+        }
+        public Task<int> UpdateDecisionAsync(DecisionClass _decision)
+        {
+            try
+            {
+                return decisionsDataBase.UpdateAsync(_decision);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public Task<List<DecisionClass>> GetDecisionsAsync(string _case)
+        {
+            return decisionsDataBase.Table<DecisionClass>().Where(x => x.Case == _case).OrderByDescending(x => x.DecisionDate).ToListAsync();
+        }
+
+        public async Task<DecisionClass> GetDecisionAsync(int _id)
+        {
+            return await decisionsDataBase.Table<DecisionClass>().Where(x => x.N == _id).FirstOrDefaultAsync();
         }
 
         #endregion

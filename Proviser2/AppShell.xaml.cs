@@ -25,6 +25,7 @@ namespace Proviser2
             Routing.RegisterRoute(nameof(CasePage), typeof(CasePage));
             Routing.RegisterRoute(nameof(EventsListPage), typeof(EventsListPage));
             Routing.RegisterRoute(nameof(EventPage), typeof(EventPage));
+            Routing.RegisterRoute(nameof(DecisionsListPage), typeof(DecisionsListPage));
 
             FileManager.FileInit();
         
@@ -47,6 +48,11 @@ namespace Proviser2
                 case "Завантажити засідання":
                     await Task.Run(() => ImportCourtsWebHook.Import());
                     await DisplayAlert("Завантаження", "Засідання завантажено", "OK");
+                    break;
+
+                case "Завантажити судові рішення":
+                    await Task.Run(() => ImportDecisions.Import());
+                    await DisplayAlert("Завантаження", "Рішення завантажено", "OK");
                     break;
             }
         }

@@ -69,7 +69,7 @@ namespace Proviser2.Core.ViewModel
                         courtSoketClass.PrisonDate = PrisonDateConverter.GetBeautifyPrisonDate(subCase.PrisonDate);
                         courtSoketClass.Header = subCase.Header;
                         courtSoketClass.Note = subCase.Note;
-                        courtSoketClass.PrisonDate = subCase.PrisonDate.ToShortDateString();
+                        courtSoketClass.PrisonDate = PrisonDateConverter.GetBeautifyPrisonDate(subCase.PrisonDate);
                         Items.Add(courtSoketClass);
                     }
                     catch

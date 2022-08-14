@@ -27,7 +27,8 @@ namespace Proviser2.Core.Model
         public string URL { get; set; }
         public string Content { get; set; }
         public string CriminalNumber { get; set; }
-        public String Category { get; set; }
+        public string Category { get; set; }
         public DateTime SaveDate { get; set; }
+
     }
 }

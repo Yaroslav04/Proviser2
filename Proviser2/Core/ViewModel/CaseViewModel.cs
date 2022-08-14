@@ -15,7 +15,11 @@ namespace Proviser2.Core.ViewModel
         public CaseViewModel()
         {
             FastAddCommand = new Command(FastAdd);
-            OpenEventsCommand = new Command(OpenEvents);
+            OpenEventsCommand = new Command(OpenEvents);    
+            OpenCourtsCommand = new Command(OpenCourts);
+            OpenDecisionCommand = new Command(OpenDecisions);
+            DeleteCommand = new Command(Delete);
+            UpdateCommand = new Command(Update);
         }
 
         #region  Properties
@@ -133,16 +137,16 @@ namespace Proviser2.Core.ViewModel
 
         #endregion
 
-
         #region Commands
 
         public Command FastAddCommand { get; }
         public Command OpenEventsCommand { get; }
         public Command OpenCourtsCommand { get; }
         public Command OpenDecisionCommand { get; }
+        public Command DeleteCommand { get; }
+        public Command UpdateCommand { get; }
 
         #endregion
-
 
         private void FastAdd()
         {
@@ -152,7 +156,31 @@ namespace Proviser2.Core.ViewModel
         private async void OpenEvents()
         {
             await Shell.Current.GoToAsync($"{nameof(EventsListPage)}?{nameof(CaseViewModel.CaseId)}={CaseId}");
+        }
 
+        private async void OpenDecisions()
+        {
+            await Shell.Current.GoToAsync($"{nameof(DecisionsListPage)}?{nameof(CaseViewModel.CaseId)}={CaseId}");
+        }
+
+        private async void OpenCourts()
+        {
+            await Shell.Current.GoToAsync($"{nameof(EventsListPage)}?{nameof(CaseViewModel.CaseId)}={CaseId}");
+        }
+
+        private async void Delete()
+        {
+            await App.DataBase.DeleteCasesAsync(await App.DataBase.GetCasesByCaseAsync(CaseId));
+            await Shell.Current.GoToAsync("..");
+        }
+
+        private async void Update()
+        {
+            CaseClass caseClass = await App.DataBase.GetCasesByCaseAsync(CaseId);
+            caseClass.MainCase = MainCaseMainPanel;
+            caseClass.CriminalNumber = CriminalNumberMainPanel;
+            caseClass.Header = HeaderMainPanel;
+            await App.DataBase.UpdateCaseAsync(caseClass);
         }
 
         private async void LoadCase(string _case)
