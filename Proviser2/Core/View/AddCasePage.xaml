@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-              xmlns:viewmodel="clr-namespace:Proviser2.Core.ViewModel"
+             xmlns:viewmodel="clr-namespace:Proviser2.Core.ViewModel"
              xmlns:model="clr-namespace:Proviser2.Core.Model"
              x:Class="Proviser2.Core.View.AddCasePage"
-             x:DataType="viewmodel:AddCaseViewModel">
+             x:DataType="viewmodel:AddCaseViewModel"
+             Title="{Binding Title}">
     <ContentPage.Content>
         <StackLayout Spacing="3">
 
@@ -20,11 +21,10 @@
                 <Label Text="Введіть номер судової справи" FontSize="Medium"/>
                 <Entry Text="{Binding CaseSearchPanel , Mode=TwoWay}" FontSize="Medium"/>
 
-                <Label Text="Заголовок справи" FontSize="Medium" />
-                <Editor Text="{Binding HeaderEditPanel, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium"/>
-
                 <Label Text="Введіть учасника судового засідання" FontSize="Medium" />
                 <Entry Text="{Binding LittigansSerachPanel, Mode=TwoWay}" FontSize="Medium" />
+
+                <Entry Text="{Binding HeaderEditPanel, Mode=TwoWay}" FontSize="Medium"/>
             </StackLayout>
 
             <CollectionView Grid.Row="1" x:Name="ItemsListView" 
@@ -63,13 +63,24 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <StackLayout Grid.Row="2">
-                <Button Text="Пошук" Command="{Binding SearchCommand}" CornerRadius="15"></Button>
+            <StackLayout Margin="0,5,0,5" Grid.Row="2" Spacing="5" MinimumHeightRequest="200">
+
+                <Grid VerticalOptions="FillAndExpand">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Button Grid.Column="0" Grid.Row="0" Text="Пошук" Command="{Binding SearchCommand}" CornerRadius="15"></Button>
+                    <Button Grid.Column="1" Grid.Row="0" Text="Очистити" Command="{Binding ClearCommand}" CornerRadius="15"></Button>
+                    <Button Grid.Row="1" Grid.ColumnSpan="2" Text="Зберегти" Command="{Binding SaveCommand}" CornerRadius="15"></Button>
+                </Grid>
+                                                                
             </StackLayout>
-            
-            <StackLayout Grid.Row="2">
-                <Button Text="Зберегти" Command="{Binding SaveCommand}" CornerRadius="15"></Button>
-            </StackLayout>
+           
                 
         </StackLayout>
     </ContentPage.Content>

@@ -11,20 +11,19 @@ using Xamarin.Forms.Xaml;
 namespace Proviser2.Core.View
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class CourtsListPage : ContentPage
+    public partial class EventsListPage : ContentPage
     {
-        CourtsListViewModel courtsListViewModel;
-        public CourtsListPage()
+        EventsListViewModel eventsListViewModel;
+        public EventsListPage()
         {
             InitializeComponent();
-            courtsListViewModel = new CourtsListViewModel();
-            BindingContext = courtsListViewModel;
+            eventsListViewModel = new EventsListViewModel();
+            BindingContext = eventsListViewModel;
         }
-
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            courtsListViewModel.OnAppearing();
+            eventsListViewModel.OnAppearing();
         }
     }
 }

@@ -14,9 +14,11 @@ namespace Proviser2.Core.ViewModel
     {
         public AddCaseViewModel()
         {
+            Title = "Додати справу";
             Items = new ObservableCollection<CourtClass>();
             SaveCommand = new Command(Save);
             SearchCommand = new Command(Search);
+            ClearCommand = new Command(Clear);
         }
 
         #region Properties
@@ -70,19 +72,18 @@ namespace Proviser2.Core.ViewModel
         #region Commands
         public Command SaveCommand { get; }
         public Command SearchCommand { get; }
+        public Command ClearCommand { get; }
 
         #endregion
 
         void OnItemSelected(CourtClass item)
         {
-
             if (item != null)
             {
                 CaseSearchPanel = item.Case;
                 HeaderEditPanel = TextManager.Header(item.Littigans);
             }
 
-           
         }
 
         private async void Search()
@@ -93,15 +94,15 @@ namespace Proviser2.Core.ViewModel
             {
                 var result = await App.DataBase.GetCourtsAsync(CaseSearchPanel);
                 if (result.Count > 0)
-                {                   
+                {
                     var last = result.Last();
-                    Items.Add(last);           
+                    Items.Add(last);
                 }
                 else
                 {
                     return;
                 }
-                
+
             }
 
             if (!String.IsNullOrWhiteSpace(LittigansSerachPanel))
@@ -109,7 +110,7 @@ namespace Proviser2.Core.ViewModel
                 if (LittigansSerachPanel.Length > 2)
                 {
                     var result = await App.DataBase.GetCourtsByLittigansAsync(LittigansSerachPanel);
-                    result = result.OrderByDescending(x => x.Date).Take(100).ToList();
+                    result = result.OrderByDescending(x => x.Date).Take(250).ToList();
                     List<string> cases = new List<string>();
                     if (result.Count > 0)
                     {
@@ -125,12 +126,12 @@ namespace Proviser2.Core.ViewModel
                             var subresult = await App.DataBase.GetCourtsAsync(c);
                             if (subresult.Count > 0)
                             {
-                               
+
                                 var last = subresult.Last();
                                 Items.Add(last);
                             }
                         }
-                    }                    
+                    }
                 }
                 return;
             }
@@ -143,6 +144,7 @@ namespace Proviser2.Core.ViewModel
                 CaseClass caseClass = new CaseClass();
                 caseClass.Case = selectedItem.Case;
                 caseClass.Header = HeaderEditPanel;
+                caseClass.PrisonDate = DateTime.MinValue;
                 try
                 {
                     await App.DataBase.SaveCasesAsync(caseClass);
@@ -150,6 +152,10 @@ namespace Proviser2.Core.ViewModel
                 catch
                 {
 
+                }
+                finally
+                {
+                    Clear();
                 }
             }
             else if (Items.Count == 0)
@@ -157,6 +163,7 @@ namespace Proviser2.Core.ViewModel
                 CaseClass caseClass = new CaseClass();
                 caseClass.Case = CaseSearchPanel;
                 caseClass.Header = HeaderEditPanel;
+                caseClass.PrisonDate = DateTime.MinValue;
                 try
                 {
                     await App.DataBase.SaveCasesAsync(caseClass);
@@ -164,6 +171,10 @@ namespace Proviser2.Core.ViewModel
                 catch
                 {
 
+                }
+                finally
+                {
+                    Clear();
                 }
             }
             else
@@ -172,6 +183,13 @@ namespace Proviser2.Core.ViewModel
             }
         }
 
-
+        private async void Clear()
+        {
+            selectedItem = null;
+            CaseSearchPanel = null;
+            HeaderEditPanel = null;
+            LittigansSerachPanel = null;
+            Items.Clear();
+        }
     }
 }

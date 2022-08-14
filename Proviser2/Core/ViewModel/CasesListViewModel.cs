@@ -93,9 +93,10 @@ namespace Proviser2.Core.ViewModel
 
         async void OnItemSelected(CaseClass item)
         {
+
             if (item == null)
                 return;
-           // await Shell.Current.GoToAsync($"{nameof(Case)}?{nameof(CaseViewModel.Id)}={item.Case}");
+            await Shell.Current.GoToAsync($"{nameof(CasePage)}?{nameof(CaseViewModel.CaseId)}={item.Case}");
         }
 
         #endregion

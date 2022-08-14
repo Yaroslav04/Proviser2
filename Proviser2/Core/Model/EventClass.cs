@@ -7,15 +7,16 @@ using SQLite;
 
 namespace Proviser2.Core.Model
 {
-    public class JournalClass
+    public class EventClass
     {
         [AutoIncrement]
         [PrimaryKey]
         [NotNull]
         public int N { get; set; }
-        public int HearingId { get; set; }
-        public string Type { get; set; }
+        public string Case { get; set; }
+        public DateTime Date { get; set; }
         public string Event { get; set; }
+        public string Description { get; set; }
     }
 
 }

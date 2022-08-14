@@ -9,7 +9,7 @@
              >
     
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="+" Command="{Binding AddItemCommand}" />
+        <ToolbarItem Text="(+)" Command="{Binding AddItemCommand}" />
     </ContentPage.ToolbarItems>
 
     <RefreshView x:DataType="viewmodel:CasesListViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
@@ -19,8 +19,8 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <ContentView>
-                        <Frame HasShadow="True" CornerRadius="15" HeightRequest="100" Margin="2" Padding="20" BackgroundColor="Lavender">
-                            <StackLayout HorizontalOptions="Start"  x:DataType="model:CaseClass">
+                        <Frame x:DataType="model:CaseClass" HasShadow="True" CornerRadius="15" Margin="2" Padding="20" BackgroundColor="Lavender">
+                            <StackLayout HorizontalOptions="Start">
 
                                 <Label Text="{Binding Header}" 
                             LineBreakMode="NoWrap" 
@@ -31,20 +31,20 @@
                             LineBreakMode="NoWrap"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="15" />
-                                
+
                                 <Label Text="{Binding MainCase}"
                             LineBreakMode="NoWrap"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="12" />
-
-                                <StackLayout.GestureRecognizers>
-                                    <TapGestureRecognizer 
+                               
+                            </StackLayout>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
                                 NumberOfTapsRequired="1"
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:CasesListViewModel}}, Path=ItemTapped}"		
                                 CommandParameter="{Binding .}">
-                                    </TapGestureRecognizer>
-                                </StackLayout.GestureRecognizers>
-                            </StackLayout>
+                                </TapGestureRecognizer>
+                            </Frame.GestureRecognizers>
                         </Frame>
                     </ContentView>
                 </DataTemplate>

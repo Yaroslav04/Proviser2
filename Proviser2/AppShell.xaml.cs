@@ -10,6 +10,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using static Xamarin.Forms.Device;
 using Proviser2.Core.View;
+using Proviser2.Core.Model;
 
 namespace Proviser2
 {
@@ -21,8 +22,12 @@ namespace Proviser2
             DeviceDisplay.KeepScreenOn = true;
 
             Routing.RegisterRoute(nameof(AddCasePage), typeof(AddCasePage));
+            Routing.RegisterRoute(nameof(CasePage), typeof(CasePage));
+            Routing.RegisterRoute(nameof(EventsListPage), typeof(EventsListPage));
+            Routing.RegisterRoute(nameof(EventPage), typeof(EventPage));
 
             FileManager.FileInit();
+        
         }
 
         private void ServiseButton_Clicked(object sender, EventArgs e)
@@ -41,6 +46,7 @@ namespace Proviser2
             {
                 case "Завантажити засідання":
                     await Task.Run(() => ImportCourtsWebHook.Import());
+                    await DisplayAlert("Завантаження", "Засідання завантажено", "OK");
                     break;
             }
         }

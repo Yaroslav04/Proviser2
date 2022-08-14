@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+              xmlns:viewmodel="clr-namespace:Proviser2.Core.ViewModel"
+             xmlns:model="clr-namespace:Proviser2.Core.Model"
+              x:DataType="viewmodel:CaseViewModel"
+             x:Class="Proviser2.Core.View.CasePage"
+             Title="{Binding Title}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="(+)" Command="{Binding FastAddCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Margin="5,5,5,5">
+                <Label Text="{Binding CaseMainPanel}" FontSize="Medium"/>
+                <Entry Placeholder="Заголовок" Text="{Binding HeaderMainPanel}" FontSize="Medium"/>
+                <Entry Placeholder="Номер кримінального провадження" Text="{Binding CriminalNumberMainPanel}" FontSize="Medium"/>
+                <Entry Placeholder="Головна судова справа" Text="{Binding MainCaseMainPanel}" FontSize="Medium"/>
+                <Label Text="{Binding NoteMainPanel}" FontSize="Medium"/>
+                <Label Text="{Binding PrisonDateMainPanel}" FontSize="Medium"/>
+                <Label Text="{Binding CourtMainPanel}" FontSize="Medium"/>
+                <Label Text="{Binding JudgeMainPanel}" FontSize="Medium"/>
+                <Label Text="{Binding LittigansMainPanel}" FontSize="Medium"/>
+                <Label Text="{Binding CategoryMainPanel}" FontSize="Medium"/>
+
+                <Button Text="Журнал судових подій" Command="{Binding OpenEventsCommand}"
+                    CornerRadius="15" Margin="3,3,3,3" />
+                <Button Text="Судові засідання" Command="{Binding OpenEventsCommand}"
+                    CornerRadius="15" Margin="3,3,3,3" />
+                <Button Text="Судові рішення" Command="{Binding OpenEventsCommand}"
+                    CornerRadius="15" Margin="3,3,3,3" />
+                <Button Text="Редагувати судову справу" Command="{Binding OpenEventsCommand}"
+                    CornerRadius="15" Margin="3,3,3,3" />
+                <Button Text="Видалити судову справу" Command="{Binding OpenEventsCommand}"
+                    CornerRadius="15" Margin="3,3,3,3" />
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

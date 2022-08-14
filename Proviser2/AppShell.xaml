@@ -60,6 +60,7 @@
     </Shell.Resources>
 
 
+
     <FlyoutItem Title="Засідання">
         <ShellContent Route="CourtsListPage" ContentTemplate="{DataTemplate local:CourtsListPage}" />
     </FlyoutItem>
@@ -69,7 +70,8 @@
     <FlyoutItem Title="Нові надходження">
         <ShellContent Route="NewsPage" ContentTemplate="{DataTemplate local:NewsPage}" />
     </FlyoutItem>
-    <MenuItem x:Name="ServiseButton" Text="Сервіс" StyleClass="MenuItemLayoutStyle" Clicked="ServiseButton_Clicked">
+
+    <MenuItem x:Name="ServiseButton"  Text="Функції" StyleClass="MenuItemLayoutStyle" Clicked="ServiseButton_Clicked">
     </MenuItem>
 
 

@@ -14,16 +14,16 @@ namespace Proviser2.Core.Servises
     {
         readonly SQLiteAsyncConnection courtsDataBase;
         readonly SQLiteAsyncConnection casesDataBase;
-        readonly SQLiteAsyncConnection decisionDataBase;
-        readonly SQLiteAsyncConnection journalDataBase;
+        readonly SQLiteAsyncConnection decisionsDataBase;
+        readonly SQLiteAsyncConnection eventsDataBase;
 
         public DataBase(string _connectionString, List<string> _dataBaseName)
         {
-            decisionDataBase = new SQLiteAsyncConnection(Path.Combine(_connectionString, _dataBaseName[2]));
-            decisionDataBase.CreateTableAsync<DecisionClass>().Wait();
+            decisionsDataBase = new SQLiteAsyncConnection(Path.Combine(_connectionString, _dataBaseName[2]));
+            decisionsDataBase.CreateTableAsync<DecisionClass>().Wait();
 
-            journalDataBase = new SQLiteAsyncConnection(Path.Combine(_connectionString, _dataBaseName[3]));
-            journalDataBase.CreateTableAsync<JournalClass>().Wait();
+            eventsDataBase = new SQLiteAsyncConnection(Path.Combine(_connectionString, _dataBaseName[3]));
+            eventsDataBase.CreateTableAsync<EventClass>().Wait();
 
             courtsDataBase = new SQLiteAsyncConnection(Path.Combine(_connectionString, _dataBaseName[0]));
             courtsDataBase.CreateTableAsync<CourtClass>().Wait();
@@ -58,7 +58,6 @@ namespace Proviser2.Core.Servises
             }
 
         }
-
         public Task<int> UpdateCourtsAsync(CourtClass _court)
         {
             try
@@ -92,64 +91,41 @@ namespace Proviser2.Core.Servises
             return courtsDataBase.Table<CourtClass>().Where(x => x.Littigans.Contains(_value)).ToListAsync();
         }
 
-        #endregion
-
-        #region Case
-
-        public Task<int> SaveCasesAsync(CaseClass _case)
+        public async Task<CourtClass> GetLastLocalCourtAsync(string _case)
         {
-            try
+            var courts = await GetCourtsAsync(_case);
+            if (courts.Count > 0)
             {
-                return casesDataBase.InsertAsync(_case);
+                if (courts.Last().Court != "Дніпровський апеляційний суд")
+                {
+                    return courts.Last();
+                }
+                else
+                {
+                    courts = courts.OrderBy(x => x.Date).ToList();
+                    var subresult = courts.Where(x => x.Court != "Дніпровський апеляційний суд").ToList();
+                    if (subresult.Count > 0)
+                    {
+                        return subresult.Last();
+                    }
+                    else
+                    {
+                        return courts.Last();
+                    }
+                }
             }
-            catch
+            else 
             {
-                return null;
-            }
-        }
-
-        public Task<int> DeleteCasesAsync(CaseClass _case)
-        {
-            try
-            {
-                return casesDataBase.DeleteAsync(_case);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        public Task<int> UpdateCasesAsync(CaseClass _case)
-        {
-            try
-            {
-                return casesDataBase.UpdateAsync(_case);
-            }
-            catch
-            {
-                return null;
+                return new CourtClass
+                {
+                    Case = _case,
+                    Judge = "",
+                    Court = "",
+                    Littigans = "",
+                    Category = ""
+                };
             }
         }
-
-        public Task<List<CaseClass>> GetCasesAsync()
-        {
-            return casesDataBase.Table<CaseClass>().ToListAsync();
-        }
-
-        public Task<CaseClass> GetCasesAsync(int _id)
-        {
-            return casesDataBase.Table<CaseClass>().Where(x => x.N == _id).FirstOrDefaultAsync();
-        }
-
-        public Task<CaseClass> GetCasesByCaseAsync(string _case)
-        {
-            return casesDataBase.Table<CaseClass>().Where(x => x.Case == _case).FirstOrDefaultAsync();
-        }
-
-        #endregion
-
-        #region Functions
 
         public async Task<List<CourtClass>> GetCourtsHearingOrderingByDateAsync()
         {
@@ -195,6 +171,126 @@ namespace Proviser2.Core.Servises
 
         }
 
+
         #endregion
+
+        #region Case
+        public Task<int> SaveCasesAsync(CaseClass _case)
+        {
+            try
+            {
+                return casesDataBase.InsertAsync(_case);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public Task<int> DeleteCasesAsync(CaseClass _case)
+        {
+            try
+            {
+                return casesDataBase.DeleteAsync(_case);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public Task<int> UpdateCasesAsync(CaseClass _case)
+        {
+            try
+            {
+                return casesDataBase.UpdateAsync(_case);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public Task<List<CaseClass>> GetCasesAsync()
+        {
+            return casesDataBase.Table<CaseClass>().ToListAsync();
+        }
+
+        public Task<CaseClass> GetCaseAsync(int _id)
+        {
+            return casesDataBase.Table<CaseClass>().Where(x => x.N == _id).FirstOrDefaultAsync();
+        }
+
+        public Task<CaseClass> GetCasesByCaseAsync(string _case)
+        {
+            return casesDataBase.Table<CaseClass>().Where(x => x.Case == _case).FirstOrDefaultAsync();
+        }
+
+        public async Task<string> GetHeaderAsync(string _case)
+        {
+            var subcase = await GetCasesByCaseAsync(_case);
+            if (subcase != null)
+            {
+                return subcase.Header;
+            }
+            else
+            {
+                return string.Empty;
+            }
+           
+        }
+
+        #endregion
+
+        #region Events
+
+        public Task<int> SaveEventAsync(EventClass _event)
+        {
+            try
+            {
+                return eventsDataBase.InsertAsync(_event);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public Task<int> DeleteEventAsync(EventClass _event)
+        {
+            try
+            {
+                return eventsDataBase.DeleteAsync(_event);
+            }
+            catch
+            {
+                return null;
+            }
+
+        }
+        public Task<int> UpdateEventAsync(EventClass _event)
+        {
+            try
+            {
+                return eventsDataBase.UpdateAsync(_event);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public Task<List<EventClass>> GetEventsAsync(string _case)
+        {
+            return eventsDataBase.Table<EventClass>().Where(x => x.Case == _case).OrderByDescending(x => x.Date).ToListAsync();
+        }
+
+        public async Task<EventClass> GetEventAsync(int _id)
+        {
+            return await eventsDataBase.Table<EventClass>().Where(x => x.N == _id).FirstOrDefaultAsync();
+        }
+
+        #endregion
+
     }
 }
