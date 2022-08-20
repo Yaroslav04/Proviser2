@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 
 namespace Proviser2.Core.Servises
 {
@@ -47,6 +48,18 @@ namespace Proviser2.Core.Servises
         {
             Regex regex = new Regex(@"\d\d(.)\d\d(.)\d\d\d\d");
             return regex.IsMatch(_text);
+        }
+
+        public static string GetBeautifyPrisonDate(DateTime date)
+        {
+            if (date > System.DateTime.MinValue)
+            {
+                return $"Дата тримання під вартою: {date.ToShortDateString()}";
+            }
+            else
+            {
+                return "";
+            }
         }
     }
 }

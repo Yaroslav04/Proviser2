@@ -17,9 +17,9 @@ namespace Proviser2.Core.ViewModel
         public DecisionsListViewModel()
         {
             Title = "Судові рішення";
-            Items = new ObservableCollection<DecisionClass>();
+            Items = new ObservableCollection<DecisionSoketClass>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
-            ItemTapped = new Command<DecisionClass>(OnItemSelected);
+            ItemTapped = new Command<DecisionSoketClass>(OnItemSelected);
         }
 
         public void OnAppearing()
@@ -40,8 +40,8 @@ namespace Proviser2.Core.ViewModel
             }
         }
 
-        private DecisionClass _selectedItem;
-        public DecisionClass SelectedItem
+        private DecisionSoketClass _selectedItem;
+        public DecisionSoketClass SelectedItem
         {
             get => _selectedItem;
             set
@@ -51,14 +51,14 @@ namespace Proviser2.Core.ViewModel
             }
         }
 
-        public ObservableCollection<DecisionClass> Items { get; }
+        public ObservableCollection<DecisionSoketClass> Items { get; }
 
         #endregion
 
         #region Commands
 
         public Command LoadItemsCommand { get; }
-        public Command<DecisionClass> ItemTapped { get; }
+        public Command<DecisionSoketClass> ItemTapped { get; }
 
         #endregion
 
@@ -75,7 +75,18 @@ namespace Proviser2.Core.ViewModel
                 {
                     foreach (var item in items)
                     {
-                        Items.Add(item);
+                        DecisionSoketClass decisionSoketClass = new DecisionSoketClass(item);
+                        decisionSoketClass.DecisionDateSoket = item.DecisionDate.ToShortDateString();
+                        if (item.LegalDate != DateTime.MinValue)
+                        {
+                            decisionSoketClass.LegalDateSoket = $"Дата набрання законної сили:{item.LegalDate.ToShortDateString()}";
+                        }
+                        else
+                        {
+                            decisionSoketClass.LegalDateSoket = $"Дата набрання законної сили:";
+                        }
+                       
+                        Items.Add(decisionSoketClass);
                     }
                 }
             }
@@ -88,7 +99,7 @@ namespace Proviser2.Core.ViewModel
                 IsBusy = false;
             }
         }
-        async void OnItemSelected(DecisionClass _item)
+        async void OnItemSelected(DecisionSoketClass _item)
         {
             if (_item == null)
                 return;

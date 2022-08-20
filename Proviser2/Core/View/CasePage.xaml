@@ -27,7 +27,7 @@
 
                 <Button Text="Журнал судових подій" Command="{Binding OpenEventsCommand}"
                     CornerRadius="15" Margin="3,3,3,3" />
-                <Button Text="Судові засідання" Command="{Binding OpenDecisionCommand}"
+                <Button Text="Судові засідання" Command="{Binding OpenCourtsCommand}"
                     CornerRadius="15" Margin="3,3,3,3" />
                 <Button Text="Судові рішення" Command="{Binding OpenDecisionCommand}"
                     CornerRadius="15" Margin="3,3,3,3" />

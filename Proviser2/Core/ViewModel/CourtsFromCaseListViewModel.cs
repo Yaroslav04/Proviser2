@@ -8,20 +8,20 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using System.Linq;
 
 namespace Proviser2.Core.ViewModel
 {
-    public class CourtsListViewModel : BaseViewModel
+    [QueryProperty(nameof(CaseId), nameof(CaseId))]
+    public class CourtsFromCaseListViewModel : BaseViewModel
     {
-
-        public CourtsListViewModel()
+        public CourtsFromCaseListViewModel()
         {
-            Title = "Засідання " + DateTime.Now.ToShortDateString();       
+            Title = "Засідання";
             Items = new ObservableCollection<CourtSoketClass>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<CourtSoketClass>(OnItemSelected);
         }
-
         public void OnAppearing()
         {
             IsBusy = true;
@@ -29,6 +29,16 @@ namespace Proviser2.Core.ViewModel
         }
 
         #region Properties
+
+        private string caseId;
+        public string CaseId
+        {
+            get => caseId;
+            set
+            {
+                SetProperty(ref caseId, value);
+            }
+        }
 
         private CourtSoketClass _selectedItem;
         public CourtSoketClass SelectedItem
@@ -40,6 +50,7 @@ namespace Proviser2.Core.ViewModel
                 OnItemSelected(value);
             }
         }
+
         public ObservableCollection<CourtSoketClass> Items { get; }
 
         #endregion
@@ -51,7 +62,6 @@ namespace Proviser2.Core.ViewModel
 
         #endregion
 
-        #region Functions
         async Task ExecuteLoadItemsCommand()
         {
             IsBusy = true;
@@ -59,13 +69,15 @@ namespace Proviser2.Core.ViewModel
             try
             {
                 Items.Clear();
-                var items = await App.DataBase.GetCourtsHearingOrderingByDateAsync();
+                var items = await App.DataBase.GetCourtsAsync(CaseId);
+                items = items.OrderBy(x => x.Date).ToList();
                 foreach (var item in items)
                 {
                     try
                     {
                         var subCase = await App.DataBase.GetCasesByCaseAsync(item.Case);
                         CourtSoketClass courtSoketClass = new CourtSoketClass(item);
+                        courtSoketClass.N = item.N;
                         courtSoketClass.PrisonDate = TextManager.GetBeautifyPrisonDate(subCase.PrisonDate);
                         courtSoketClass.Header = subCase.Header;
                         courtSoketClass.Note = subCase.Note;
@@ -76,7 +88,7 @@ namespace Proviser2.Core.ViewModel
                     {
 
                     }
-                    
+
                 }
             }
             catch (Exception ex)
@@ -95,9 +107,16 @@ namespace Proviser2.Core.ViewModel
             if (item == null)
                 return;
 
-            await Shell.Current.GoToAsync($"{nameof(CasePage)}?{nameof(CaseViewModel.CaseId)}={item.Case}");
+            if (item.Origin == "local")
+            {
+                Debug.WriteLine(item.N);
+                var result = await Shell.Current.DisplayActionSheet($"Видалити {item.Date}?", destruction: "OK", cancel: "Відміна");
+                if (result == "OK")
+                {
+                    await App.DataBase.DeleteCourtAsync(await App.DataBase.GetCourtAsync(item.N));
+                }
+               
+            }
         }
-
-        #endregion
     }
 }

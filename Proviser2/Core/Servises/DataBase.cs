@@ -2,6 +2,7 @@
 using SQLite;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -52,8 +53,9 @@ namespace Proviser2.Core.Servises
             {
                 return courtsDataBase.DeleteAsync(_court);
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.WriteLine(ex.Message);
                 return null;
             }
 
@@ -76,7 +78,7 @@ namespace Proviser2.Core.Servises
             return courtsDataBase.Table<CourtClass>().ToListAsync();
         }
 
-        public Task<CourtClass> GetCourtsAsync(int _id)
+        public Task<CourtClass> GetCourtAsync(int _id)
         {
             return courtsDataBase.Table<CourtClass>().Where(x => x.N == _id).FirstOrDefaultAsync();
         }
@@ -116,14 +118,7 @@ namespace Proviser2.Core.Servises
             }
             else 
             {
-                return new CourtClass
-                {
-                    Case = _case,
-                    Judge = "",
-                    Court = "",
-                    Littigans = "",
-                    Category = ""
-                };
+                return null;           
             }
         }
 

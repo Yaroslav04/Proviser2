@@ -26,6 +26,8 @@ namespace Proviser2
             Routing.RegisterRoute(nameof(EventsListPage), typeof(EventsListPage));
             Routing.RegisterRoute(nameof(EventPage), typeof(EventPage));
             Routing.RegisterRoute(nameof(DecisionsListPage), typeof(DecisionsListPage));
+            Routing.RegisterRoute(nameof(AddCourtPage), typeof(AddCourtPage));
+            Routing.RegisterRoute(nameof(CourtsFromCaseListPage), typeof(CourtsFromCaseListPage));
 
             FileManager.FileInit();
         

@@ -1,10 +1,12 @@
 ﻿using Proviser2.Core.Model;
-using Proviser2.Core.Servises.UserInterfaseConverters;
+using Proviser2.Core.Servises;
 using Proviser2.Core.View;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Proviser2.Core.ViewModel
@@ -148,9 +150,82 @@ namespace Proviser2.Core.ViewModel
 
         #endregion
 
-        private void FastAdd()
+        private async void FastAdd()
         {
-            
+            List<string> functions = new List<string> {
+                "Додати судове засідання", "Додати дату тримання під вартою", "Оновити примітку"            
+            };
+            string result = await Shell.Current.DisplayActionSheet("Швидкий доступ", "Відміна", null, functions.ToArray());
+            switch (result)
+            {
+                case "Додати судове засідання":
+                    OpenAddCourt();
+                    break;
+
+                case "Додати дату тримання під вартою":
+                    AddPrisonDate();
+                    break;
+
+                case "Оновити примітку":
+                    UpdateNote();
+                    break;
+
+
+            }
+        }
+
+        private async void UpdateNote()
+        {
+            string result = await Shell.Current.DisplayPromptAsync("Редагування примітки", $"Редагування примітки для {HeaderMainPanel}:", maxLength: 40, initialValue: NoteMainPanel);
+            Debug.WriteLine(result);
+            if (!String.IsNullOrWhiteSpace(result))
+            {
+                try
+                {
+                    var _cases = await App.DataBase.GetCasesByCaseAsync(CaseId);
+                    _cases.Note = result;
+                    await App.DataBase.UpdateCaseAsync(_cases);
+                    await Shell.Current.DisplayAlert("Успішно", $"Примтіка оновлена", "OK");
+                    NoteMainPanel = result;
+                }
+                catch
+                {
+                    await Shell.Current.DisplayAlert("Помилка", $"Помилка оновлення примітки", "OK");
+                }
+            }
+        }
+
+        private async void AddPrisonDate()
+        {
+            string result = await Shell.Current.DisplayPromptAsync("Додати дату тримання під вартою", $"Введіть дату тримання під вартою для {HeaderMainPanel}:", maxLength: 10);
+
+            if (TextManager.Date(result))
+            {
+                if (Convert.ToDateTime(result) >= DateTime.Now)
+                {
+                    var item = await App.DataBase.GetCasesByCaseAsync(CaseId);
+                    if (item != null)
+                    {
+                        item.PrisonDate = Convert.ToDateTime(result);
+                        await App.DataBase.UpdateCaseAsync(item);
+                        await Shell.Current.DisplayAlert("Успішно", "Дата тримання під вартою додана", "OK");
+                        PrisonDateMainPanel = TextManager.GetBeautifyPrisonDate(Convert.ToDateTime(result));
+                    }
+                }
+                else
+                {
+                    await Shell.Current.DisplayAlert("Помилка", "Дата в минулому", "OK");
+                }
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert("Помилка", "Невірно зазначено формат дати", "OK");
+            }
+        }
+
+        private async void OpenAddCourt()
+        {
+            await Shell.Current.GoToAsync($"{nameof(AddCourtPage)}?{nameof(AddCourtViewModel.CaseId)}={CaseId}");
         }
 
         private async void OpenEvents()
@@ -165,7 +240,7 @@ namespace Proviser2.Core.ViewModel
 
         private async void OpenCourts()
         {
-            await Shell.Current.GoToAsync($"{nameof(EventsListPage)}?{nameof(CaseViewModel.CaseId)}={CaseId}");
+            await Shell.Current.GoToAsync($"{nameof(CourtsFromCaseListPage)}?{nameof(CourtsFromCaseListViewModel.CaseId)}={CaseId}");
         }
 
         private async void Delete()
@@ -185,19 +260,23 @@ namespace Proviser2.Core.ViewModel
 
         private async void LoadCase(string _case)
         {
-            var item = await App.DataBase.GetCasesByCaseAsync(_case);
-            Title = item.Header;
-            HeaderMainPanel = item.Header;
-            CaseMainPanel = item.Case;
-            NoteMainPanel = item.Note;
-            PrisonDateMainPanel = PrisonDateConverter.GetBeautifyPrisonDate(item.PrisonDate);
-            CriminalNumberMainPanel = item.CriminalNumber;
-            MainCaseMainPanel = item.MainCase;
-            var court = await App.DataBase.GetLastLocalCourtAsync(_case);
-            CourtMainPanel = court.Court;
-            JudgeMainPanel = court.Judge;
-            LittigansMainPanel = court.Littigans;
-            CategoryMainPanel = court.Category;
+            CaseClass item = await App.DataBase.GetCasesByCaseAsync(_case);
+
+                Title = item.Header;
+                HeaderMainPanel = item.Header;
+                CaseMainPanel = item.Case;
+                NoteMainPanel = item.Note;
+                PrisonDateMainPanel = TextManager.GetBeautifyPrisonDate(item.PrisonDate);
+                CriminalNumberMainPanel = item.CriminalNumber;
+                MainCaseMainPanel = item.MainCase;
+                var court = await App.DataBase.GetLastLocalCourtAsync(_case);
+                if (court != null) 
+                {
+                    CourtMainPanel = court.Court;
+                    JudgeMainPanel = court.Judge;
+                    LittigansMainPanel = court.Littigans;
+                    CategoryMainPanel = court.Category;
+                }                                 
         }
     }
 }

@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Proviser2.Core.View.CourtsListPage"
-             xmlns:viewmodel="clr-namespace:Proviser2.Core.ViewModel"
+             x:Class="Proviser2.Core.View.CourtsFromCaseListPage"
+              xmlns:viewmodel="clr-namespace:Proviser2.Core.ViewModel"
              xmlns:model="clr-namespace:Proviser2.Core.Model"
-             x:DataType="viewmodel:CourtsListViewModel"
+             x:DataType="viewmodel:CourtsFromCaseListViewModel"
              Title="{Binding Title}"
              >
-    
+             
     <ContentPage.Content>
         <RefreshView Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
             <CollectionView x:Name="ItemsListView" 
@@ -33,7 +33,6 @@
 
                                     </StackLayout>
 
-
                                     <Label Text="{Binding Header}"
                             LineBreakMode="NoWrap"
                             Style="{DynamicResource ListItemDetailTextStyle}"
@@ -54,21 +53,21 @@
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="13" />
 
-                                    <Label Text="{Binding PrisonDate}"
+                                    <Label Text="{Binding Littigans}"
                             LineBreakMode="NoWrap"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="15" />
 
-                                    <Label Text="{Binding Note}"
+                                    <Label Text="{Binding Category}"
                             
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="15" />
                                 </StackLayout>
-                                
+
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer 
-                                NumberOfTapsRequired="1"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:CourtsListViewModel}}, Path=ItemTapped}"		
+                                NumberOfTapsRequired="2"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:CourtsFromCaseListViewModel}}, Path=ItemTapped}"		
                                 CommandParameter="{Binding .}">
                                     </TapGestureRecognizer>
                                 </Frame.GestureRecognizers>

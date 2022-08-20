@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Proviser2.Core.View.AddCourtPage"
+             xmlns:viewmodel="clr-namespace:Proviser2.Core.ViewModel"
+             xmlns:model="clr-namespace:Proviser2.Core.Model"
+             x:DataType="viewmodel:AddCourtViewModel"
+             Title="{Binding Title}"   
+             >
+
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="7*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <StackLayout VerticalOptions="Start" Orientation="Horizontal" Grid.Row="0" Spacing="10" >
+                <Label VerticalOptions="Center" Text="Дата:" FontSize="18" />
+                <DatePicker FontSize="20" Date="{Binding Date, Mode=TwoWay}"></DatePicker>
+                <Label VerticalOptions="Center" Text="Час:" FontSize="18" />
+                <TimePicker FontSize="20" Time="{Binding Time, Mode=TwoWay}"></TimePicker>
+            </StackLayout>
+
+            <RefreshView Grid.Row="1" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+                <CollectionView x:Name="ItemsListView" 
+                ItemsSource="{Binding Items}"
+                SelectionMode="None" >
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <ContentView>
+                                <Frame x:DataType="model:CourtSoketClass" HasShadow="True" CornerRadius="15" Margin="2" Padding="20" BackgroundColor="Lavender">
+                                    <StackLayout x:DataType="model:CourtSoketClass">
+
+                                        <StackLayout Orientation="Horizontal">
+
+                                            <Label Text="{Binding Date}"
+                            LineBreakMode="NoWrap" 
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="20" />
+
+                                            <Label Text="{Binding Origin}"
+                            LineBreakMode="NoWrap" 
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="15" HorizontalOptions="End" />
+                                        </StackLayout>
+
+                                        <Label Text="{Binding Header}"
+                            LineBreakMode="NoWrap"
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="15" />
+
+                                        <Label Text="{Binding Court}"
+                            LineBreakMode="NoWrap"
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="13" />
+
+                                    </StackLayout>
+
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer 
+                                NumberOfTapsRequired="1"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:CourtsListViewModel}}, Path=ItemTapped}"		
+                                CommandParameter="{Binding .}">
+                                        </TapGestureRecognizer>
+                                    </Frame.GestureRecognizers>
+                                </Frame>
+                            </ContentView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+
+            <StackLayout VerticalOptions="End" Grid.Row="2">
+                <Button Text="Зберегти" Command="{Binding SaveCommand}" CornerRadius="15"></Button>
+            </StackLayout>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

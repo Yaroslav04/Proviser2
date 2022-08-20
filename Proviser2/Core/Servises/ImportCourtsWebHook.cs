@@ -15,7 +15,7 @@ namespace Proviser2.Core.Servises
         public static async Task Import()
         {
             int k = 0;
-            List<string> _courts = new List<string>(new string[] { "Заводський районний суд м.Дніпродзержинська", "Дніпровський районний суд м.Дніпродзержинська", "Баглійський районний суд м.Дніпродзержинська", "Дніпровський апеляційний суд" });
+            List<string> _courts = new List<string>(new string[] { "Заводський районний суд м.Дніпродзержинська", "Дніпровський районний суд м.Дніпродзержинська", "Баглійський районний суд м.Дніпродзержинська", "Дніпровський апеляційний суд", "Касаційний кримінальний суд Верховного Суду" });
 
             try
             {
@@ -41,7 +41,6 @@ namespace Proviser2.Core.Servises
                                     }
                                     catch (Exception ex)
                                     {
-                                        Debug.WriteLine("save error" + ex.Message.ToString() + line);
                                     }
                                 }
                                 catch

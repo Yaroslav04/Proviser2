@@ -18,7 +18,6 @@ namespace Proviser2.Core.Model
         public string Id { get; set; }
         public string DecisionType { get; set; }
         public DateTime DecisionDate { get; set; }
-        public DateTime PublicDate { get; set; }
         public DateTime LegalDate { get; set; }
         public string JudiciaryType { get; set; }
         public string Case { get; set; }

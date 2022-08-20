@@ -31,8 +31,7 @@ namespace Proviser2.Core.Servises
                             {
                                 DecisionClass decisionClass = new DecisionClass();
                                 decisionClass.Case = item.Case;
-                                decisionClass.DecisionDate = item.DecisionDate;
-                                decisionClass.PublicDate = item.PublicDate;
+                                decisionClass.DecisionDate = item.DecisionDate;                             
                                 decisionClass.CriminalNumber = item.CriminalNumber;
                                 decisionClass.Court = item.Court;
                                 decisionClass.Id = item.Id;
@@ -123,6 +122,10 @@ namespace Proviser2.Core.Servises
                     if (matches.Count > 0)
                     {
                         result.LegalDate = Convert.ToDateTime(matches[0].Value);
+                    }
+                    else
+                    {
+                        result.LegalDate = DateTime.MinValue;
                     }
                 }
 

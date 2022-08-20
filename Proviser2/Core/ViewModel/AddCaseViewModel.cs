@@ -155,7 +155,7 @@ namespace Proviser2.Core.ViewModel
                 }
                 finally
                 {
-                    Clear();
+                    
                 }
             }
             else if (Items.Count == 0)
@@ -174,7 +174,7 @@ namespace Proviser2.Core.ViewModel
                 }
                 finally
                 {
-                    Clear();
+                    
                 }
             }
             else
