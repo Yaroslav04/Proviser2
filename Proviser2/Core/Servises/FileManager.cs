@@ -67,7 +67,6 @@ namespace Proviser2.Core.Servises
         {
             if (File.GetLastWriteTime(GeneralPath("log.txt")).DayOfYear != DateTime.Now.DayOfYear)
             {
-
                 return true;
             }
 
@@ -101,7 +100,9 @@ namespace Proviser2.Core.Servises
             {
                 array = sr.ReadToEnd().Split(",");
             }
+
             Debug.WriteLine("array" + array.Length);
+            
             if (array.Length > 1)
             {
                 foreach (string str in array)

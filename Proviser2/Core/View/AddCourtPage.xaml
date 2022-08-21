@@ -6,10 +6,10 @@
              xmlns:model="clr-namespace:Proviser2.Core.Model"
              x:DataType="viewmodel:AddCourtViewModel"
              Title="{Binding Title}"   
-             >
+             BackgroundColor="{StaticResource Light}">
 
     <ContentPage.Content>
-        <Grid>
+        <Grid Margin="5,5,5,5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"></RowDefinition>
                 <RowDefinition Height="7*"></RowDefinition>
@@ -24,52 +24,54 @@
             </StackLayout>
 
             <RefreshView Grid.Row="1" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
-                <CollectionView x:Name="ItemsListView" 
+                <Frame CornerRadius="15" BackgroundColor="{StaticResource Heavy}" Padding="2,2,2,2">
+                    <CollectionView x:Name="ItemsListView" 
                 ItemsSource="{Binding Items}"
                 SelectionMode="None" >
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <ContentView>
-                                <Frame x:DataType="model:CourtSoketClass" HasShadow="True" CornerRadius="15" Margin="2" Padding="20" BackgroundColor="Lavender">
-                                    <StackLayout x:DataType="model:CourtSoketClass">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <ContentView>
+                                    <Frame x:DataType="model:CourtSoketClass" HasShadow="True" CornerRadius="15" Margin="2" Padding="20">
+                                        <StackLayout x:DataType="model:CourtSoketClass">
 
-                                        <StackLayout Orientation="Horizontal">
+                                            <StackLayout Orientation="Horizontal">
 
-                                            <Label Text="{Binding Date}"
+                                                <Label Text="{Binding Date}"
                             LineBreakMode="NoWrap" 
                             Style="{DynamicResource ListItemTextStyle}" 
                             FontSize="20" />
 
-                                            <Label Text="{Binding Origin}"
+                                                <Label Text="{Binding Origin}"
                             LineBreakMode="NoWrap" 
                             Style="{DynamicResource ListItemTextStyle}" 
                             FontSize="15" HorizontalOptions="End" />
-                                        </StackLayout>
+                                            </StackLayout>
 
-                                        <Label Text="{Binding Header}"
+                                            <Label Text="{Binding Header}"
                             LineBreakMode="NoWrap"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="15" />
 
-                                        <Label Text="{Binding Court}"
+                                            <Label Text="{Binding Court}"
                             LineBreakMode="NoWrap"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="13" />
 
-                                    </StackLayout>
+                                        </StackLayout>
 
-                                    <Frame.GestureRecognizers>
-                                        <TapGestureRecognizer 
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer 
                                 NumberOfTapsRequired="1"
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:CourtsListViewModel}}, Path=ItemTapped}"		
                                 CommandParameter="{Binding .}">
-                                        </TapGestureRecognizer>
-                                    </Frame.GestureRecognizers>
-                                </Frame>
-                            </ContentView>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                                            </TapGestureRecognizer>
+                                        </Frame.GestureRecognizers>
+                                    </Frame>
+                                </ContentView>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Frame>
             </RefreshView>
 
             <StackLayout VerticalOptions="End" Grid.Row="2">

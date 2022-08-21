@@ -1,12 +1,11 @@
 ﻿using Proviser2.Core.Model;
-using Proviser2.Core.Servises;
 using System;
 
-namespace Proviser2.Class.Converters.Servise
+namespace Proviser2.Core.Servises
 {
-    static class TextToCourtClassConverter
+    static class ClassConverter
     {
-        public static CourtClass Transform(string _text)
+        public static CourtClass TransformTextToCourtClass(string _text)
         {
             CourtClass courts = new CourtClass();
             courts.Date = ExeptionDate(_text, 0);

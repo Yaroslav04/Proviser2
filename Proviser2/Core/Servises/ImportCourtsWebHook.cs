@@ -1,5 +1,4 @@
-﻿using Proviser2.Class.Converters.Servise;
-using Proviser2.Core.Model;
+﻿using Proviser2.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,7 +28,7 @@ namespace Proviser2.Core.Servises
                             {
                                 try
                                 {
-                                    CourtClass x = TextToCourtClassConverter.Transform(line);
+                                    CourtClass x = ClassConverter.TransformTextToCourtClass(line);
                                     x.Origin = "net";
                                     x.SaveDate = DateTime.Now;
                                     try

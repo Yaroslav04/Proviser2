@@ -15,4 +15,9 @@
          which is used to tint widgets -->
     <!--<item name="colorAccent">#FF4081</item>-->
   </style>
+	<style name="MainTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+		<item name="android:statusBarColor">#314077</item>
+		<item name="android:navigationBarColor">#314077</item>
+	</style>
+	
 </resources>

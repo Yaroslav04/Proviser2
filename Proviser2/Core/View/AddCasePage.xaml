@@ -5,10 +5,11 @@
              xmlns:model="clr-namespace:Proviser2.Core.Model"
              x:Class="Proviser2.Core.View.AddCasePage"
              x:DataType="viewmodel:AddCaseViewModel"
-             Title="{Binding Title}">
+             Title="{Binding Title}"
+             BackgroundColor="{StaticResource Light}">
     <ContentPage.Content>
         
-        <StackLayout Spacing="3">
+        <StackLayout Spacing="3" Margin="5,5,5,5">
 
             <Grid>
                 <Grid.RowDefinitions>
@@ -28,9 +29,10 @@
                 
                 <Label Grid.Column="0" VerticalOptions="Center" Text="Заголовок" FontSize="15"/>
                 <Entry Grid.Column="1"  VerticalOptions="Center" Text="{Binding HeaderEditPanel, Mode=TwoWay}" FontSize="Medium"/>
-                                            
+
             </StackLayout>
 
+            <Frame CornerRadius="15" BackgroundColor="{StaticResource Heavy}" Padding="2,2,2,2">
             <CollectionView Grid.Row="1" x:Name="ItemsListView" 
                 ItemsSource="{Binding Items}"
                 SelectedItem="{Binding SelectedItem}"
@@ -38,7 +40,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <ContentView>
-                            <Frame HasShadow="True" CornerRadius="15" Margin="2" Padding="20" BackgroundColor="Lavender">
+                            <Frame HasShadow="True" CornerRadius="15" Margin="2" Padding="20">
                                 <StackLayout x:DataType="model:CourtClass">
 
                                     <Label Text="{Binding Case}" 
@@ -66,6 +68,7 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+            </Frame>
 
             <StackLayout Margin="0,5,0,5" Grid.Row="2" Spacing="5" MinimumHeightRequest="200">
 

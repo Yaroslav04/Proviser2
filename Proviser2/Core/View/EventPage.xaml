@@ -6,7 +6,7 @@
              xmlns:model="clr-namespace:Proviser2.Core.Model"
               x:DataType="viewmodel:EventViewModel"
              Title="{Binding Title}"
-             >
+             BackgroundColor="{StaticResource Light}">
     <ContentPage.Content>
         <StackLayout>
             <StackLayout Orientation="Horizontal" Spacing="5">
@@ -15,7 +15,7 @@
             </StackLayout>
             
             <Entry Placeholder="Дата" Text="{Binding DateMainPanel}" MaxLength="10"></Entry>
-            <Picker Title="Подія" ItemsSource="{Binding Events}" SelectedItem="{Binding SelectedEventMainPanel, Mode=TwoWay}"></Picker>
+            <Entry Placeholder="Подія" Text="{Binding SelectedEventMainPanel}"></Entry>
             <Entry Placeholder="Опис" Text="{Binding DescriprtionMainPanel}"></Entry>
 
 

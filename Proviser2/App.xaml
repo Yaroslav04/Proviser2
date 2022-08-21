@@ -4,11 +4,11 @@
              x:Class="Proviser2.App">
     <Application.Resources>
         <ResourceDictionary>
-            
-            <Color x:Key="Primary">#314077</Color>
-            <Color x:Key="Light">#e1e7f5</Color>
-            <Color x:Key="Heavy">#5788c6</Color>
 
+            <Color x:Key="Primary">#314077</Color>
+            <Color x:Key="Heavy">#5788c6</Color>
+            <Color x:Key="Light">#e1e7f5</Color>
+           
             <Style TargetType="Button">
                 <Setter Property="TextColor" Value="{StaticResource Light}"></Setter>
                 <Setter Property="VisualStateManager.VisualStateGroups">
@@ -21,7 +21,7 @@
                             </VisualState>
                             <VisualState x:Name="Disabled">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource Heavy}" />
                                 </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>
@@ -32,6 +32,12 @@
             <Style TargetType="Label">
                 <Setter Property="TextColor" Value="{StaticResource Primary}"></Setter>
             </Style>
+
+            <Style TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="{StaticResource Light}"></Setter>
+            </Style>
+            
+            <!--styles.xml for navigation bar-->
 
         </ResourceDictionary>
     </Application.Resources>

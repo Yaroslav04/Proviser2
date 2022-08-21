@@ -6,7 +6,7 @@
              xmlns:model="clr-namespace:Proviser2.Core.Model"
              x:DataType="viewmodel:EventsListViewModel"
              Title="{Binding Title}"      
-             >
+             BackgroundColor="{StaticResource Heavy}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="(+)" Command="{Binding AddEventCommand}" />
@@ -20,7 +20,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <ContentView>
-                            <Frame x:DataType="model:EventSoketClass" HasShadow="True" CornerRadius="15" Margin="2" Padding="20" BackgroundColor="Lavender">
+                            <Frame x:DataType="model:EventSoketClass" HasShadow="True" CornerRadius="15" Margin="2" Padding="20">
                                 <StackLayout x:DataType="model:EventSoketClass">
 
                                         <Label Text="{Binding DateSoket}"

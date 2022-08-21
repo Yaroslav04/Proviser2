@@ -17,20 +17,29 @@ namespace Proviser2.Core.Servises
         readonly SQLiteAsyncConnection casesDataBase;
         readonly SQLiteAsyncConnection decisionsDataBase;
         readonly SQLiteAsyncConnection eventsDataBase;
+        readonly SQLiteAsyncConnection configDataBase;
+        readonly SQLiteAsyncConnection legasyDataBase;
 
         public DataBase(string _connectionString, List<string> _dataBaseName)
         {
-            decisionsDataBase = new SQLiteAsyncConnection(Path.Combine(_connectionString, _dataBaseName[2]));
-            decisionsDataBase.CreateTableAsync<DecisionClass>().Wait();
-
-            eventsDataBase = new SQLiteAsyncConnection(Path.Combine(_connectionString, _dataBaseName[3]));
-            eventsDataBase.CreateTableAsync<EventClass>().Wait();
 
             courtsDataBase = new SQLiteAsyncConnection(Path.Combine(_connectionString, _dataBaseName[0]));
             courtsDataBase.CreateTableAsync<CourtClass>().Wait();
 
             casesDataBase = new SQLiteAsyncConnection(Path.Combine(_connectionString, _dataBaseName[1]));
             casesDataBase.CreateTableAsync<CaseClass>().Wait();
+
+            decisionsDataBase = new SQLiteAsyncConnection(Path.Combine(_connectionString, _dataBaseName[2]));
+            decisionsDataBase.CreateTableAsync<DecisionClass>().Wait();
+
+            eventsDataBase = new SQLiteAsyncConnection(Path.Combine(_connectionString, _dataBaseName[3]));
+            eventsDataBase.CreateTableAsync<EventClass>().Wait();
+
+            configDataBase = new SQLiteAsyncConnection(Path.Combine(_connectionString, _dataBaseName[4]));
+            configDataBase.CreateTableAsync<ConfigClass>().Wait();
+
+            legasyDataBase = new SQLiteAsyncConnection(@"/storage/emulated/0/Proviser/CourtsDataBase.db3");
+            legasyDataBase.CreateTableAsync<Courts>().Wait();
         }
 
         #region Court
@@ -287,7 +296,6 @@ namespace Proviser2.Core.Servises
 
         #endregion
 
-
         #region Decisions
 
         public Task<int> SaveDecisionAsync(DecisionClass _decision)
@@ -334,6 +342,62 @@ namespace Proviser2.Core.Servises
         public async Task<DecisionClass> GetDecisionAsync(int _id)
         {
             return await decisionsDataBase.Table<DecisionClass>().Where(x => x.N == _id).FirstOrDefaultAsync();
+        }
+
+        #endregion
+
+        #region Config
+
+        public Task<int> SaveConfigAsync(ConfigClass _config)
+        {
+            try
+            {
+                return configDataBase.InsertAsync(_config);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public Task<int> DeleteConfigAsync(ConfigClass _config)
+        {
+            try
+            {
+                return configDataBase.DeleteAsync(_config);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return null;
+            }
+
+        }
+        public Task<int> UpdateConfigAsync(ConfigClass _config)
+        {
+            try
+            {
+                return configDataBase.UpdateAsync(_config);
+            }
+            catch
+            {
+                return null;
+            }
+
+        }
+
+        public Task<List<ConfigClass>> GetConfigAsync(string _type)
+        {
+            return configDataBase.Table<ConfigClass>().Where(x => x.Type == _type).ToListAsync();
+        }
+
+        #endregion
+
+        #region Legasy
+
+        public Task<List<Courts>> GetOldCourtsAsync()
+        {
+            return legasyDataBase.Table<Courts>().ToListAsync();
         }
 
         #endregion

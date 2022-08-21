@@ -6,7 +6,7 @@
              xmlns:model="clr-namespace:Proviser2.Core.Model"
              x:DataType="viewmodel:CasesListViewModel"
              Title="{Binding Title}"
-             >
+             BackgroundColor="{StaticResource Heavy}">
     
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="(+)" Command="{Binding AddItemCommand}" />
@@ -19,7 +19,7 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <ContentView>
-                        <Frame x:DataType="model:CaseClass" HasShadow="True" CornerRadius="15" Margin="2" Padding="20" BackgroundColor="Lavender">
+                        <Frame x:DataType="model:CaseClass" HasShadow="True" CornerRadius="15" Margin="2" Padding="20">
                             <StackLayout HorizontalOptions="Start">
 
                                 <Label Text="{Binding Header}" 
@@ -36,7 +36,7 @@
                             LineBreakMode="NoWrap"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="12" />
-                               
+
                             </StackLayout>
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer 

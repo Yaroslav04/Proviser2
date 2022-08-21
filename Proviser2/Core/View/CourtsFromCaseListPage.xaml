@@ -6,7 +6,7 @@
              xmlns:model="clr-namespace:Proviser2.Core.Model"
              x:DataType="viewmodel:CourtsFromCaseListViewModel"
              Title="{Binding Title}"
-             >
+             BackgroundColor="{StaticResource Heavy}">
              
     <ContentPage.Content>
         <RefreshView Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
@@ -16,7 +16,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <ContentView>
-                            <Frame x:DataType="model:CourtSoketClass" HasShadow="True" CornerRadius="15" Margin="2" Padding="20" BackgroundColor="Lavender">
+                            <Frame x:DataType="model:CourtSoketClass" HasShadow="True" CornerRadius="15" Margin="2" Padding="20">
                                 <StackLayout x:DataType="model:CourtSoketClass">
 
                                     <StackLayout Orientation="Horizontal">

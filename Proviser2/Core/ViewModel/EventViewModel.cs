@@ -17,10 +17,6 @@ namespace Proviser2.Core.ViewModel
         {
             SaveCommand = new Command(Save);
             DeleteCommand = new Command(Delete);
-            Events = new ObservableCollection<string>
-            {
-                "допит свідка"
-            };
         }
 
         #region Properties
@@ -50,7 +46,6 @@ namespace Proviser2.Core.ViewModel
                 SetProperty(ref dateMainPanel, value);
             }
         }
-        public ObservableCollection<string> Events { get; }
 
         private string selectedEventMainPanel;
         public string SelectedEventMainPanel

@@ -6,7 +6,7 @@
              xmlns:model="clr-namespace:Proviser2.Core.Model"
              x:DataType="viewmodel:DecisionsListViewModel"
              Title="{Binding Title}"
-             >
+             BackgroundColor="{StaticResource Heavy}">
     <ContentPage.Content>
         <RefreshView Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
             <CollectionView x:Name="ItemsListView" 
@@ -15,7 +15,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <ContentView>
-                            <Frame x:DataType="model:DecisionSoketClass" HasShadow="True" CornerRadius="15" Margin="2" Padding="20" BackgroundColor="Lavender">
+                            <Frame x:DataType="model:DecisionSoketClass" HasShadow="True" CornerRadius="15" Margin="2" Padding="20">
                                 <StackLayout x:DataType="model:DecisionSoketClass">
 
                                     <Label Text="{Binding DecisionDateSoket}"                        
@@ -24,25 +24,20 @@
                                     <Label Text="{Binding LegalDateSoket}"                        
                             Style="{DynamicResource ListItemTextStyle}" 
                             FontSize="20" />
-                                    <Label Text="{Binding DecisionType}"                        
+                                    
+                                    <StackLayout Orientation="Horizontal" Spacing="5">
+                                        <Label Text="{Binding JudiciaryType}"                        
                             Style="{DynamicResource ListItemTextStyle}" 
                             FontSize="20" />
-                                    <Label Text="{Binding JudiciaryType}"                        
+                                        <Label Text="{Binding DecisionType}"                        
                             Style="{DynamicResource ListItemTextStyle}" 
                             FontSize="20" />
+                                    </StackLayout>
+                                   
                                     <Label Text="{Binding Court}"                        
                             Style="{DynamicResource ListItemTextStyle}" 
                             FontSize="20" />
-                                    <Label Text="{Binding Judge}"                        
-                            Style="{DynamicResource ListItemTextStyle}" 
-                            FontSize="20" />
-                                    <Label Text="{Binding Category}"                        
-                            Style="{DynamicResource ListItemTextStyle}" 
-                            FontSize="20" />
-                                    <Label Text="{Binding CriminalNumber}"                        
-                            Style="{DynamicResource ListItemTextStyle}" 
-                            FontSize="20" />
-                                    
+
                                 </StackLayout>
 
                                 <Frame.GestureRecognizers>
