@@ -68,7 +68,7 @@ namespace Proviser2.Core.ViewModel
 
             try
             {
-                Items.Clear();
+                Items.Clear();    
                 var items = await App.DataBase.GetCourtsAsync(CaseId);
                 items = items.OrderBy(x => x.Date).ToList();
                 foreach (var item in items)
@@ -114,8 +114,7 @@ namespace Proviser2.Core.ViewModel
                 if (result == "OK")
                 {
                     await App.DataBase.DeleteCourtAsync(await App.DataBase.GetCourtAsync(item.N));
-                }
-               
+                }           
             }
         }
     }

@@ -5,7 +5,8 @@
              xmlns:model="clr-namespace:Proviser2.Core.Model"
               x:DataType="viewmodel:CaseViewModel"
              x:Class="Proviser2.Core.View.CasePage"
-             Title="{Binding Title}">
+             Title="{Binding Title}"
+             BackgroundColor="{StaticResource Light}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="(+)" Command="{Binding FastAddCommand}" />
@@ -14,6 +15,7 @@
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Margin="5,5,5,5">
+                
                 <Label Text="{Binding CaseMainPanel}" FontSize="Medium"/>
                 <Entry Placeholder="Заголовок" Text="{Binding HeaderMainPanel}" FontSize="Medium"/>
                 <Entry Placeholder="Номер кримінального провадження" Text="{Binding CriminalNumberMainPanel}" FontSize="Medium"/>
