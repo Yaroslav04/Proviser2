@@ -40,13 +40,14 @@
 
                                     <Label Text="{Binding Case}" 
                             LineBreakMode="NoWrap"
+                                            TextColor="Gray"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="15" />
 
                                     <Label Text="{Binding Court}" 
                            
                             Style="{DynamicResource ListItemDetailTextStyle}"
-                            FontSize="13" />
+                            FontSize="15" />
 
                                     <Label Text="{Binding Judge}" 
                             
@@ -55,11 +56,12 @@
 
                                     <Label Text="{Binding Littigans}"
                             LineBreakMode="NoWrap"
+                                            TextColor="Gray"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="15" />
 
                                     <Label Text="{Binding Category}"
-                            
+                             TextColor="Gray"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="15" />
                                 </StackLayout>

@@ -11,20 +11,20 @@ using Xamarin.Forms.Xaml;
 namespace Proviser2.Core.View
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class NotificationPage : ContentPage
+    public partial class NewDecisionsPage : ContentPage
     {
-        NotificationViewModel notificationViewModel;
-        public NotificationPage()
+        NewDecisionsViewModel newDecisionsViewModel;
+        public NewDecisionsPage()
         {
             InitializeComponent();
-            notificationViewModel = new NotificationViewModel();
-            BindingContext = notificationViewModel;
+            newDecisionsViewModel = new NewDecisionsViewModel();
+            BindingContext = newDecisionsViewModel;
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            notificationViewModel.OnAppearing();
+            newDecisionsViewModel.OnAppearing();
         }
     }
 }

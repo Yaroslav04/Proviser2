@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Proviser2.Core.Model;
+using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace Proviser2.Core.Servises
 {
@@ -50,15 +53,54 @@ namespace Proviser2.Core.Servises
             return regex.IsMatch(_text);
         }
 
-        public static string GetBeautifyPrisonDate(DateTime date)
+        public static string GetBeautifyPrisonDate(DateTime _date)
         {
-            if (date > System.DateTime.MinValue)
+            if (_date > System.DateTime.MinValue)
             {
-                return $"Дата тримання під вартою: {date.ToShortDateString()}";
+                if ((System.DateTime.Now - _date).TotalDays < 30)
+                {
+                    return $"Дата тримання під вартою: {_date.ToShortDateString()}";
+                }
+                else
+                {
+                    return "";
+                }
             }
             else
             {
                 return "";
+            }
+        }
+
+        public static string GetBeautifyLegalDate(DateTime _date)
+        {
+            if (_date > System.DateTime.MinValue)
+            {
+                return $"Дата набрання законної сили:{_date.ToShortDateString()}";
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public static string GetBeautifyDecisionCategory(string _text)
+        {
+            if (string.IsNullOrWhiteSpace(_text))
+            {
+                return "";
+            }
+            else
+            {
+                List<string> categoties = new List<string>(_text.Split(";"));
+                if (categoties.Count == 0)
+                {
+                    return _text;
+                }
+                else
+                {
+                    return categoties.LastOrDefault().Trim();
+                }
             }
         }
     }

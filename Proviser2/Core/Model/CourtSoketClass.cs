@@ -18,6 +18,7 @@ namespace Proviser2.Core.Model
             this.Littigans = courtClass.Littigans;
             this.Category = courtClass.Category;
             this.Origin = courtClass.Origin;
+            this.SaveDate = courtClass.SaveDate;
         }
     }
 }

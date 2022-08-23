@@ -8,6 +8,8 @@ namespace Proviser2.Core.Model
     {
         public string DecisionDateSoket { get; set; }
         public string LegalDateSoket { get; set; }
+        public string CategorySoket { get; set; }
+        public string Header { get; set; }
         public DecisionSoketClass(DecisionClass decisionClass)
         {
             this.N = decisionClass.N;

@@ -11,18 +11,16 @@ using Xamarin.Forms;
 
 namespace Proviser2.Core.ViewModel
 {
-    [QueryProperty(nameof(CaseId), nameof(CaseId))]
-    public class DecisionsListViewModel : BaseViewModel
+    public class NewDecisionsViewModel : BaseViewModel
     {
-
-        public DecisionsListViewModel()
+        public NewDecisionsViewModel()
         {
-            Title = "Судові рішення";
+            Title = "Нові рішення";
             Items = new ObservableCollection<DecisionSoketClass>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<DecisionSoketClass>(OnItemSelected);
-        }
 
+        }
         public void OnAppearing()
         {
             IsBusy = true;
@@ -30,16 +28,6 @@ namespace Proviser2.Core.ViewModel
         }
 
         #region Properties
-
-        private string caseId;
-        public string CaseId
-        {
-            get => caseId;
-            set
-            {
-                SetProperty(ref caseId, value);
-            }
-        }
 
         private DecisionSoketClass _selectedItem;
         public DecisionSoketClass SelectedItem
@@ -60,6 +48,7 @@ namespace Proviser2.Core.ViewModel
 
         public Command LoadItemsCommand { get; }
         public Command<DecisionSoketClass> ItemTapped { get; }
+        public Command AddEventCommand { get; }
 
         #endregion
 
@@ -69,18 +58,24 @@ namespace Proviser2.Core.ViewModel
 
             try
             {
-                Items.Clear();
-
-                var items = await App.DataBase.GetDecisionsAsync(CaseId);
-                if (items.Count > 0)
+                var decisions = await App.DataBase.GetLastDecisionsAsync();
+                if (decisions.Count == 0)
                 {
-                    foreach (var item in items)
+                    return;
+                }
+                else
+                {
+                    Items.Clear();
+                    foreach (var item in decisions)
                     {
+
+
                         DecisionSoketClass decisionSoketClass = new DecisionSoketClass(item);
                         decisionSoketClass.Header = await App.DataBase.GetHeaderAsync(item.Case);
                         decisionSoketClass.DecisionDateSoket = item.DecisionDate.ToShortDateString();
-                        decisionSoketClass.LegalDateSoket = TextManager.GetBeautifyLegalDate(item.LegalDate); 
+                        decisionSoketClass.LegalDateSoket = TextManager.GetBeautifyLegalDate(item.LegalDate);
                         decisionSoketClass.CategorySoket = TextManager.GetBeautifyDecisionCategory(item.Category);
+                        Items.Add(decisionSoketClass);
                         Items.Add(decisionSoketClass);
                     }
                 }
@@ -94,12 +89,15 @@ namespace Proviser2.Core.ViewModel
                 IsBusy = false;
             }
         }
-        async void OnItemSelected(DecisionSoketClass _item)
-        {
-            if (_item == null)
-                return;
-            await Browser.OpenAsync("https://reyestr.court.gov.ua/Review/" + _item.Id, BrowserLaunchMode.SystemPreferred);
-        }
 
+        async void OnItemSelected(DecisionSoketClass item)
+        {
+            if (item == null)
+                return;
+
+            await Browser.OpenAsync(item.URL, BrowserLaunchMode.SystemPreferred);
+
+        }
     }
 }
+

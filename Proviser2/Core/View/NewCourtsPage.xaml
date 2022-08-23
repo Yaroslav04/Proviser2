@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Proviser2.Core.View.NewCourtsPage"
+               xmlns:viewmodel="clr-namespace:Proviser2.Core.ViewModel"
+             xmlns:model="clr-namespace:Proviser2.Core.Model"
+             x:DataType="viewmodel:NewCourtsViewModel"
+             Title="{Binding Title}"           
+             BackgroundColor="{StaticResource Heavy}"
+             >
+    <ContentPage.Content>
+        <RefreshView Padding="2,2,2,2" Margin="2,2,2,2" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+            <CollectionView x:Name="ItemsListView" 
+                ItemsSource="{Binding Items}"
+                SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <ContentView>
+                            <StackLayout Margin="0,0,0,5">
+                                <Frame x:DataType="model:CourtSoketClass" HasShadow="True" CornerRadius="15" Margin="2" Padding="20">
+                                    <StackLayout Spacing="5" x:DataType="model:CourtSoketClass">
+
+                                        <StackLayout Orientation="Horizontal">
+
+                                            <Label Text="{Binding Date}"
+                            LineBreakMode="NoWrap" 
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="22" />
+
+                                            <Label Text="{Binding Origin}"
+                            LineBreakMode="NoWrap" 
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="15" HorizontalOptions="End" />
+
+                                        </StackLayout>
+
+
+                                        <Label Text="{Binding Header}"
+                            LineBreakMode="NoWrap"
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="18" />
+
+                                        <Label Text="{Binding Case}" 
+                                           TextColor="Gray"
+                            LineBreakMode="NoWrap"
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="15" />
+
+                                        <Label Text="{Binding Court}" 
+                           
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="13" />
+
+                                        <Label Text="{Binding Judge}" 
+                            
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="13" />
+
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Завантажено: " 
+                            
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="13" />
+                                            
+                                            <Label Text="{Binding SaveDate}" 
+                            
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="13" />
+                                        </StackLayout>
+                                        
+
+                                    </StackLayout>
+
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer 
+                                NumberOfTapsRequired="1"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:NewCourtsViewModel}}, Path=ItemTapped}"		
+                                CommandParameter="{Binding .}">
+                                        </TapGestureRecognizer>
+                                    </Frame.GestureRecognizers>
+                                </Frame>
+                            </StackLayout>
+                        </ContentView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </ContentPage.Content>
+</ContentPage>

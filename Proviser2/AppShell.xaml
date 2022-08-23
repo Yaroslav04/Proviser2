@@ -65,8 +65,11 @@
     <FlyoutItem Title="Судові справи">
         <ShellContent Route="CasesListPage" ContentTemplate="{DataTemplate local:CasesListPage}" />
     </FlyoutItem>
-    <FlyoutItem Title="Нові надходження">
-        <ShellContent Route="NotificationPage" ContentTemplate="{DataTemplate local:NotificationPage}" />
+    <FlyoutItem Title="Нові засідання">
+        <ShellContent Route="NewCourtsPage" ContentTemplate="{DataTemplate local:NewCourtsPage}" />
+    </FlyoutItem>
+    <FlyoutItem Title="Нові рішення">
+        <ShellContent Route="NewDecisionsPage" ContentTemplate="{DataTemplate local:NewDecisionsPage}" />
     </FlyoutItem>
 
     <MenuItem x:Name="ServiseButton"  Text="Функції" StyleClass="MenuItemLayoutStyle" Clicked="ServiseButton_Clicked">

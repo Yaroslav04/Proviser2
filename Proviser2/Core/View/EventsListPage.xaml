@@ -30,13 +30,15 @@
 
                                     <StackLayout Orientation="Horizontal" Spacing="5">
 
-                                        <Label Text="{Binding Case}"
-                            LineBreakMode="NoWrap" 
-                            Style="{DynamicResource ListItemTextStyle}" 
-                            FontSize="15" />
-
                                         <Label Text="{Binding Header}"
                             LineBreakMode="NoWrap" 
+                                                TextColor="Gray"
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="15" />
+                                        
+                                        <Label Text="{Binding Case}"
+                            LineBreakMode="NoWrap" 
+                                                TextColor="Gray"
                             Style="{DynamicResource ListItemTextStyle}" 
                             FontSize="15" />
 
@@ -48,7 +50,7 @@
                             FontSize="18" />
 
                                     <Label Text="{Binding Description}" 
-                            LineBreakMode="NoWrap"
+                          
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="15" />
 

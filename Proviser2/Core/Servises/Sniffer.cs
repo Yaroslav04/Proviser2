@@ -232,31 +232,42 @@ namespace Proviser2.Core.Servises
 
         public static async Task ReminderHeaderRefresh()
         {
+
             List<string> messages = new List<string>();
 
-            var _cases = await App.DataBase.GetCasesAsync();
-            if (_cases.Count > 0)
+            var cases = await App.DataBase.GetCasesAsync();
+            if (cases.Count == 0)
             {
-                foreach (var item in _cases)
+                return;
+            }
+            else
+            {
+                foreach (var cs in cases)
                 {
-                    var _courts = await App.DataBase.GetCourtsAsync(item.Case);
-                    if (_courts.Count > 0)
+                    var courts = await App.DataBase.GetCourtsAsync(cs.Case);
+                    if (courts.Count > 0)
                     {
-                        if ((DateTime.Now - _courts.LastOrDefault().Date).TotalDays > 3)
+                        var lastCourt = courts.OrderByDescending(x => x.Date).FirstOrDefault();
+                        if ((DateTime.Now - lastCourt.Date).TotalDays > 3)
                         {
-                            if ((DateTime.Now - _courts.LastOrDefault().Date).TotalDays < 30)
+                            if ((DateTime.Now - lastCourt.Date).TotalDays < 30)
                             {
-                                messages.Add($"Необхідно оновити засідання:\n{item.Header} {item.Case}\n{_courts.LastOrDefault().Date}");
+                                messages.Add($"Необхідно оновити засідання:\n{cs.Header} {cs.Case}\n{lastCourt.Date}");
                             }
                         }
                     }
                 }
-                if (messages.Count > 0)
+            }
+
+            if (messages.Count == 0)
+            {
+                return;
+            }
+            else
+            {
+                foreach (var mes in messages)
                 {
-                    foreach (var mes in messages)
-                    {
-                        await Shell.Current.DisplayAlert("Нагадування", mes, "OK");
-                    }
+                    await Shell.Current.DisplayAlert("Нагадування", mes, "OK");
                 }
             }
         }
@@ -274,7 +285,7 @@ namespace Proviser2.Core.Servises
             }
             else
             {
-                foreach( var cs in cases)
+                foreach (var cs in cases)
                 {
                     if (String.IsNullOrWhiteSpace(cs.CriminalNumber))
                     {
@@ -301,7 +312,7 @@ namespace Proviser2.Core.Servises
                             }
                         }
                     }
-                }        
+                }
             }
         }
 
