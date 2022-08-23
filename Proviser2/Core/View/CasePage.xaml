@@ -16,16 +16,16 @@
         <ScrollView>
             <StackLayout Margin="5,5,5,5">
                 
-                <Label Text="{Binding CaseMainPanel}" FontSize="Medium"/>
+                <Label Text="{Binding CaseMainPanel}" FontSize="Large"/>
                 <Entry Placeholder="Заголовок" Text="{Binding HeaderMainPanel}" FontSize="Medium"/>
                 <Entry Placeholder="Номер кримінального провадження" Text="{Binding CriminalNumberMainPanel}" FontSize="Medium"/>
                 <Entry Placeholder="Головна судова справа" Text="{Binding MainCaseMainPanel}" FontSize="Medium"/>
                 <Label Text="{Binding NoteMainPanel}" FontSize="Medium"/>
-                <Label Text="{Binding PrisonDateMainPanel}" FontSize="Medium"/>
+                <Label Text="{Binding PrisonDateMainPanel}"  TextColor="DarkCyan"  FontSize="Medium"/>
                 <Label Text="{Binding CourtMainPanel}" FontSize="Medium"/>
                 <Label Text="{Binding JudgeMainPanel}" FontSize="Medium"/>
-                <Label Text="{Binding LittigansMainPanel}" FontSize="Medium"/>
-                <Label Text="{Binding CategoryMainPanel}" FontSize="Medium"/>
+                <Label Text="{Binding LittigansMainPanel}" TextColor="Gray" FontSize="Medium"/>
+                <Label Text="{Binding CategoryMainPanel}" TextColor="Gray" FontSize="Medium"/>
 
                 <Button Text="Журнал судових подій" Command="{Binding OpenEventsCommand}"
                     CornerRadius="15" Margin="3,3,3,3" />

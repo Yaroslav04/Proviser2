@@ -155,6 +155,7 @@ namespace Proviser2.Core.Servises
                 }
             }
         }
+
         static async Task<List<ConfigClass>> GetNameSniffer()
         {
             var result = await App.DataBase.GetConfigAsync("sniffer");

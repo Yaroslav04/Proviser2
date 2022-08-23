@@ -107,6 +107,11 @@ namespace Proviser2
                 case "Додати дані для пошуку":
                     await Sniffer.AddNameSniffer();
                     break;
+
+                case "Відправити засідання на пошту":
+                    await Task.Run(() => MailSender.SendCourtHearings());
+                    await DisplayAlert("Відправка на пошту", "Засідання відправлено", "OK");
+                    break;
             }
         }
     }

@@ -254,8 +254,12 @@ namespace Proviser2.Core.ViewModel
 
         private async void Delete()
         {
-            await App.DataBase.DeleteCasesAsync(await App.DataBase.GetCasesByCaseAsync(CaseId));
-            await Shell.Current.GoToAsync("..");
+            bool answer = await Shell.Current.DisplayAlert("Видалення", $"Видалити {HeaderMainPanel} {CaseMainPanel}", "Так", "Ні");
+            if (answer) 
+            {
+                await App.DataBase.DeleteCasesAsync(await App.DataBase.GetCasesByCaseAsync(CaseId));
+                await Shell.Current.GoToAsync("..");
+            }
         }
 
         private async void Update()

@@ -24,8 +24,6 @@ namespace Proviser2.Core.ViewModel
 
         private async void Save()
         {
-            //if (Servises.TextManager.DateTime(Date))
-            //{
             try
             {
                 var courtClass = await App.DataBase.GetLastLocalCourtAsync(CaseId);
@@ -35,6 +33,7 @@ namespace Proviser2.Core.ViewModel
                     courtClass.Origin = "local";
                     courtClass.SaveDate = DateTime.Now;
                     await App.DataBase.SaveCourtAsync(courtClass);
+                    await Shell.Current.DisplayAlert("Реєстрція засідання", $"Зареєстровано {courtClass.Date}", "OK");
                 }
                 else
                 {
@@ -54,23 +53,19 @@ namespace Proviser2.Core.ViewModel
                     courtClass.Category = category;
                     courtClass.SaveDate = DateTime.Now;
                     await App.DataBase.SaveCourtAsync(courtClass);
+                    await Shell.Current.DisplayAlert("Реєстрція засідання", $"Зареєстровано {courtClass.Date}", "OK");
+
                 }
-                Date = DateTime.Now;
-                Time = TimeSpan.FromHours(12);
             }
             catch
             {
-
+                await Shell.Current.DisplayAlert("Реєстрція засідання", $"Помилка", "OK");
             }
             finally
             {
-
+                Date = DateTime.Now;
+                Time = TimeSpan.FromHours(12);
             }
-            //}
-            //else
-            //{
-
-            //}
         }
 
         public void OnAppearing()

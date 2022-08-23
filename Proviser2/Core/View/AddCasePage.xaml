@@ -8,8 +8,8 @@
              Title="{Binding Title}"
              BackgroundColor="{StaticResource Light}">
     <ContentPage.Content>
-        
-        <StackLayout Spacing="3" Margin="5,5,5,5">
+
+        <StackLayout Spacing="3" Padding="2,2,2,2" Margin="2,2,2,2">
 
             <Grid>
                 <Grid.RowDefinitions>

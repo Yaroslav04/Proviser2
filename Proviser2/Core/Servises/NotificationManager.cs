@@ -22,7 +22,7 @@ namespace Proviser2.Core.Servises
                     notificationClass.Id = item.N;
                     notificationClass.Type = "Судове засідання";
                     notificationClass.Date = item.SaveDate;
-                    notificationClass.Description = $"📅{await App.DataBase.GetHeaderAsync(item.Case)} {item.Case}\n{item.Date}";
+                    notificationClass.Description = $"📅{await App.DataBase.GetHeaderAsync(item.Case)}\n{item.Case}\n{item.Date}";
                     notificationClass.Court = item.Court;
                     notificationClass.Link = item.Case;
                     result.Add(notificationClass);
@@ -49,7 +49,7 @@ namespace Proviser2.Core.Servises
                     {
                         legalDate = item.LegalDate.ToShortDateString();
                     }
-                    notificationClass.Description = $"📄{await App.DataBase.GetHeaderAsync(item.Case)} {item.Case}\n{item.DecisionDate.ToShortDateString()} - {legalDate}\n{item.DecisionType}";
+                    notificationClass.Description = $"📄{await App.DataBase.GetHeaderAsync(item.Case)}\n{item.Case}\n{item.DecisionDate.ToShortDateString()} - {legalDate}\n{item.DecisionType}";
                     notificationClass.Court = item.Court;
                     notificationClass.Link = item.URL;
                     result.Add(notificationClass);

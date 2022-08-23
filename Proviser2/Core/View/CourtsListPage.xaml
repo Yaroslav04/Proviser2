@@ -25,7 +25,7 @@
                                         <Label Text="{Binding Date}"
                             LineBreakMode="NoWrap" 
                             Style="{DynamicResource ListItemTextStyle}" 
-                            FontSize="20" />
+                            FontSize="22" />
 
                                         <Label Text="{Binding Origin}"
                             LineBreakMode="NoWrap" 
@@ -41,6 +41,7 @@
                             FontSize="18" />
 
                                     <Label Text="{Binding Case}" 
+                                           TextColor="Gray"
                             LineBreakMode="NoWrap"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="15" />
@@ -56,6 +57,7 @@
                             FontSize="13" />
 
                                     <Label Text="{Binding PrisonDate}"
+                            TextColor="DarkCyan"          
                             LineBreakMode="NoWrap"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="15" />

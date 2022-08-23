@@ -60,24 +60,31 @@ namespace Proviser2.Core.ViewModel
             {
                 Items.Clear();
                 var items = await App.DataBase.GetCourtsHearingOrderingByDateAsync();
-                foreach (var item in items)
+                if (items.Count == 0)
                 {
-                    try
-                    {
-                        var subCase = await App.DataBase.GetCasesByCaseAsync(item.Case);
-                        CourtSoketClass courtSoketClass = new CourtSoketClass(item);
-                        courtSoketClass.PrisonDate = TextManager.GetBeautifyPrisonDate(subCase.PrisonDate);
-                        courtSoketClass.Header = subCase.Header;
-                        courtSoketClass.Note = subCase.Note;
-                        courtSoketClass.PrisonDate = TextManager.GetBeautifyPrisonDate(subCase.PrisonDate);
-                        Items.Add(courtSoketClass);
-                    }
-                    catch
-                    {
-
-                    }
-                    
+                    return;
                 }
+                else
+                {
+                    foreach (var item in items)
+                    {
+                        try
+                        {
+                            var subCase = await App.DataBase.GetCasesByCaseAsync(item.Case);
+                            CourtSoketClass courtSoketClass = new CourtSoketClass(item);
+                            courtSoketClass.PrisonDate = TextManager.GetBeautifyPrisonDate(subCase.PrisonDate);
+                            courtSoketClass.Header = subCase.Header;
+                            courtSoketClass.Note = subCase.Note;
+                            courtSoketClass.PrisonDate = TextManager.GetBeautifyPrisonDate(subCase.PrisonDate);
+                            Items.Add(courtSoketClass);
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                }
+               
             }
             catch (Exception ex)
             {
