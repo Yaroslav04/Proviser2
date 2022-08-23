@@ -35,18 +35,6 @@ namespace Proviser2.Core.Servises
                 refresh = true;
             }
 
-            if (!File.Exists(GeneralPath("mail.txt")))
-            {
-                File.Create(GeneralPath("mail.txt"));
-                refresh = true;
-            }
-
-            if (!File.Exists(GeneralPath("sniffer.txt")))
-            {
-                File.Create(GeneralPath("sniffer.txt"));
-                refresh = true;
-            }
-
             if (refresh == true)
             {
                 return true;
@@ -72,67 +60,5 @@ namespace Proviser2.Core.Servises
 
             return false;
         }
-
-        public static string GetMail()
-        {
-            string result = "";
-            using (StreamReader sr = new StreamReader(GeneralPath("mail.txt")))
-            {
-                result = sr.ReadToEnd();
-            }
-
-            if (result != "")
-            {
-                return result.Replace(" ", "").Replace("\n", "");
-            }
-            else
-            {
-                return "";
-            }
-        }
-
-        public static List<string> GetSniffer()
-        {
-            List<string> result = new List<string>();
-            string[] array;
-
-            using (StreamReader sr = new StreamReader(GeneralPath("sniffer.txt")))
-            {
-                array = sr.ReadToEnd().Split(",");
-            }
-
-            Debug.WriteLine("array" + array.Length);
-            
-            if (array.Length > 1)
-            {
-                foreach (string str in array)
-                {
-                    result.Add(str);
-                }
-
-                return result;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public static void SetMail(string _value)
-        {
-            using (StreamWriter sw = new StreamWriter(GeneralPath("mail.txt")))
-            {
-                sw.Write(_value);
-            }
-        }
-
-        public static void SetSniffer(string _value)
-        {
-            using (StreamWriter sw = new StreamWriter(GeneralPath("sniffer.txt")))
-            {
-                sw.Write(_value);
-            }
-        }
-
     }
 }

@@ -11,7 +11,6 @@ namespace Proviser2.Core.Servises
 {
     public static class CourtMigration
     {
-
         public static async Task Migrate()
         {
             var oldCourts = await App.DataBase.GetOldCourtsAsync();
@@ -29,7 +28,6 @@ namespace Proviser2.Core.Servises
                 }
             }
         }
-
         private static CourtClass ConvertToNewClass(Courts oldCourt)
         {
             CourtClass courtClass = new CourtClass();

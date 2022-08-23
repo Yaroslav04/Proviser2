@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Proviser2.Core.View.NotificationPage"
+             xmlns:viewmodel="clr-namespace:Proviser2.Core.ViewModel"
+             xmlns:model="clr-namespace:Proviser2.Core.Model"
+             x:DataType="viewmodel:NotificationViewModel"
+             Title="{Binding Title}"      
+             BackgroundColor="{StaticResource Heavy}">
+
+    <ContentPage.Content>
+        <RefreshView Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+            <CollectionView x:Name="ItemsListView" 
+                ItemsSource="{Binding Items}"
+                SelectionMode="None" >
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <ContentView>
+                            <Frame x:DataType="model:NotificationClass" HasShadow="True" CornerRadius="15" Margin="2" Padding="20">
+                                <StackLayout x:DataType="model:NotificationClass">
+
+
+                                        <Label Text="{Binding Description}"                    
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="20" />
+
+
+                                    <Label Text="{Binding Court}"                          
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="20" />
+
+                                    <StackLayout Orientation="Horizontal" Spacing="5">
+
+                                        <Label Text="Завантажено: "
+                            LineBreakMode="NoWrap" 
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="15" />
+
+                                        <Label Text="{Binding Date}"
+                            LineBreakMode="NoWrap" 
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="15" />
+
+                                    </StackLayout>
+                                
+
+                                </StackLayout>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer 
+                                NumberOfTapsRequired="1"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:NotificationViewModel}}, Path=ItemTapped}"		
+                                CommandParameter="{Binding .}">
+                                    </TapGestureRecognizer>
+                                </Frame.GestureRecognizers>
+                            </Frame>
+                        </ContentView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </ContentPage.Content>
+</ContentPage>

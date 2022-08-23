@@ -39,7 +39,7 @@ namespace Proviser2
         {
             FileManager.FileInit();
 
-            await NameSniffer.SetSniffer();
+            await Sniffer.SetNameSniffer();
             await MailManager.SetMail();
 
             if (FileManager.FirstStart())
@@ -54,10 +54,11 @@ namespace Proviser2
             IsBusy = true;
             try
             {
-                await NameSniffer.RunSniffer();
-                await RemainderSniffer.ReminderHeaderRefresh();
-                await RemainderSniffer.ReminderPrisonNew();
-                await RemainderSniffer.ReminderPrisonRefresh();
+                await Sniffer.RunNameSniffer();
+                await Sniffer.ReminderHeaderRefresh();
+                await Sniffer.ReminderPrisonNew();
+                await Sniffer.ReminderPrisonRefresh();
+                await Sniffer.UpdateCriminalNumberFromDecisions();
             }
             catch
             {
@@ -78,7 +79,7 @@ namespace Proviser2
         {
             List<string> functions = new List<string> {
                 "Завантажити засідання", "Завантажити судові рішення", "Запуск пошукового сервісу", 
-                "Відправити на пошту", "Експорт всіх судових засідань", "Міграція"
+                "Відправити засідання на пошту", "Експорт всіх судових засідань", "Міграція", "Додати дані для пошуку"
             };
             string result = await DisplayActionSheet("Меню", "Відміна", null, functions.ToArray());
             switch (result)
@@ -93,9 +94,18 @@ namespace Proviser2
                     await DisplayAlert("Завантаження", "Рішення завантажено", "OK");
                     break;
 
+                case "Запуск пошукового сервісу":
+                    await RunSnifferFunctions();                  
+                    await DisplayAlert("Пошуковий сервіс", "Завершено", "OK");
+                    break;
+
                 case "Міграція":
                     await Task.Run(() => CourtMigration.Migrate());
                     await DisplayAlert("Міграція", "Перенесено", "OK");
+                    break;
+
+                case "Додати дані для пошуку":
+                    await Sniffer.AddNameSniffer();
                     break;
             }
         }

@@ -87,6 +87,26 @@ namespace Proviser2.Core.Servises
             return courtsDataBase.Table<CourtClass>().ToListAsync();
         }
 
+        public async Task<List<CourtClass>> GetLastCourtsAsync()
+        {
+            var cases = await GetCasesAsync();
+            if (cases.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                var casesNum = new List<string>();
+                foreach (var item in cases)
+                {
+                    casesNum.Add(item.Case);
+                }
+                return await courtsDataBase.Table<CourtClass>().Where(x => x.Origin != "local")
+                    .Where(x => casesNum.Contains(x.Case))
+                    .OrderByDescending(x => x.SaveDate).Take(25).ToListAsync();
+            }    
+        }
+
         public Task<CourtClass> GetCourtAsync(int _id)
         {
             return courtsDataBase.Table<CourtClass>().Where(x => x.N == _id).FirstOrDefaultAsync();
@@ -342,6 +362,31 @@ namespace Proviser2.Core.Servises
         public async Task<DecisionClass> GetDecisionAsync(int _id)
         {
             return await decisionsDataBase.Table<DecisionClass>().Where(x => x.N == _id).FirstOrDefaultAsync();
+        }
+
+        public async Task<DecisionClass> GetDecisionByIdAsync(string _id)
+        {
+            return await decisionsDataBase.Table<DecisionClass>().Where(x => x.Id == _id).FirstOrDefaultAsync();
+        }
+
+        public async Task<List<DecisionClass>> GetLastDecisionsAsync()
+        {
+            var cases = await GetCasesAsync();
+            if (cases.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                var casesNum = new List<string>();
+                foreach (var item in cases)
+                {
+                    casesNum.Add(item.Case);
+                }
+                return await decisionsDataBase.Table<DecisionClass>()
+                    .Where(x => casesNum.Contains(x.Case))
+                    .OrderByDescending(x => x.SaveDate).Take(25).ToListAsync();
+            }
         }
 
         #endregion

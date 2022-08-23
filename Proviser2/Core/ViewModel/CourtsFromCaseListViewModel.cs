@@ -70,7 +70,7 @@ namespace Proviser2.Core.ViewModel
             {
                 Items.Clear();    
                 var items = await App.DataBase.GetCourtsAsync(CaseId);
-                items = items.OrderBy(x => x.Date).ToList();
+                items = items.OrderByDescending(x => x.Date).ToList();
                 foreach (var item in items)
                 {
                     try

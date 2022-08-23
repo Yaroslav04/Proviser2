@@ -42,12 +42,30 @@ namespace Proviser2.Core.Servises
                                 decisionClass.DecisionType = item.DecisionType;
                                 decisionClass.Judge = item.Judge;
                                 decisionClass.URL = item.URL;
-                                decisionClass.JudiciaryType = item.JudiciaryType;
-                                Debug.WriteLine(item.URL);
+                                decisionClass.JudiciaryType = item.JudiciaryType;                 
                                 await App.DataBase.SaveDecisionAsync(decisionClass);
+                                Debug.WriteLine( $"save decison {item.URL}");
                             }
                             catch
                             {
+                                try
+                                {
+                                    var existDecision = await App.DataBase.GetDecisionByIdAsync(item.Id);
+                                    if (existDecision != null)
+                                    {
+                                        if (item.LegalDate != existDecision.LegalDate)
+                                        {
+                                            existDecision.LegalDate = item.LegalDate;
+                                            existDecision.SaveDate = DateTime.Now;
+                                            await App.DataBase.UpdateDecisionAsync(existDecision);
+                                            Debug.WriteLine($"exist decision update {item.Case} {item.LegalDate}");
+                                        }
+                                    }
+                                }
+                                catch
+                                {
+
+                                }
 
                             }                                          
                         }
