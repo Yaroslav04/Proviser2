@@ -224,6 +224,45 @@ namespace Proviser2.Core.Servises
             }
         }
 
+        public static async Task ReminderDownload()
+        {
+            List<string> messages = new List<string>();
+
+            var lastCourtDownlod = await App.DataBase.GetLastDownloadCourtDate();
+
+            if (lastCourtDownlod != DateTime.MinValue)
+            {
+                if ((DateTime.Now - lastCourtDownlod).TotalDays > 7)
+                {
+                    messages.Add($"Необхідно завантажити засідання:{lastCourtDownlod.ToShortDateString()}");
+                }
+            }
+
+            var lastDecisionDownlod = await App.DataBase.GetLastDownloadDecisionDate();
+
+            if (lastDecisionDownlod != DateTime.MinValue)
+            {
+                if ((DateTime.Now - lastDecisionDownlod).TotalDays > 7)
+                {
+                    messages.Add($"Необхідно завантажити рішення:{lastDecisionDownlod.ToShortDateString()}");
+                }
+            }
+
+            if (messages.Count == 0)
+            {
+                return;
+            }
+            else
+            {
+                foreach (var mes in messages)
+                {
+                    await Shell.Current.DisplayAlert("Нагадування", mes, "OK");
+                }
+            }
+
+
+        }
+
         #endregion
 
         #region CriminalNumberSniffer

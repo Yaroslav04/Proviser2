@@ -43,7 +43,6 @@ namespace Proviser2.Core.Servises
         }
 
         #region Court
-
         public Task<int> SaveCourtAsync(CourtClass _court)
         {
             try
@@ -275,9 +274,26 @@ namespace Proviser2.Core.Servises
             }
         }
 
+        public async Task<DateTime> GetLastDownloadCourtDate()
+        {
+            var last = await courtsDataBase.Table<CourtClass>()
+                .Where(x => x.Origin == "net")
+                .OrderByDescending(x => x.SaveDate)
+                .FirstOrDefaultAsync();
+            if (last != null)
+            {
+                return last.SaveDate;
+            }
+            else
+            {
+                return DateTime.MinValue;
+            }
+        }
+
         #endregion
 
         #region Case
+
         public Task<int> SaveCasesAsync(CaseClass _case)
         {
             try
@@ -289,7 +305,6 @@ namespace Proviser2.Core.Servises
                 return null;
             }
         }
-
         public Task<int> DeleteCasesAsync(CaseClass _case)
         {
             try
@@ -301,7 +316,6 @@ namespace Proviser2.Core.Servises
                 return null;
             }
         }
-
         public Task<int> UpdateCaseAsync(CaseClass _case)
         {
             try
@@ -313,22 +327,18 @@ namespace Proviser2.Core.Servises
                 return null;
             }
         }
-
         public Task<List<CaseClass>> GetCasesAsync()
         {
             return casesDataBase.Table<CaseClass>().ToListAsync();
         }
-
         public Task<CaseClass> GetCaseAsync(int _id)
         {
             return casesDataBase.Table<CaseClass>().Where(x => x.N == _id).FirstOrDefaultAsync();
         }
-
         public Task<CaseClass> GetCasesByCaseAsync(string _case)
         {
             return casesDataBase.Table<CaseClass>().Where(x => x.Case == _case).FirstOrDefaultAsync();
         }
-
         public async Task<string> GetHeaderAsync(string _case)
         {
             var subcase = await GetCasesByCaseAsync(_case);
@@ -465,6 +475,22 @@ namespace Proviser2.Core.Servises
                 return await decisionsDataBase.Table<DecisionClass>()
                     .Where(x => casesNum.Contains(x.Case))
                     .OrderByDescending(x => x.SaveDate).Take(25).ToListAsync();
+            }
+        }
+
+        public async Task<DateTime> GetLastDownloadDecisionDate()
+        {
+            var last = await decisionsDataBase.Table<DecisionClass>()
+                .OrderByDescending(x => x.SaveDate)
+                .FirstOrDefaultAsync();
+
+            if (last != null)
+            {
+                return last.SaveDate;
+            }
+            else
+            {
+                return DateTime.MinValue;
             }
         }
 

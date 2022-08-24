@@ -54,6 +54,7 @@ namespace Proviser2
             IsBusy = true;
             try
             {
+                await Sniffer.ReminderDownload();
                 await Sniffer.RunNameSniffer();
                 await Sniffer.ReminderHeaderRefresh();
                 await Sniffer.ReminderPrisonNew();
@@ -111,6 +112,11 @@ namespace Proviser2
                 case "Відправити засідання на пошту":
                     await Task.Run(() => MailSender.SendCourtHearings());
                     await DisplayAlert("Відправка на пошту", "Засідання відправлено", "OK");
+                    break;
+
+                case "Експорт всіх судових засідань":
+                    await Task.Run(() => ExportManager.ExportAllCourtHearings());
+                    await DisplayAlert("Експорт", "Експорт всіх засідань виконано", "OK");
                     break;
             }
         }
