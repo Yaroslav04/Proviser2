@@ -22,7 +22,7 @@
 
                                     <StackLayout Orientation="Horizontal">
 
-                                        <Label Text="{Binding Date}"
+                                        <Label Text="{Binding DateSoket}"
                             LineBreakMode="NoWrap" 
                             Style="{DynamicResource ListItemTextStyle}" 
                             FontSize="22" />

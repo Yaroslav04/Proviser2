@@ -1,10 +1,27 @@
 ﻿using Proviser2.Core.Model;
 using System;
+using System.Threading.Tasks;
 
 namespace Proviser2.Core.Servises
 {
     static class ClassConverter
     {
+
+        public static async Task<CourtSoketClass> ConvertCourtClassToSoket(CourtClass courtClass)
+        {
+            CourtSoketClass courtSoketClass = new CourtSoketClass(courtClass);
+            var cs = await App.DataBase.GetCasesByCaseAsync(courtClass.Case);
+            if (cs != null) 
+            {
+                courtSoketClass.PrisonDate = TextManager.GetBeautifyPrisonDate(cs.PrisonDate);
+                courtSoketClass.Header = cs.Header;
+                courtSoketClass.Note = cs.Note;
+            }
+            courtSoketClass.DateSoket = TextManager.GetBeautifyCourtDate(courtClass.Date);
+
+            return courtSoketClass;
+        }
+
         public static CourtClass TransformTextToCourtClass(string _text)
         {
             CourtClass courts = new CourtClass();

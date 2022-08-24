@@ -140,28 +140,17 @@ namespace Proviser2.Core.ViewModel
             {
                 Items.Clear();
                 var items = await App.DataBase.GetCourtsHearingOrderingByDateAsync();
-                foreach (var item in items)
+                if (items.Count > 0)
                 {
-                    try
+                    foreach (var item in items)
                     {
-                        var subCase = await App.DataBase.GetCasesByCaseAsync(item.Case);
-                        CourtSoketClass courtSoketClass = new CourtSoketClass(item);
-                        courtSoketClass.PrisonDate = TextManager.GetBeautifyPrisonDate(subCase.PrisonDate);
-                        courtSoketClass.Header = subCase.Header;
-                        courtSoketClass.Note = subCase.Note;
-                        courtSoketClass.PrisonDate = TextManager.GetBeautifyPrisonDate(subCase.PrisonDate);
-                        Items.Add(courtSoketClass);
+                        Items.Add(await ClassConverter.ConvertCourtClassToSoket(item));
                     }
-                    catch
-                    {
-
-                    }
-
-                }
+                }        
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.WriteLine(ex);
+
             }
             finally
             {

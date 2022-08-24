@@ -35,7 +35,7 @@
             <Frame CornerRadius="15" BackgroundColor="{StaticResource Heavy}" Padding="2,2,2,2">
             <CollectionView Grid.Row="1" x:Name="ItemsListView" 
                 ItemsSource="{Binding Items}"
-                SelectedItem="{Binding SelectedItem}"
+                SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                 SelectionMode="Single">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>

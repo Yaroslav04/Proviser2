@@ -16,7 +16,7 @@ namespace Proviser2.Core.ViewModel
 
         public CourtsListViewModel()
         {
-            Title = "Засідання " + DateTime.Now.ToShortDateString();       
+            Title = "Засідання " + DateTime.Now.ToShortDateString();
             Items = new ObservableCollection<CourtSoketClass>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<CourtSoketClass>(OnItemSelected);
@@ -68,23 +68,9 @@ namespace Proviser2.Core.ViewModel
                 {
                     foreach (var item in items)
                     {
-                        try
-                        {
-                            var subCase = await App.DataBase.GetCasesByCaseAsync(item.Case);
-                            CourtSoketClass courtSoketClass = new CourtSoketClass(item);
-                            courtSoketClass.PrisonDate = TextManager.GetBeautifyPrisonDate(subCase.PrisonDate);
-                            courtSoketClass.Header = subCase.Header;
-                            courtSoketClass.Note = subCase.Note;
-                            courtSoketClass.PrisonDate = TextManager.GetBeautifyPrisonDate(subCase.PrisonDate);
-                            Items.Add(courtSoketClass);
-                        }
-                        catch
-                        {
-
-                        }
+                        Items.Add(await ClassConverter.ConvertCourtClassToSoket(item));
                     }
                 }
-               
             }
             catch (Exception ex)
             {

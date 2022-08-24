@@ -36,7 +36,7 @@
 
                                             <StackLayout Orientation="Horizontal">
 
-                                                <Label Text="{Binding Date}"
+                                                <Label Text="{Binding DateSoket}"
                             LineBreakMode="NoWrap" 
                                                        TextColor="Black"
                             Style="{DynamicResource ListItemTextStyle}" 

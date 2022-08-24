@@ -7,6 +7,8 @@ using System.Text;
 using Xamarin.Forms;
 using System.Linq;
 using Proviser2.Core.Servises;
+using static SQLite.SQLite3;
+using System.Diagnostics;
 
 namespace Proviser2.Core.ViewModel
 {
@@ -92,48 +94,39 @@ namespace Proviser2.Core.ViewModel
 
             if (!String.IsNullOrWhiteSpace(CaseSearchPanel))
             {
-                var result = await App.DataBase.GetCourtsAsync(CaseSearchPanel);
-                if (result.Count > 0)
-                {
-                    var last = result.Last();
-                    Items.Add(last);
-                }
-                else
+                var result = await App.DataBase.GetLastLocalCourtAsync(CaseSearchPanel);
+                if (result == null)
                 {
                     return;
                 }
-
+                else
+                {
+                    Items.Add(result);
+                    return;
+                }
             }
 
             if (!String.IsNullOrWhiteSpace(LittigansSerachPanel))
             {
                 if (LittigansSerachPanel.Length > 2)
                 {
-                    var result = await App.DataBase.GetCourtsByLittigansAsync(LittigansSerachPanel);
-                    result = result.OrderByDescending(x => x.Date).Take(250).ToList();
-                    List<string> cases = new List<string>();
-                    if (result.Count > 0)
+
+                    var notExistCourts = await Sniffer.GetNotExistCourtsByLittigans(LittigansSerachPanel);
+
+                    if (notExistCourts.Count == 0)
                     {
-                        foreach (var item in result)
+                        return;
+                    }
+                    else
+                    {
+                        foreach (var item in notExistCourts) 
                         {
-                            cases.Add(item.Case);
-                        }
+                            
+                          Items.Add(item);
 
-                        result = new List<CourtClass>();
-                        cases = cases.Distinct().ToList();
-                        foreach (var c in cases)
-                        {
-                            var subresult = await App.DataBase.GetCourtsAsync(c);
-                            if (subresult.Count > 0)
-                            {
-
-                                var last = subresult.Last();
-                                Items.Add(last);
-                            }
                         }
                     }
                 }
-                return;
             }
         }
 
@@ -155,7 +148,10 @@ namespace Proviser2.Core.ViewModel
                 }
                 finally
                 {
-                    
+                    selectedItem = null;
+                    CaseSearchPanel = null;
+                    HeaderEditPanel = null;
+                    Search();
                 }
             }
             else if (Items.Count == 0)
@@ -174,7 +170,10 @@ namespace Proviser2.Core.ViewModel
                 }
                 finally
                 {
-                    
+                    selectedItem = null;
+                    CaseSearchPanel = null;
+                    HeaderEditPanel = null;
+                    Search();
                 }
             }
             else

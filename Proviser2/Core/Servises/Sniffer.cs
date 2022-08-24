@@ -1,6 +1,7 @@
 ﻿using Proviser2.Core.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,8 +33,96 @@ namespace Proviser2.Core.Servises
             await Shell.Current.DisplayAlert("Реєстрація", "Данні для пошуку встановлені", "OK");
         }
 
+
+        public static async Task<List<CourtClass>> GetNotExistCourtsByLittigans(string _name)
+        {
+            List<string> casesFromCourtListByLittigans = new List<string>();
+
+            List<CourtClass> courtsList = await App.DataBase.GetCourtsByLittigansAsync(_name);
+
+            if (courtsList.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                foreach (var item in courtsList)
+                {
+                    casesFromCourtListByLittigans.Add(item.Case);
+                }
+
+                casesFromCourtListByLittigans = casesFromCourtListByLittigans.Distinct().ToList();
+            }
+
+            List<string> casesResult = new List<string>();
+
+            if (casesFromCourtListByLittigans.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                var savedCases = await App.DataBase.GetCasesAsync();
+
+                if (savedCases.Count == 0)
+                {
+                    foreach (var item in casesFromCourtListByLittigans)
+                    {
+                        casesResult.Add(item);
+                    }
+                }
+                else
+                {
+                    foreach (var item in casesFromCourtListByLittigans)
+                    {
+
+                        bool sw = false;
+
+                        foreach (var subitem in savedCases)
+                        {
+                            if (item == subitem.Case)
+                            {
+                                sw = true;
+                            }
+                        }
+
+                        if (sw == false)
+                        {
+                            casesResult.Add(item);
+                        }
+                    }
+                }
+            }
+
+            if (casesResult.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                List<CourtClass> courtsResult = new List<CourtClass>();
+               
+                foreach (var c in casesResult)
+                {
+                    CourtClass r = await App.DataBase.GetLastLocalCourtAsync(c);
+                    if (r != null)
+                    {
+                        courtsResult.Add(r);
+                    }
+                }
+
+                if (courtsResult.Count == 0)
+                {
+                    return null;
+                }
+                courtsResult = courtsResult.OrderByDescending(x => x.Date).ToList();
+                return courtsResult;
+            }
+        }
+
         public static async Task RunNameSniffer()
         {
+            List<CourtClass> courtsResult = new List<CourtClass>();
             var snifferList = await GetNameSniffer();
             if (snifferList.Count == 0)
             {
@@ -41,114 +130,57 @@ namespace Proviser2.Core.Servises
             }
             else
             {
-                List<string> casesFromCourtListByLittigans = new List<string>();
                 foreach (ConfigClass sniffer in snifferList)
                 {
-                    List<CourtClass> courtsList = await App.DataBase.GetCourtsByLittigansAsync(sniffer.Value);
-
-                    if (courtsList.Count > 0)
+                    var subResult = await GetNotExistCourtsByLittigans(sniffer.Value);
+                    if (subResult.Count > 0)
                     {
-                        courtsList = courtsList.Where(x => (DateTime.Now - x.Date).TotalDays < 30).ToList();
-                        foreach (var item in courtsList)
-                        {
-                            casesFromCourtListByLittigans.Add(item.Case);
-                        }
-                        casesFromCourtListByLittigans = casesFromCourtListByLittigans.Distinct().ToList();
+                        courtsResult.AddRange(subResult);
                     }
                 }
+            }
 
-                List<string> casesResult = new List<string>();
+            if (courtsResult.Count == 0)
+            {
+                return;
+            }
+            else
+            {
+                courtsResult = courtsResult.Where(x => (DateTime.Now - x.Date).TotalDays < 30).ToList();
+            }
 
-                if (casesFromCourtListByLittigans.Count == 0)
+            if (courtsResult.Count == 0)
+            {
+                return;
+            }
+            else
+            {
+                foreach (var m in courtsResult)
                 {
-                    return;
-                }
-                else
-                {
-                    var savedCases = await App.DataBase.GetCasesAsync();
-                    if (savedCases.Count == 0)
+                    bool answer = await Shell.Current.DisplayAlert("Пошук по користувачу", $"Знайдено співпадінь:\n{m.Case} {m.Littigans}\nЗареєструвати?", "Так", "Ні");
+
+                    if (answer)
                     {
-                        foreach (var item in casesFromCourtListByLittigans)
+                        var _listt = await App.DataBase.GetCourtsAsync(m.Case);
+                        if (_listt.Count > 0)
                         {
-                            casesResult.Add(item);
-                        }
-                    }
-                    else
-                    {
-                        foreach (var item in casesFromCourtListByLittigans)
-                        {
-                            bool sw = false;
-                            foreach (var subitem in savedCases)
+                            CourtClass courts = _listt.LastOrDefault();
+                            CaseClass cases = new CaseClass()
                             {
-                                if (item == subitem.Case)
-                                {
-                                    sw = true;
-                                }
+                                Case = courts.Case,
+                                Header = TextManager.Header(courts.Littigans),
+                                Note = "",
+                                PrisonDate = DateTime.MinValue
+                            };
+                            try
+                            {
+                                await App.DataBase.SaveCasesAsync(cases);
+                                FileManager.WriteLog("add case", cases.Case, "");
+                                await Shell.Current.DisplayAlert("Успішно", "Зареєстровано", "OK");
                             }
-
-                            if (sw == false)
+                            catch
                             {
-                                casesResult.Add(item);
-                            }
-                            else
-                            {
-                                sw = false;
-                            }
-                        }
-                    }
-                }
-
-                if (casesResult.Count == 0)
-                {
-                    return;
-                }
-                else
-                {
-                    List<CourtClass> courtsResult = new List<CourtClass>();
-
-                    foreach (var c in casesResult)
-                    {
-                        CourtClass r = await App.DataBase.GetLastLocalCourtAsync(c);
-                        if (r != null)
-                        {
-                            courtsResult.Add(r);
-                        }
-                    }
-
-                    if (courtsResult.Count == 0)
-                    {
-                        return;
-                    }
-                    else
-                    {
-                        foreach (var m in courtsResult)
-                        {
-                            bool answer = await Shell.Current.DisplayAlert("Пошук по користувачу", $"Знайдено співпадінь:\n{m.Case} {m.Littigans}\nЗареєструвати?", "Так", "Ні");
-
-                            if (answer)
-                            {
-                                var _listt = await App.DataBase.GetCourtsAsync(m.Case);
-                                if (_listt.Count > 0)
-                                {
-                                    CourtClass courts = _listt.LastOrDefault();
-                                    CaseClass cases = new CaseClass()
-                                    {
-                                        Case = courts.Case,
-                                        Header = TextManager.Header(courts.Littigans),
-                                        Note = "",
-                                        PrisonDate = DateTime.MinValue
-                                    };
-                                    try
-                                    {
-                                        await App.DataBase.SaveCasesAsync(cases);
-                                        FileManager.WriteLog("add case", cases.Case, "");
-                                        await Shell.Current.DisplayAlert("Успішно", "Зареєстровано", "OK");
-                                    }
-                                    catch
-                                    {
-                                        await Shell.Current.DisplayAlert("Помилка", "Вже зареєстровано або помилка", "OK");
-                                    }
-                                }
+                                await Shell.Current.DisplayAlert("Помилка", "Вже зареєстровано або помилка", "OK");
                             }
                         }
                     }

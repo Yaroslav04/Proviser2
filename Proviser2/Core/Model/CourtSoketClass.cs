@@ -6,11 +6,13 @@ namespace Proviser2.Core.Model
 {
     public class CourtSoketClass : CourtClass
     {
+        public string DateSoket { get; set; }
         public string PrisonDate { get; set; }
         public string Header { get; set; }
         public string Note { get; set; }
         public CourtSoketClass(CourtClass courtClass)
         {
+            this.N = courtClass.N;
             this.Date = courtClass.Date;
             this.Judge = courtClass.Judge;
             this.Case = courtClass.Case;

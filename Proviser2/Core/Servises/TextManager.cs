@@ -103,5 +103,15 @@ namespace Proviser2.Core.Servises
                 }
             }
         }
+
+        public static string GetBeautifyCourtDate(DateTime _date)
+        {
+            var minute = _date.Minute.ToString();
+            if (minute.Length == 1)
+            {
+                minute = minute + "0";
+            }
+            return $"{_date.ToShortDateString()} {_date.Hour}:{minute}";
+        }
     }
 }
