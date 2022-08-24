@@ -67,8 +67,8 @@ namespace Proviser2
             finally
             {
                 IsBusy = false;
-            }          
-        }
+            }
+}
 
         private void ServiseButton_Clicked(object sender, EventArgs e)
         {
@@ -95,7 +95,7 @@ namespace Proviser2
                     break;
 
                 case "Запуск пошукового сервісу":
-                    await RunSnifferFunctions();                  
+                    await RunSnifferFunctions();
                     await DisplayAlert("Пошуковий сервіс", "Завершено", "OK");
                     break;
 

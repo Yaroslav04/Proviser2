@@ -55,7 +55,6 @@ namespace Proviser2.Core.Servises
                 return null;
             }
         }
-
         public Task<int> DeleteCourtAsync(CourtClass _court)
         {
             try
@@ -81,12 +80,10 @@ namespace Proviser2.Core.Servises
             }
 
         }
-
         public Task<List<CourtClass>> GetCourtsAsync()
         {
             return courtsDataBase.Table<CourtClass>().ToListAsync();
         }
-
         public async Task<List<CourtClass>> GetLastCourtsAsync()
         {
             var cases = await GetCasesAsync();
@@ -106,22 +103,18 @@ namespace Proviser2.Core.Servises
                     .OrderByDescending(x => x.SaveDate).Take(25).ToListAsync();
             }    
         }
-
         public Task<CourtClass> GetCourtAsync(int _id)
         {
             return courtsDataBase.Table<CourtClass>().Where(x => x.N == _id).FirstOrDefaultAsync();
         }
-
         public Task<List<CourtClass>> GetCourtsAsync(string _case)
         {
             return courtsDataBase.Table<CourtClass>().Where(x => x.Case == _case).ToListAsync();
         }
-
         public Task<List<CourtClass>> GetCourtsByLittigansAsync(string _value)
         {
             return courtsDataBase.Table<CourtClass>().Where(x => x.Littigans.Contains(_value)).ToListAsync();
         }
-
         public async Task<CourtClass> GetLastLocalCourtAsync(string _case)
         {
             var courts = await GetCourtsAsync(_case);
@@ -150,7 +143,6 @@ namespace Proviser2.Core.Servises
                 return null;           
             }
         }
-
         public async Task<List<CourtClass>> GetCourtsHearingOrderingByDateAsync()
         {
             List<CourtClass> _courts = new List<CourtClass>();
@@ -194,7 +186,94 @@ namespace Proviser2.Core.Servises
             }
 
         }
+        public async Task<List<CourtClass>> GetNotExistCourtsByLittigans(string _name)
+        {
+            List<string> casesFromCourtListByLittigans = new List<string>();
 
+            List<CourtClass> courtsList = await GetCourtsByLittigansAsync(_name);
+
+            if (courtsList.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                foreach (var item in courtsList)
+                {
+                    casesFromCourtListByLittigans.Add(item.Case);
+                }
+
+                casesFromCourtListByLittigans = casesFromCourtListByLittigans.Distinct().ToList();
+            }
+
+            List<string> casesResult = new List<string>();
+
+            if (casesFromCourtListByLittigans.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                var savedCases = await GetCasesAsync();
+
+                if (savedCases.Count == 0)
+                {
+                    foreach (var item in casesFromCourtListByLittigans)
+                    {
+                        casesResult.Add(item);
+                    }
+                }
+                else
+                {
+                    foreach (var item in casesFromCourtListByLittigans)
+                    {
+
+                        bool sw = false;
+
+                        foreach (var subitem in savedCases)
+                        {
+                            if (item == subitem.Case)
+                            {
+                                sw = true;
+                            }
+                        }
+
+                        if (sw == false)
+                        {
+                            casesResult.Add(item);
+                        }
+                    }
+                }
+            }
+
+            if (casesResult.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                List<CourtClass> courtsResult = new List<CourtClass>();
+
+                foreach (var c in casesResult)
+                {
+                    CourtClass r = await GetLastLocalCourtAsync(c);
+                    if (r != null)
+                    {
+                        courtsResult.Add(r);
+                    }
+                }
+
+                if (courtsResult.Count == 0)
+                {
+                    return null;
+                }
+                else
+                {
+                    courtsResult = courtsResult.OrderByDescending(x => x.Date).ToList();
+                    return courtsResult;
+                }
+            }
+        }
 
         #endregion
 

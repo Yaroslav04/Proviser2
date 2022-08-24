@@ -71,19 +71,7 @@ namespace Proviser2.Core.ViewModel
                     Items.Clear();
                     foreach (var item in courts)
                     {
-                       
-                       
-                        CourtSoketClass courtSoketClass = new CourtSoketClass(item);
-                        var subCase = await App.DataBase.GetCasesByCaseAsync(item.Case);
-                        if (subCase != null)
-                        {
-                            courtSoketClass.PrisonDate = TextManager.GetBeautifyPrisonDate(subCase.PrisonDate);
-                            courtSoketClass.Header = subCase.Header;
-                            courtSoketClass.Note = subCase.Note;
-                            courtSoketClass.PrisonDate = TextManager.GetBeautifyPrisonDate(subCase.PrisonDate);
-                        }
-
-                        Items.Add(courtSoketClass);
+                        Items.Add(await ClassConverter.ConvertCourtClassToSoket(item));
                     }
                 }
             }

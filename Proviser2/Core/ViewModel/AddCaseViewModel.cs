@@ -111,7 +111,7 @@ namespace Proviser2.Core.ViewModel
                 if (LittigansSerachPanel.Length > 2)
                 {
 
-                    var notExistCourts = await Sniffer.GetNotExistCourtsByLittigans(LittigansSerachPanel);
+                    var notExistCourts = await App.DataBase.GetNotExistCourtsByLittigans(LittigansSerachPanel);
 
                     if (notExistCourts.Count == 0)
                     {

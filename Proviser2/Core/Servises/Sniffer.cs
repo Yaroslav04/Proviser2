@@ -33,98 +33,13 @@ namespace Proviser2.Core.Servises
             await Shell.Current.DisplayAlert("Реєстрація", "Данні для пошуку встановлені", "OK");
         }
 
-
-        public static async Task<List<CourtClass>> GetNotExistCourtsByLittigans(string _name)
-        {
-            List<string> casesFromCourtListByLittigans = new List<string>();
-
-            List<CourtClass> courtsList = await App.DataBase.GetCourtsByLittigansAsync(_name);
-
-            if (courtsList.Count == 0)
-            {
-                return null;
-            }
-            else
-            {
-                foreach (var item in courtsList)
-                {
-                    casesFromCourtListByLittigans.Add(item.Case);
-                }
-
-                casesFromCourtListByLittigans = casesFromCourtListByLittigans.Distinct().ToList();
-            }
-
-            List<string> casesResult = new List<string>();
-
-            if (casesFromCourtListByLittigans.Count == 0)
-            {
-                return null;
-            }
-            else
-            {
-                var savedCases = await App.DataBase.GetCasesAsync();
-
-                if (savedCases.Count == 0)
-                {
-                    foreach (var item in casesFromCourtListByLittigans)
-                    {
-                        casesResult.Add(item);
-                    }
-                }
-                else
-                {
-                    foreach (var item in casesFromCourtListByLittigans)
-                    {
-
-                        bool sw = false;
-
-                        foreach (var subitem in savedCases)
-                        {
-                            if (item == subitem.Case)
-                            {
-                                sw = true;
-                            }
-                        }
-
-                        if (sw == false)
-                        {
-                            casesResult.Add(item);
-                        }
-                    }
-                }
-            }
-
-            if (casesResult.Count == 0)
-            {
-                return null;
-            }
-            else
-            {
-                List<CourtClass> courtsResult = new List<CourtClass>();
-               
-                foreach (var c in casesResult)
-                {
-                    CourtClass r = await App.DataBase.GetLastLocalCourtAsync(c);
-                    if (r != null)
-                    {
-                        courtsResult.Add(r);
-                    }
-                }
-
-                if (courtsResult.Count == 0)
-                {
-                    return null;
-                }
-                courtsResult = courtsResult.OrderByDescending(x => x.Date).ToList();
-                return courtsResult;
-            }
-        }
-
         public static async Task RunNameSniffer()
         {
+
             List<CourtClass> courtsResult = new List<CourtClass>();
             var snifferList = await GetNameSniffer();
-            if (snifferList.Count == 0)
+
+            if (snifferList == null)
             {
                 return;
             }
@@ -132,13 +47,18 @@ namespace Proviser2.Core.Servises
             {
                 foreach (ConfigClass sniffer in snifferList)
                 {
-                    var subResult = await GetNotExistCourtsByLittigans(sniffer.Value);
-                    if (subResult.Count > 0)
+                    var subResult = await App.DataBase.GetNotExistCourtsByLittigans(sniffer.Value);
+                    if (subResult == null)
+                    {
+                        return;
+                    }
+                    else
                     {
                         courtsResult.AddRange(subResult);
                     }
                 }
             }
+
 
             if (courtsResult.Count == 0)
             {
@@ -148,13 +68,13 @@ namespace Proviser2.Core.Servises
             {
                 courtsResult = courtsResult.Where(x => (DateTime.Now - x.Date).TotalDays < 30).ToList();
             }
-
             if (courtsResult.Count == 0)
             {
                 return;
             }
             else
             {
+              
                 foreach (var m in courtsResult)
                 {
                     bool answer = await Shell.Current.DisplayAlert("Пошук по користувачу", $"Знайдено співпадінь:\n{m.Case} {m.Littigans}\nЗареєструвати?", "Так", "Ні");
@@ -214,11 +134,11 @@ namespace Proviser2.Core.Servises
             {
                 foreach (var item in _cases)
                 {
-                    if (item.PrisonDate > DateTime.Now)
+                    if (item.PrisonDate != DateTime.MinValue)
                     {
                         if ((item.PrisonDate - DateTime.Now).Days < 15)
                         {
-                            if ((item.PrisonDate - DateTime.Now).Days > 10)
+                            if ((item.PrisonDate - DateTime.Now).Days > 1)
                             {
                                 messages.Add($"Необхідно продовжити тримання під вартою:\n{item.Header} {item.Case}\n{item.PrisonDate.ToShortDateString()}");
                             }
@@ -244,9 +164,9 @@ namespace Proviser2.Core.Servises
             {
                 foreach (var item in _cases)
                 {
-                    if (item.PrisonDate < DateTime.Now)
+                    if (item.PrisonDate != DateTime.MinValue)
                     {
-                        if ((DateTime.Now - item.PrisonDate).Days < 30)
+                        if ((DateTime.Now > item.PrisonDate))
                         {
                             messages.Add($"Необхідно оновити під вартою:\n{item.Header} {item.Case}\n{item.PrisonDate.ToShortDateString()}");
                         }
@@ -304,7 +224,6 @@ namespace Proviser2.Core.Servises
             }
         }
 
-
         #endregion
 
         #region CriminalNumberSniffer
@@ -347,7 +266,6 @@ namespace Proviser2.Core.Servises
                 }
             }
         }
-
         #endregion
     }
 }

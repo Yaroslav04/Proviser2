@@ -7,19 +7,30 @@ namespace Proviser2.Core.Servises
     static class ClassConverter
     {
 
-        public static async Task<CourtSoketClass> ConvertCourtClassToSoket(CourtClass courtClass)
+        public static async Task<CourtSoketClass> ConvertCourtClassToSoket(CourtClass _courtClass)
         {
-            CourtSoketClass courtSoketClass = new CourtSoketClass(courtClass);
-            var cs = await App.DataBase.GetCasesByCaseAsync(courtClass.Case);
+            CourtSoketClass courtSoketClass = new CourtSoketClass(_courtClass);
+            var cs = await App.DataBase.GetCasesByCaseAsync(_courtClass.Case);
             if (cs != null) 
             {
                 courtSoketClass.PrisonDate = TextManager.GetBeautifyPrisonDate(cs.PrisonDate);
                 courtSoketClass.Header = cs.Header;
                 courtSoketClass.Note = cs.Note;
             }
-            courtSoketClass.DateSoket = TextManager.GetBeautifyCourtDate(courtClass.Date);
+            courtSoketClass.DateSoket = TextManager.GetBeautifyCourtDate(_courtClass.Date);
 
             return courtSoketClass;
+        }
+
+        public static async Task<DecisionSoketClass> ConvertDecisionClassToSoket(DecisionClass _decisionClass)
+        {
+            DecisionSoketClass decisionSoketClass = new DecisionSoketClass(_decisionClass);
+            decisionSoketClass.Header = await App.DataBase.GetHeaderAsync(_decisionClass.Case);
+            decisionSoketClass.DecisionDateSoket = _decisionClass.DecisionDate.ToShortDateString();
+            decisionSoketClass.LegalDateSoket = TextManager.GetBeautifyLegalDate(_decisionClass.LegalDate);
+            decisionSoketClass.CategorySoket = TextManager.GetBeautifyDecisionCategory(_decisionClass.Category);
+
+            return decisionSoketClass;
         }
 
         public static CourtClass TransformTextToCourtClass(string _text)

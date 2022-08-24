@@ -68,15 +68,7 @@ namespace Proviser2.Core.ViewModel
                     Items.Clear();
                     foreach (var item in decisions)
                     {
-
-
-                        DecisionSoketClass decisionSoketClass = new DecisionSoketClass(item);
-                        decisionSoketClass.Header = await App.DataBase.GetHeaderAsync(item.Case);
-                        decisionSoketClass.DecisionDateSoket = item.DecisionDate.ToShortDateString();
-                        decisionSoketClass.LegalDateSoket = TextManager.GetBeautifyLegalDate(item.LegalDate);
-                        decisionSoketClass.CategorySoket = TextManager.GetBeautifyDecisionCategory(item.Category);
-                        Items.Add(decisionSoketClass);
-                        Items.Add(decisionSoketClass);
+                        Items.Add(await ClassConverter.ConvertDecisionClassToSoket(item));
                     }
                 }
             }
