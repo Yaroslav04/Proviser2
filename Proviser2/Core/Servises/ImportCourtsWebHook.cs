@@ -38,7 +38,7 @@ namespace Proviser2.Core.Servises
                                         Debug.WriteLine("save: " + line);
 
                                     }
-                                    catch (Exception ex)
+                                    catch
                                     {
                                     }
                                 }

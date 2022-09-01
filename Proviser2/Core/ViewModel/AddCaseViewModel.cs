@@ -112,8 +112,7 @@ namespace Proviser2.Core.ViewModel
                 {
 
                     var notExistCourts = await App.DataBase.GetNotExistCourtsByLittigans(LittigansSerachPanel);
-
-                    if (notExistCourts.Count == 0)
+                    if (notExistCourts == null)
                     {
                         return;
                     }
@@ -182,7 +181,7 @@ namespace Proviser2.Core.ViewModel
             }
         }
 
-        private async void Clear()
+        private void Clear()
         {
             selectedItem = null;
             CaseSearchPanel = null;

@@ -112,7 +112,15 @@ namespace Proviser2.Core.Servises
         }
         public Task<List<CourtClass>> GetCourtsByLittigansAsync(string _value)
         {
-            return courtsDataBase.Table<CourtClass>().Where(x => x.Littigans.Contains(_value)).ToListAsync();
+            try
+            {
+                return courtsDataBase.Table<CourtClass>().Where(x => x.Littigans.Contains(_value)).ToListAsync();
+
+            }
+            catch
+            {
+                return null;
+            }
         }
         public async Task<CourtClass> GetLastLocalCourtAsync(string _case)
         {
@@ -191,7 +199,7 @@ namespace Proviser2.Core.Servises
 
             List<CourtClass> courtsList = await GetCourtsByLittigansAsync(_name);
 
-            if (courtsList.Count == 0)
+            if (courtsList == null)
             {
                 return null;
             }
