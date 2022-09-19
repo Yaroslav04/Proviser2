@@ -40,6 +40,22 @@ namespace Proviser2.Core.Servises
                                     }
                                     catch
                                     {
+                                        try
+                                        {
+                                            var z = await App.DataBase.GetCourtByCaseAndDate(x.Case, x.Date);
+                                            if (z != null)
+                                            {
+                                                if (z.Origin == "local")
+                                                {
+                                                    z.Origin = "full";
+                                                    await App.DataBase.UpdateCourtsAsync(z);
+                                                }                                          
+                                            }
+                                        }
+                                        catch
+                                        {
+
+                                        }
                                     }
                                 }
                                 catch

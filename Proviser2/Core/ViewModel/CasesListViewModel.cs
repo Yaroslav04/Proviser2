@@ -60,7 +60,12 @@ namespace Proviser2.Core.ViewModel
             {
                 Items.Clear();
                 var items = await App.DataBase.GetCasesAsync();
-                items = items.OrderBy(x => x.Header).ToList();
+                var subitems = items.Where(x => String.IsNullOrEmpty(x.Header)).ToList();
+                items = items.OrderBy(x => x.Header).Where(x => !String.IsNullOrEmpty(x.Header)).ToList();
+                if (subitems.Count > 0)
+                {
+                    items.AddRange(subitems);
+                }
                 foreach (var item in items)
                 {
                     Items.Add(item);

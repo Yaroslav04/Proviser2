@@ -298,6 +298,11 @@ namespace Proviser2.Core.Servises
             }
         }
 
+        public async Task<CourtClass> GetCourtByCaseAndDate(string _case, DateTime _date)
+        {
+            return await courtsDataBase.Table<CourtClass>().Where(x => x.Case == _case & x.Date == _date).FirstOrDefaultAsync();
+        }
+
         #endregion
 
         #region Case
