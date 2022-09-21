@@ -71,6 +71,9 @@
     <FlyoutItem Title="Нові рішення">
         <ShellContent Route="NewDecisionsPage" ContentTemplate="{DataTemplate local:NewDecisionsPage}" />
     </FlyoutItem>
+    <FlyoutItem Title="Новий стан">
+        <ShellContent Route="NewStanPage" ContentTemplate="{DataTemplate local:NewStanPage}" />
+    </FlyoutItem>
 
     <MenuItem x:Name="ServiseButton"  Text="Функції" StyleClass="MenuItemLayoutStyle" Clicked="ServiseButton_Clicked">
     </MenuItem>

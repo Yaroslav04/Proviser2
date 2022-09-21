@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Proviser2.Core.View.StanListPage"
+             xmlns:viewmodel="clr-namespace:Proviser2.Core.ViewModel"
+             xmlns:model="clr-namespace:Proviser2.Core.Model"
+             x:DataType="viewmodel:StanListViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="{StaticResource Heavy}">
+    <ContentPage.Content>
+        <RefreshView Padding="2,2,2,2" Margin="2,2,2,2" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+            <CollectionView x:Name="ItemsListView" 
+                ItemsSource="{Binding Items}"
+                SelectionMode="None" >
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <ContentView>
+                            <Frame x:DataType="model:StanSoketClass" HasShadow="True" CornerRadius="15" Margin="2" Padding="20">
+                                <StackLayout x:DataType="model:StanSoketClass">
+
+
+                                    <Label Text="{Binding Header}"                        
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="17" />
+
+                                    <Label Text="{Binding Court}"                        
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="15" />
+
+                                    <Label Text="{Binding Case}"
+                                                TextColor="Gray"
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="15" />
+
+                                    <Label Text="{Binding Littigans}"                        
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="15" />
+
+                                    <Label Text="{Binding Date}"
+                                                TextColor="Gray"
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="15" />
+
+                                    <Label Text="{Binding Decision}"                        
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="15" />
+
+                                    <Label Text="{Binding SubDecision}" 
+                                           TextColor="Gray"
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="15" />
+
+                                    <Label Text="{Binding Description}" 
+                                           TextColor="Gray"
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="15" />
+
+                                </StackLayout>
+
+                                <!--<Frame.GestureRecognizers>
+                                    <TapGestureRecognizer 
+                                NumberOfTapsRequired="1"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:NewDecisionsViewModel}}, Path=ItemTapped}"		
+                                CommandParameter="{Binding .}">
+                                    </TapGestureRecognizer>
+                                </Frame.GestureRecognizers>-->
+                            </Frame>
+                        </ContentView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </ContentPage.Content>
+</ContentPage>

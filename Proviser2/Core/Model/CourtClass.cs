@@ -27,5 +27,10 @@ namespace Proviser2.Core.Model
         public string Origin { get; set; }
         public DateTime SaveDate { get; set; }
 
+        public override string ToString()
+        {
+            return $"{Date}\t{Judge}\t{Case}\t{Court}\t{Littigans}\t{Category}\t{Origin}";
+        }
+
     }
 }

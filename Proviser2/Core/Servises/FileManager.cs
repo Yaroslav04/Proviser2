@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms.Shapes;
+using Path = System.IO.Path;
 
 namespace Proviser2.Core.Servises
 {
@@ -49,6 +51,24 @@ namespace Proviser2.Core.Servises
             {
                 sw.WriteLine($"{DateTime.Now}\t{_teg}\t{_case}\t{_value}");
             }
+        }
+
+        public static List<string> GetSavedStan()
+        {
+            List<string> savedStan = new List<string>();
+            using (StreamReader sr = new StreamReader(GeneralPath("log.txt")))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    var array = line.Split("\t");
+                    if (array[2] == "stan")
+                    {
+                        savedStan.Add(array[3].Replace("\n", "").Replace("\r", ""));
+                    }
+                }
+            }
+            return savedStan;
         }
 
         public static bool FirstStart()

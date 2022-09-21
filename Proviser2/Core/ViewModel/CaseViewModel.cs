@@ -21,6 +21,7 @@ namespace Proviser2.Core.ViewModel
             OpenEventsCommand = new Command(OpenEvents);
             OpenCourtsCommand = new Command(OpenCourts);
             OpenDecisionCommand = new Command(OpenDecisions);
+            OpenStanCommand = new Command(OpenStan);
             DeleteCommand = new Command(Delete);
             UpdateCommand = new Command(Update);
         }
@@ -146,6 +147,7 @@ namespace Proviser2.Core.ViewModel
         public Command OpenEventsCommand { get; }
         public Command OpenCourtsCommand { get; }
         public Command OpenDecisionCommand { get; }
+        public Command OpenStanCommand { get; }
         public Command DeleteCommand { get; }
         public Command UpdateCommand { get; }
 
@@ -154,7 +156,8 @@ namespace Proviser2.Core.ViewModel
         private async void FastAdd()
         {
             List<string> functions = new List<string> {
-                "Додати судове засідання", "Додати дату тримання під вартою", "Оновити примітку"
+                "Додати судове засідання", "Додати дату тримання під вартою", "Оновити примітку",
+                "Завантажити судові рішення"
             };
             string result = await Shell.Current.DisplayActionSheet("Швидкий доступ", "Відміна", null, functions.ToArray());
             switch (result)
@@ -171,7 +174,10 @@ namespace Proviser2.Core.ViewModel
                     UpdateNote();
                     break;
 
-
+                case "Завантажити судові рішення":
+                    await Task.Run(() => ImportDecisions.Import(CaseId));
+                    await Shell.Current.DisplayAlert("Завантаження", "Рішення завантажено", "OK");
+                    break;
             }
         }
 
@@ -239,12 +245,17 @@ namespace Proviser2.Core.ViewModel
 
         private async void OpenEvents()
         {
-            await Shell.Current.GoToAsync($"{nameof(EventsListPage)}?{nameof(CaseViewModel.CaseId)}={CaseId}");
+            await Shell.Current.GoToAsync($"{nameof(EventsListPage)}?{nameof(EventsListViewModel.CaseId)}={CaseId}");
         }
 
         private async void OpenDecisions()
         {
-            await Shell.Current.GoToAsync($"{nameof(DecisionsListPage)}?{nameof(CaseViewModel.CaseId)}={CaseId}");
+            await Shell.Current.GoToAsync($"{nameof(DecisionsListPage)}?{nameof(DecisionsListViewModel.CaseId)}={CaseId}");
+        }
+
+        private async void OpenStan()
+        {
+            await Shell.Current.GoToAsync($"{nameof(StanListPage)}?{nameof(StanListViewModel.CaseId)}={CaseId}");
         }
 
         private async void OpenCourts()

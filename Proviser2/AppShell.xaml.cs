@@ -30,7 +30,7 @@ namespace Proviser2
             Routing.RegisterRoute(nameof(DecisionsListPage), typeof(DecisionsListPage));
             Routing.RegisterRoute(nameof(AddCourtPage), typeof(AddCourtPage));
             Routing.RegisterRoute(nameof(CourtsFromCaseListPage), typeof(CourtsFromCaseListPage));
-
+            Routing.RegisterRoute(nameof(StanListPage), typeof(StanListPage));
             RunAsync();
 
         }
@@ -79,9 +79,11 @@ namespace Proviser2
         private async void ServiseButton_ClickedAsync()
         {
             List<string> functions = new List<string> {
-                "Завантажити засідання", "Завантажити судові рішення", "Запуск пошукового сервісу", 
-                "Відправити засідання на пошту", "Експорт всіх судових засідань", "Додати дані для пошуку"
+                "Завантажити засідання", "Завантажити судові рішення","Завантажити стан", "Запуск пошукового сервісу", "Додати дані для пошуку",
+                "Відправити засідання на пошту", "Експорт всіх судових засідань", "Експорт моїх засідань", "Експорт станів"
+                
             };
+
             string result = await DisplayActionSheet("Меню", "Відміна", null, functions.ToArray());
             switch (result)
             {
@@ -95,14 +97,14 @@ namespace Proviser2
                     await DisplayAlert("Завантаження", "Рішення завантажено", "OK");
                     break;
 
+                case "Завантажити стан":
+                    await Task.Run(() => ImportStanWebHook.Import());
+                    await DisplayAlert("Завантаження", "Стан завантажено", "OK");
+                    break;
+
                 case "Запуск пошукового сервісу":
                     await RunSnifferFunctions();
                     await DisplayAlert("Пошуковий сервіс", "Завершено", "OK");
-                    break;
-
-                case "Міграція":
-                    await Task.Run(() => CourtMigration.Migrate());
-                    await DisplayAlert("Міграція", "Перенесено", "OK");
                     break;
 
                 case "Додати дані для пошуку":
@@ -117,6 +119,16 @@ namespace Proviser2
                 case "Експорт всіх судових засідань":
                     await Task.Run(() => ExportManager.ExportAllCourtHearings());
                     await DisplayAlert("Експорт", "Експорт всіх засідань виконано", "OK");
+                    break;
+
+                case "Експорт моїх засідань":
+                    await Task.Run(() => ExportManager.ExportMyCourtHearings());
+                    await DisplayAlert("Експорт", "Експорт моїх засідань виконано", "OK");
+                    break;
+
+                case "Експорт станів":
+                    await Task.Run(() => ExportManager.ExportAllStan());
+                    await DisplayAlert("Експорт", "Експорт станів виконано", "OK");
                     break;
             }
         }

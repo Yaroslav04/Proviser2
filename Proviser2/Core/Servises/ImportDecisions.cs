@@ -31,7 +31,7 @@ namespace Proviser2.Core.Servises
                             {
                                 DecisionClass decisionClass = new DecisionClass();
                                 decisionClass.Case = item.Case;
-                                decisionClass.DecisionDate = item.DecisionDate;                             
+                                decisionClass.DecisionDate = item.DecisionDate;
                                 decisionClass.CriminalNumber = item.CriminalNumber;
                                 decisionClass.Court = item.Court;
                                 decisionClass.Id = item.Id;
@@ -42,9 +42,9 @@ namespace Proviser2.Core.Servises
                                 decisionClass.DecisionType = item.DecisionType;
                                 decisionClass.Judge = item.Judge;
                                 decisionClass.URL = item.URL;
-                                decisionClass.JudiciaryType = item.JudiciaryType;                 
+                                decisionClass.JudiciaryType = item.JudiciaryType;
                                 await App.DataBase.SaveDecisionAsync(decisionClass);
-                                Debug.WriteLine( $"save decison {item.URL}");
+                                Debug.WriteLine($"save decison {item.URL}");
                             }
                             catch
                             {
@@ -67,33 +67,90 @@ namespace Proviser2.Core.Servises
 
                                 }
 
-                            }                                          
+                            }
                         }
                     }
                 }
-            }   
+            }
         }
-            public static async Task<string> GetResponseHTML(string _url)
+
+        public static async Task Import(string _case)
+        {
+
+            ParseERSR parseERSR = new ParseERSR();
+            parseERSR.AddCaseHeader(_case);
+            var result = await parseERSR.GetERSRCaseList();
+            if (result.Count > 0)
             {
-                HttpClient client = new HttpClient();
-                var response = await client.GetAsync(_url);
-                var responseString = await response.Content.ReadAsStringAsync();
-                return responseString;
+                foreach (var item in result)
+                {
+                    try
+                    {
+                        DecisionClass decisionClass = new DecisionClass();
+                        decisionClass.Case = item.Case;
+                        decisionClass.DecisionDate = item.DecisionDate;
+                        decisionClass.CriminalNumber = item.CriminalNumber;
+                        decisionClass.Court = item.Court;
+                        decisionClass.Id = item.Id;
+                        decisionClass.Category = item.Category;
+                        decisionClass.SaveDate = DateTime.Now;
+                        decisionClass.LegalDate = item.LegalDate;
+                        decisionClass.Content = item.Content;
+                        decisionClass.DecisionType = item.DecisionType;
+                        decisionClass.Judge = item.Judge;
+                        decisionClass.URL = item.URL;
+                        decisionClass.JudiciaryType = item.JudiciaryType;
+                        Debug.WriteLine($"{decisionClass.Case} {decisionClass.URL}");
+                        await App.DataBase.SaveDecisionAsync(decisionClass);
+                        Debug.WriteLine($"save decison");
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            var existDecision = await App.DataBase.GetDecisionByIdAsync(item.Id);
+                            if (existDecision != null)
+                            {
+                                if (item.LegalDate != existDecision.LegalDate)
+                                {
+                                    existDecision.LegalDate = item.LegalDate;
+                                    existDecision.SaveDate = DateTime.Now;
+                                    await App.DataBase.UpdateDecisionAsync(existDecision);
+                                    Debug.WriteLine($"exist decision update {item.Case} {item.LegalDate}");
+                                }
+                            }
+                        }
+                        catch
+                        {
+
+                        }
+
+                    }
+                }
             }
+        }
 
-            public static async Task<string> PostResponseHTML(string _url, Dictionary<string, string> _headers)
-            {
-                HttpClient client = new HttpClient();
+        public static async Task<string> GetResponseHTML(string _url)
+        {
+            HttpClient client = new HttpClient();
+            var response = await client.GetAsync(_url);
+            var responseString = await response.Content.ReadAsStringAsync();
+            return responseString;
+        }
 
-                var content = new FormUrlEncodedContent(_headers);
+        public static async Task<string> PostResponseHTML(string _url, Dictionary<string, string> _headers)
+        {
+            HttpClient client = new HttpClient();
 
-                var response = await client.PostAsync(_url, content);
+            var content = new FormUrlEncodedContent(_headers);
 
-                var responseString = await response.Content.ReadAsStringAsync();
+            var response = await client.PostAsync(_url, content);
 
-                return responseString;
-            }
-        
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            return responseString;
+        }
+
     }
 
     public static class ParseERSRCase
@@ -104,6 +161,9 @@ namespace Proviser2.Core.Servises
             foreach (var item in _list)
             {
                 result.Add(await GetERSRCase(item));
+                //Delay
+                Debug.WriteLine("stan step");
+                await Task.Delay(3000);
             }
             return result;
         }

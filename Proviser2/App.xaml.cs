@@ -15,7 +15,7 @@ namespace Proviser2
             {
                 if (dataBase == null)
                 {
-                    dataBase = new DataBase(FileManager.GeneralPath(), new List<string> { "CourtsDataBase.db3", "CasesDataBase.db3", "DecisionDataBase.db3", "EventDataBase.db3", "ConfigDataBase.db3"});
+                    dataBase = new DataBase(FileManager.GeneralPath(), new List<string> { "CourtsDataBase.db3", "CasesDataBase.db3", "DecisionDataBase.db3", "EventDataBase.db3", "ConfigDataBase.db3", "StanDataBase.db3" });
                 }
                 return dataBase;
             }

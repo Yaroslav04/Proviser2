@@ -18,7 +18,7 @@ namespace Proviser2.Core.Servises
         readonly SQLiteAsyncConnection decisionsDataBase;
         readonly SQLiteAsyncConnection eventsDataBase;
         readonly SQLiteAsyncConnection configDataBase;
-        readonly SQLiteAsyncConnection legasyDataBase;
+        readonly SQLiteAsyncConnection stanDataBase;
 
         public DataBase(string _connectionString, List<string> _dataBaseName)
         {
@@ -38,8 +38,8 @@ namespace Proviser2.Core.Servises
             configDataBase = new SQLiteAsyncConnection(Path.Combine(_connectionString, _dataBaseName[4]));
             configDataBase.CreateTableAsync<ConfigClass>().Wait();
 
-            legasyDataBase = new SQLiteAsyncConnection(@"/storage/emulated/0/Proviser/CourtsDataBase.db3");
-            legasyDataBase.CreateTableAsync<Courts>().Wait();
+            stanDataBase = new SQLiteAsyncConnection(Path.Combine(_connectionString, _dataBaseName[5]));
+            stanDataBase.CreateTableAsync<StanClass>().Wait();
         }
 
         #region Court
@@ -99,7 +99,7 @@ namespace Proviser2.Core.Servises
                 }
                 return await courtsDataBase.Table<CourtClass>().Where(x => x.Origin != "local")
                     .Where(x => casesNum.Contains(x.Case))
-                    .OrderByDescending(x => x.SaveDate).Take(25).ToListAsync();
+                    .OrderByDescending(x => x.SaveDate).Take(50).ToListAsync();
             }    
         }
         public Task<CourtClass> GetCourtAsync(int _id)
@@ -487,7 +487,7 @@ namespace Proviser2.Core.Servises
                 }
                 return await decisionsDataBase.Table<DecisionClass>()
                     .Where(x => casesNum.Contains(x.Case))
-                    .OrderByDescending(x => x.SaveDate).Take(25).ToListAsync();
+                    .OrderByDescending(x => x.SaveDate).Take(50).ToListAsync();
             }
         }
 
@@ -556,11 +556,73 @@ namespace Proviser2.Core.Servises
 
         #endregion
 
-        #region Legasy
+        #region Stan
 
-        public Task<List<Courts>> GetOldCourtsAsync()
+        public Task<int> SaveStanAsync(StanClass _stan)
         {
-            return legasyDataBase.Table<Courts>().ToListAsync();
+            try
+            {
+                return stanDataBase.InsertAsync(_stan);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public Task<int> DeleteStanAsync(StanClass _stan)
+        {
+            try
+            {
+                return stanDataBase.DeleteAsync(_stan);
+            }
+            catch
+            {
+                return null;
+            }
+
+        }
+        public Task<int> UpdateStanAsync(StanClass _stan)
+        {
+            try
+            {
+                return stanDataBase.UpdateAsync(_stan);
+            }
+            catch
+            {
+                return null;
+            }
+
+        }
+
+        public Task<List<StanClass>> GetStansAsync()
+        {
+            return stanDataBase.Table<StanClass>().ToListAsync();
+        }
+
+        public Task<List<StanClass>> GetStansByCaseAsync(string _case)
+        {
+            return stanDataBase.Table<StanClass>().Where(x => x.Case == _case).OrderByDescending(x => x.Date).ToListAsync();
+        }
+
+        public async Task<List<StanClass>> GetNewStansAsync()
+        {
+            var cases = await GetCasesAsync();
+            if (cases.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                var casesNum = new List<string>();
+                foreach (var item in cases)
+                {
+                    casesNum.Add(item.Case);
+                }
+                return await stanDataBase.Table<StanClass>()
+                    .Where(x => casesNum.Contains(x.Case))
+                    .OrderByDescending(x => x.Date).Take(50).ToListAsync();
+            }
         }
 
         #endregion
