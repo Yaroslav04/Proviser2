@@ -365,6 +365,18 @@ namespace Proviser2.Core.Servises
             }
            
         }
+        public async Task<bool> IsCaseExist(string _case)
+        {
+            var result = await casesDataBase.Table<CaseClass>().Where(x => x.Case == _case).ToListAsync();
+            if (result.Count == 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
 
         #endregion
 
@@ -603,6 +615,11 @@ namespace Proviser2.Core.Servises
         public Task<List<StanClass>> GetStansByCaseAsync(string _case)
         {
             return stanDataBase.Table<StanClass>().Where(x => x.Case == _case).OrderByDescending(x => x.Date).ToListAsync();
+        }
+
+        public Task<List<StanClass>> GetStansByLittigansAsync(string _value)
+        {
+            return stanDataBase.Table<StanClass>().Where(x => x.Littigans.Contains(_value)).OrderByDescending(x => x.Date).ToListAsync();
         }
 
         public async Task<List<StanClass>> GetNewStansAsync()

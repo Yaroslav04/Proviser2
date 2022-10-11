@@ -12,7 +12,6 @@ namespace Proviser2.Core.Servises
 {
     public static class ImportDecisions
     {
-
         public static async Task Import()
         {
             var cases = await App.DataBase.GetCasesAsync();

@@ -80,8 +80,8 @@ namespace Proviser2
         {
             List<string> functions = new List<string> {
                 "Завантажити засідання", "Завантажити судові рішення","Завантажити стан", "Запуск пошукового сервісу", "Додати дані для пошуку",
-                "Відправити засідання на пошту", "Експорт всіх судових засідань", "Експорт моїх засідань", "Експорт станів"
-                
+                "Відправити засідання на пошту", "Експорт всіх судових засідань", "Експорт моїх засідань", "Експорт станів",
+                "Пошук учасників"
             };
 
             string result = await DisplayActionSheet("Меню", "Відміна", null, functions.ToArray());
@@ -129,6 +129,10 @@ namespace Proviser2
                 case "Експорт станів":
                     await Task.Run(() => ExportManager.ExportAllStan());
                     await DisplayAlert("Експорт", "Експорт станів виконано", "OK");
+                    break;
+                case "Пошук учасників":
+                    await Sniffer.SearchLittigans();
+                    await DisplayAlert("Пошук учасників", "Пошук учасників виконано", "OK");
                     break;
             }
         }

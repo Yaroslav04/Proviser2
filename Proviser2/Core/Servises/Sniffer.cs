@@ -74,7 +74,7 @@ namespace Proviser2.Core.Servises
             }
             else
             {
-              
+
                 foreach (var m in courtsResult)
                 {
                     bool answer = await Shell.Current.DisplayAlert("Пошук по користувачу", $"Знайдено співпадінь:\n{m.Case} {m.Littigans}\nЗареєструвати?", "Так", "Ні");
@@ -305,6 +305,43 @@ namespace Proviser2.Core.Servises
                 }
             }
         }
+        #endregion
+
+        #region SerchSniffer
+
+        public async static Task SearchLittigans()
+        {
+            var search = await Shell.Current.DisplayPromptAsync($"Пошук", $"Введіть учасника");
+            if (String.IsNullOrWhiteSpace(search))
+            {
+                return;
+            }
+
+            var result = await App.DataBase.GetStansByLittigansAsync(search);
+            if (result == null)
+            {
+                return;
+            }
+            else
+            {
+                foreach (var item in result)
+                {
+                    Debug.WriteLine(item.Case);
+                    bool exist = await App.DataBase.IsCaseExist(item.Case);
+                    if (!exist)
+                    {     
+                        bool answer = await Shell.Current.DisplayAlert("Пошук", $"{item.Littigans}\n{item.Court} {item.Judge}\n{item.Date}", "Наступний", "Вихід");
+                        if (!answer)
+                        {
+                            return;
+                        }
+                    }
+                }
+            }
+                
+        }
+
+
         #endregion
     }
 }
