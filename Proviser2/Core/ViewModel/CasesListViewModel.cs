@@ -22,10 +22,17 @@ namespace Proviser2.Core.ViewModel
 
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
+            SearchCommand = new Command(Search);
+
             ItemTapped = new Command<CaseClass>(OnItemSelected);
 
             AddItemCommand = new Command(OnAddItem);
       
+        }
+
+        private void Search()
+        {
+            IsBusy = true;
         }
 
         public void OnAppearing()
@@ -40,6 +47,16 @@ namespace Proviser2.Core.ViewModel
         private CaseClass selectedItem;
         public ObservableCollection<CaseClass> Items { get; }
 
+        private string searchText = null;
+        public string SearchText
+        {
+            get => searchText;
+            set
+            {
+                SetProperty(ref searchText, value);
+            }
+        }
+
         #endregion
 
         #region Commands
@@ -47,6 +64,8 @@ namespace Proviser2.Core.ViewModel
         public Command<CaseClass> ItemTapped { get; }
         public Command LoadItemsCommand { get; }
         public Command AddItemCommand { get; }
+
+        public Command SearchCommand { get; }
 
         #endregion
 
@@ -59,17 +78,38 @@ namespace Proviser2.Core.ViewModel
             try
             {
                 Items.Clear();
-                var items = await App.DataBase.GetCasesAsync();
-                var subitems = items.Where(x => String.IsNullOrEmpty(x.Header)).ToList();
-                items = items.OrderBy(x => x.Header).Where(x => !String.IsNullOrEmpty(x.Header)).ToList();
-                if (subitems.Count > 0)
+                if (String.IsNullOrWhiteSpace(SearchText))
                 {
-                    items.AddRange(subitems);
+                    var items = await App.DataBase.GetCasesAsync();
+                    var subitems = items.Where(x => String.IsNullOrEmpty(x.Header)).ToList();
+                    items = items.OrderBy(x => x.Header).Where(x => !String.IsNullOrEmpty(x.Header)).ToList();
+                    if (subitems.Count > 0)
+                    {
+                        items.AddRange(subitems);
+                    }
+                    foreach (var item in items)
+                    {
+                        Items.Add(item);
+                    }
                 }
-                foreach (var item in items)
+                else
                 {
-                    Items.Add(item);
-                }
+                    var i = await App.DataBase.GetCasesAsync();
+                    var items = i.Where(x => x.Header.Contains(SearchText, StringComparison.OrdinalIgnoreCase)).ToList();
+                    if (items.Count > 0)
+                    {
+                        var subitems = items.Where(x => String.IsNullOrEmpty(x.Header)).ToList();
+                        items = items.OrderBy(x => x.Header).Where(x => !String.IsNullOrEmpty(x.Header)).ToList();
+                        if (subitems.Count > 0)
+                        {
+                            items.AddRange(subitems);
+                        }
+                        foreach (var item in items)
+                        {
+                            Items.Add(item);
+                        }
+                    }                
+                }           
             }
             catch (Exception ex)
             {

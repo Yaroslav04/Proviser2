@@ -281,7 +281,6 @@ namespace Proviser2.Core.Servises
                 }
             }
         }
-
         public async Task<DateTime> GetLastDownloadCourtDate()
         {
             var last = await courtsDataBase.Table<CourtClass>()
@@ -297,7 +296,6 @@ namespace Proviser2.Core.Servises
                 return DateTime.MinValue;
             }
         }
-
         public async Task<CourtClass> GetCourtByCaseAndDate(string _case, DateTime _date)
         {
             return await courtsDataBase.Table<CourtClass>().Where(x => x.Case == _case & x.Date == _date).FirstOrDefaultAsync();

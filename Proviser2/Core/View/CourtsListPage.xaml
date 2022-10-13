@@ -7,80 +7,87 @@
              x:DataType="viewmodel:CourtsListViewModel"
              Title="{Binding Title}"           
              BackgroundColor="{StaticResource Heavy}">
-    
+
     <ContentPage.Content>
-        <RefreshView Padding="2,2,2,2" Margin="2,2,2,2" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
-            <CollectionView x:Name="ItemsListView" 
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+            </Grid.RowDefinitions>
+            <RefreshView Grid.Row="0" Padding="2,2,2,2" Margin="2,2,2,2" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+                <CollectionView x:Name="ItemsListView" 
                 ItemsSource="{Binding Items}"
                 SelectionMode="None">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <ContentView>
-                            <StackLayout Margin="0,0,0,5">
-                            <Frame x:DataType="model:CourtSoketClass" HasShadow="True" CornerRadius="15" Margin="2" Padding="20">
-                                <StackLayout Spacing="5" x:DataType="model:CourtSoketClass">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <ContentView>
+                                <StackLayout Margin="0,0,0,5">
+                                    <Frame x:DataType="model:CourtSoketClass" HasShadow="True" CornerRadius="15" Margin="2" Padding="20">
+                                        <StackLayout Spacing="5" x:DataType="model:CourtSoketClass">
 
-                                    <StackLayout Orientation="Horizontal">
+                                            <StackLayout Orientation="Horizontal">
 
-                                        <Label Text="{Binding DateSoket}"
+                                                <Label Text="{Binding DateSoket}"
                             LineBreakMode="NoWrap" 
                             Style="{DynamicResource ListItemTextStyle}" 
                             FontSize="22" />
 
-                                        <Label Text="{Binding Origin}"
+                                                <Label Text="{Binding Origin}"
                             LineBreakMode="NoWrap" 
                             Style="{DynamicResource ListItemTextStyle}" 
                             FontSize="15" HorizontalOptions="End" />
 
-                                    </StackLayout>
+                                            </StackLayout>
 
 
-                                    <Label Text="{Binding Header}"
+                                            <Label Text="{Binding Header}"
                             LineBreakMode="NoWrap"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="18" />
 
-                                    <Label Text="{Binding Case}" 
+                                            <Label Text="{Binding Case}" 
                                            TextColor="Gray"
                             LineBreakMode="NoWrap"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="15" />
 
-                                    <Label Text="{Binding Court}" 
+                                            <Label Text="{Binding Court}" 
                            
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="13" />
 
-                                    <Label Text="{Binding Judge}" 
+                                            <Label Text="{Binding Judge}" 
                             
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="13" />
 
-                                    <Label Text="{Binding PrisonDate}"
+                                            <Label Text="{Binding PrisonDate}"
                             TextColor="DarkCyan"          
                             LineBreakMode="NoWrap"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="15" />
 
-                                    <Label Text="{Binding Note}"
+                                            <Label Text="{Binding Note}"
                             
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="15" />
-                                </StackLayout>
-                                
-                                <Frame.GestureRecognizers>
-                                    <TapGestureRecognizer 
+                                        </StackLayout>
+
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer 
                                 NumberOfTapsRequired="1"
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:CourtsListViewModel}}, Path=ItemTapped}"		
                                 CommandParameter="{Binding .}">
-                                    </TapGestureRecognizer>
-                                </Frame.GestureRecognizers>
-                            </Frame>
-                            </StackLayout>
-                        </ContentView>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </RefreshView>
+                                            </TapGestureRecognizer>
+                                        </Frame.GestureRecognizers>
+                                    </Frame>
+                                </StackLayout>
+                            </ContentView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+            <SearchBar TextColor="White" CancelButtonColor="White" Grid.Row="1" VerticalOptions="FillAndExpand"  Text="{Binding SearchText, Mode=TwoWay}" SearchCommand="{Binding SearchCommand}"></SearchBar>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

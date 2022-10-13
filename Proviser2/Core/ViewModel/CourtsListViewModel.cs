@@ -17,9 +17,15 @@ namespace Proviser2.Core.ViewModel
         public CourtsListViewModel()
         {
             Title = "Засідання " + DateTime.Now.ToShortDateString();
-            Items = new ObservableCollection<CourtSoketClass>();
+            Items = new ObservableCollection<CourtSoketClass>();      
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<CourtSoketClass>(OnItemSelected);
+            SearchCommand = new Command(Search);
+        }
+
+        private void Search()
+        {
+            IsBusy = true;
         }
 
         public void OnAppearing()
@@ -40,6 +46,17 @@ namespace Proviser2.Core.ViewModel
                 OnItemSelected(value);
             }
         }
+
+        private string searchText = null;
+        public string SearchText
+        {
+            get => searchText;
+            set
+            {
+                SetProperty(ref searchText, value);
+            }
+        }
+
         public ObservableCollection<CourtSoketClass> Items { get; }
 
         #endregion
@@ -47,11 +64,30 @@ namespace Proviser2.Core.ViewModel
         #region Commands
 
         public Command LoadItemsCommand { get; }
+        public Command SearchCommand { get; }
         public Command<CourtSoketClass> ItemTapped { get; }
 
         #endregion
 
         #region Functions
+
+        async Task<List<CourtSoketClass>> GetCourtHearings()
+        {
+            List<CourtSoketClass> courtHearings = new List<CourtSoketClass>();
+            var items = await App.DataBase.GetCourtsHearingOrderingByDateAsync();
+            if (items.Count == 0)
+            {
+                return courtHearings;
+            }
+            else
+            {
+                foreach (var item in items)
+                {
+                    courtHearings.Add(await ClassConverter.ConvertCourtClassToSoket(item));
+                }
+                return courtHearings;
+            }
+        }
         async Task ExecuteLoadItemsCommand()
         {
             IsBusy = true;
@@ -59,22 +95,39 @@ namespace Proviser2.Core.ViewModel
             try
             {
                 Items.Clear();
-                var items = await App.DataBase.GetCourtsHearingOrderingByDateAsync();
-                if (items.Count == 0)
+                if (String.IsNullOrWhiteSpace(SearchText))
                 {
-                    return;
+                    try
+                    {
+                        foreach (var item in await GetCourtHearings())
+                        {
+                            Items.Add(item);
+                        }
+                    }
+                    catch
+                    {
+                    }
                 }
                 else
                 {
-                    foreach (var item in items)
+                    try
                     {
-                        Items.Add(await ClassConverter.ConvertCourtClassToSoket(item));
+                        foreach (var item in await GetCourtHearings())
+                        {
+                            if (item.Header.Contains(SearchText, StringComparison.OrdinalIgnoreCase))
+                            {
+                                Items.Add(item);
+                            }
+                        }
+                    }
+                    catch
+                    {
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.WriteLine(ex);
+
             }
             finally
             {
@@ -83,14 +136,14 @@ namespace Proviser2.Core.ViewModel
         }
 
         async void OnItemSelected(CourtSoketClass item)
-        {
+            {
 
-            if (item == null)
-                return;
+                if (item == null)
+                    return;
 
-            await Shell.Current.GoToAsync($"{nameof(CasePage)}?{nameof(CaseViewModel.CaseId)}={item.Case}");
+                await Shell.Current.GoToAsync($"{nameof(CasePage)}?{nameof(CaseViewModel.CaseId)}={item.Case}");
+            }
+
+            #endregion
         }
-
-        #endregion
     }
-}
