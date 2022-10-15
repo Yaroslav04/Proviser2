@@ -15,9 +15,42 @@ namespace Proviser2
             {
                 if (dataBase == null)
                 {
-                    dataBase = new DataBase(FileManager.GeneralPath(), new List<string> { "CourtsDataBase.db3", "CasesDataBase.db3", "DecisionDataBase.db3", "EventDataBase.db3", "ConfigDataBase.db3", "StanDataBase.db3" });
+                    dataBase = new DataBase(FileManager.GeneralPath(), new List<string> {
+                        "CourtsDataBase.db3", "CasesDataBase.db3", "DecisionDataBase.db3",
+                        "EventDataBase.db3", "ConfigDataBase.db3", "StanDataBase.db3", "WitnessDataBase.db3",
+                    });
                 }
                 return dataBase;
+            }
+        }
+
+        public static List<string> WitnessTypes
+        {
+            get
+            {
+                return new List<string>
+                {
+                "обвинувачений",
+                "потерпілий",
+                "свідок",
+                "експерт/спеціаліст",
+                };
+            }
+        }
+
+        public static List<string> EventsTypes
+        {
+            get
+            {
+                return new List<string>
+                {
+                "перенесено засідання",
+                "допит в суді",
+                "дослідження матеріалів",
+                "проведено підготовче",            
+                "долучено матеріали провадження",
+                "інше",
+                };
             }
         }
 

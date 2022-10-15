@@ -2,6 +2,7 @@
 using Proviser2.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -31,6 +32,7 @@ namespace Proviser2.Core.Servises
                         courtSoketClass.Header = subCase.Header;
                         courtSoketClass.Note = subCase.Note;
                         courtSoketClass.PrisonDate = TextManager.GetBeautifyPrisonDate(subCase.PrisonDate);
+                        courtSoketClass.CriminalNumber = subCase.CriminalNumber;
                         courtSoketClasses.Add(courtSoketClass);
                     }
                     catch
@@ -50,15 +52,37 @@ namespace Proviser2.Core.Servises
 
                 foreach (var item in courtSoketClasses)
                 {
-                    _text = _text + $"{item.Date}\n{item.Header}\n{item.Case} {item.Judge}\n";
+                    _text = _text + $"{item.Date} судове засідання\n" +
+                        $"обвинувачений: {item.Header}\n" +
+                        $"суд: {item.Court}, номер судової справи: {item.Case}\n" +
+                        $"суддя: {item.Judge}\n" +
+                        $"номер кримінального провадження: {item.CriminalNumber}\n";
                     if (item.PrisonDate != "")
                     {
-                        _text = _text + item.PrisonDate + "\n";
+                        _text = _text + $"дата тримання під вартою: {item.PrisonDate}\n";
                     }
-                    if (item.Note != "")
+               
+                    var witness = await App.DataBase.GetWitnessByCaseAsync(item.Case);
+                    witness = witness.Where(x => x.Status == true).ToList();
+                    if (witness.Count > 0)
                     {
-                        _text = _text + item.Note + "\n";
+                        _text = _text + "Необхідно забезпечити явку до судового засідання:\n";
+                        int k = 1;
+                        foreach (var w in witness)
+                        {
+                            _text = _text + $"{k}.{w.Type}: {w.Name} {w.BirthDate}\n" +
+                                $"місце мешкання: {w.Location}\n" +
+                                $"місце роботи: {w.Work}\n" +
+                                $"засоби зв'язку: {w.Contact}\n";
+                            k++;
+                        }
                     }
+
+                    //if (item.Note != "")
+                    //{
+                    //    _text = _text + $"Примітка: {item.Note}\n";
+                    //}
+
                     _text = _text + "\n";
                 }
 

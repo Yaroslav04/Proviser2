@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Proviser2.Core.ViewModel
@@ -15,13 +16,16 @@ namespace Proviser2.Core.ViewModel
 
         public EventViewModel()
         {
+            sWitness = null;
             SaveCommand = new Command(Save);
             DeleteCommand = new Command(Delete);
+            EventsTypes = new ObservableCollection<string>(App.EventsTypes);
         }
 
         #region Properties
 
         private string eventCase { get; set; }
+        private WitnessClass sWitness { get; set; }
         private string eventN { get; set; }
 
         private string eventId;
@@ -46,6 +50,7 @@ namespace Proviser2.Core.ViewModel
                 SetProperty(ref dateMainPanel, value);
             }
         }
+        public ObservableCollection<string> EventsTypes { get; }
 
         private string selectedEventMainPanel;
         public string SelectedEventMainPanel
@@ -53,7 +58,35 @@ namespace Proviser2.Core.ViewModel
             get => selectedEventMainPanel;
             set
             {
+                sWitness = null;
                 SetProperty(ref selectedEventMainPanel, value);
+                if (value == App.EventsTypes[1])
+                {
+                    GetWitness();
+                }           
+            }
+        }
+
+        private async Task GetWitness()
+        {
+            var withness = await App.DataBase.GetWitnessByCaseAsync(eventCase);
+            if (withness.Count > 0)
+            {
+                List<string> withnessNames = new List<string>();
+                foreach(var w in withness)
+                {
+                    withnessNames.Add($"{w.Type}\t{w.Name}\t");
+                }
+
+                string selectedWitness = await Shell.Current.DisplayActionSheet("Виберіть свідка", "Cancel", null, withnessNames.ToArray());
+                if (String.IsNullOrWhiteSpace(selectedWitness) | selectedWitness == "Cancel" | selectedWitness == "Новий")
+                {                  
+                    return;
+                }
+
+                sWitness = withness[withnessNames.IndexOf(selectedWitness)];
+
+                DescriprtionMainPanel = selectedWitness;
             }
         }
 
@@ -88,7 +121,6 @@ namespace Proviser2.Core.ViewModel
         }
 
         #endregion
-
 
         #region Commands
         public Command SaveCommand { get; }
@@ -150,6 +182,12 @@ namespace Proviser2.Core.ViewModel
 
                 try
                 {
+                    if (sWitness != null)
+                    {
+                        WitnessClass _sWitness = sWitness;
+                        _sWitness.Status = false;
+                        await App.DataBase.UpdateWitnessAsync(_sWitness);
+                    }
                     await App.DataBase.SaveEventAsync(eventClass);
                     await Shell.Current.GoToAsync("..");
                 }
@@ -167,6 +205,12 @@ namespace Proviser2.Core.ViewModel
 
                 try
                 {
+                    if (sWitness != null)
+                    {
+                        WitnessClass _sWitness = sWitness;
+                        _sWitness.Status = false;
+                        await App.DataBase.UpdateWitnessAsync(_sWitness);
+                    }
                     await App.DataBase.UpdateEventAsync(eventClass);
                 }
                 catch

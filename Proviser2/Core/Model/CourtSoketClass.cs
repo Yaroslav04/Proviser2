@@ -10,6 +10,8 @@ namespace Proviser2.Core.Model
         public string PrisonDate { get; set; }
         public string Header { get; set; }
         public string Note { get; set; }
+        public string CriminalNumber { get; set; }
+
         public CourtSoketClass(CourtClass courtClass)
         {
             this.N = courtClass.N;

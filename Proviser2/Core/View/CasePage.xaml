@@ -35,6 +35,8 @@
                     CornerRadius="15" Margin="3,3,3,3" />
                 <Button Text="Стан" Command="{Binding OpenStanCommand}"
                     CornerRadius="15" Margin="3,3,3,3" />
+                <Button Text="Свідки" Command="{Binding OpenWitnessCommand}"
+                    CornerRadius="15" Margin="3,3,3,3" />
                 <Button Text="Редагувати судову справу" Command="{Binding UpdateCommand}"
                     CornerRadius="15" Margin="3,3,3,3" />
                 <Button Text="Видалити судову справу" Command="{Binding DeleteCommand}"

@@ -19,6 +19,7 @@ namespace Proviser2.Core.Servises
         readonly SQLiteAsyncConnection eventsDataBase;
         readonly SQLiteAsyncConnection configDataBase;
         readonly SQLiteAsyncConnection stanDataBase;
+        readonly SQLiteAsyncConnection witnessDataBase;
 
         public DataBase(string _connectionString, List<string> _dataBaseName)
         {
@@ -40,6 +41,10 @@ namespace Proviser2.Core.Servises
 
             stanDataBase = new SQLiteAsyncConnection(Path.Combine(_connectionString, _dataBaseName[5]));
             stanDataBase.CreateTableAsync<StanClass>().Wait();
+
+            witnessDataBase = new SQLiteAsyncConnection(Path.Combine(_connectionString, _dataBaseName[6]));
+            witnessDataBase.CreateTableAsync<WitnessClass>().Wait();
+
         }
 
         #region Court
@@ -638,6 +643,62 @@ namespace Proviser2.Core.Servises
                     .Where(x => casesNum.Contains(x.Case))
                     .OrderByDescending(x => x.Date).Take(50).ToListAsync();
             }
+        }
+
+        #endregion
+
+        #region Witness
+
+        public Task<int> SaveWitnessAsync(WitnessClass _witness)
+        {
+            try
+            {
+                return witnessDataBase.InsertAsync(_witness);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public Task<int> DeleteWitnessAsync(WitnessClass _witness)
+        {
+            try
+            {
+                return witnessDataBase.DeleteAsync(_witness);
+            }
+            catch
+            {
+                return null;
+            }
+
+        }
+        public Task<int> UpdateWitnessAsync(WitnessClass _witness)
+        {
+            try
+            {
+                return witnessDataBase.UpdateAsync(_witness);
+            }
+            catch
+            {
+                return null;
+            }
+
+        }
+
+        public Task<List<WitnessClass>> GetWitnesssAsync()
+        {
+            return witnessDataBase.Table<WitnessClass>().ToListAsync();
+        }
+
+        public Task<List<WitnessClass>> GetWitnessByCaseAsync(string _case)
+        {
+            return witnessDataBase.Table<WitnessClass>().Where(x => x.Case == _case).ToListAsync();
+        }
+
+        public Task<List<WitnessClass>> GetWitnessByNameEndCaseAsync(string _case, string _name)
+        {
+            return witnessDataBase.Table<WitnessClass>().Where(x => x.Case == _case).ToListAsync();
         }
 
         #endregion

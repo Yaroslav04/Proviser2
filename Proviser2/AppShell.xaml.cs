@@ -31,6 +31,7 @@ namespace Proviser2
             Routing.RegisterRoute(nameof(AddCourtPage), typeof(AddCourtPage));
             Routing.RegisterRoute(nameof(CourtsFromCaseListPage), typeof(CourtsFromCaseListPage));
             Routing.RegisterRoute(nameof(StanListPage), typeof(StanListPage));
+            Routing.RegisterRoute(nameof(WitnessListPage), typeof(WitnessListPage));
             RunAsync();
 
         }

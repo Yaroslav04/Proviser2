@@ -24,7 +24,7 @@
                     </StackLayout>
 
                     <Entry Placeholder="Дата" Text="{Binding DateMainPanel}" MaxLength="10"></Entry>
-                    <Entry Placeholder="Подія" Text="{Binding SelectedEventMainPanel}"></Entry>
+                    <Picker ItemsSource="{Binding EventsTypes}" SelectedItem="{Binding SelectedEventMainPanel}"></Picker>
 
                 </StackLayout>
 
