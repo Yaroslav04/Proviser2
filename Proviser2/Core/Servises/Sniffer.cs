@@ -330,7 +330,7 @@ namespace Proviser2.Core.Servises
                     bool exist = await App.DataBase.IsCaseExist(item.Case);
                     if (!exist)
                     {     
-                        bool answer = await Shell.Current.DisplayAlert("Пошук", $"{item.Littigans}\n{item.Court} {item.Judge}\n{item.Date}", "Наступний", "Вихід");
+                        bool answer = await Shell.Current.DisplayAlert("Пошук", $"{item.Littigans}\n{item.Court} {item.Judge}\n{item.Date} {item.Case}", "Наступний", "Вихід");
                         if (!answer)
                         {
                             return;

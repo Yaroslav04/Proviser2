@@ -81,7 +81,7 @@ namespace Proviser2.Core.ViewModel
         {
             if (item == null)
                 return;
-            string[] menu = { "Змінити активність", "Видалити" };
+            string[] menu = {"Змінити активність", "Редагувати", "Видалити" };
             string answer = await Shell.Current.DisplayActionSheet("Оберіть дію", "Cancel", null, menu);
 
             if (answer == menu[0])
@@ -99,6 +99,77 @@ namespace Proviser2.Core.ViewModel
             }
 
             if (answer == menu[1])
+            {
+                string _type = item.Type;
+
+                string _name = await Shell.Current.DisplayPromptAsync($"Редагування свідка", $"Введіть П.І.Б. свідка", initialValue: item.Name);
+                if (String.IsNullOrWhiteSpace(_name))
+                {
+                    await Shell.Current.DisplayAlert("Редагування свідка", $"Не вказано П.І.Б.", "OK");
+                    return;
+                }
+
+                string _birthDate = await Shell.Current.DisplayPromptAsync($"Редагування свідка", $"Введіть дату народження свідка", maxLength: 10, initialValue: item.BirthDate);
+                if (String.IsNullOrWhiteSpace(_birthDate))
+                {
+                    await Shell.Current.DisplayAlert("Редагування свідка", $"Не вказано дату народження свідка", "OK");
+                    return;
+                }
+
+                string _location = await Shell.Current.DisplayPromptAsync($"Редагування свідка", $"Введіть місце проживання свідка", initialValue: item.Location);
+                if (String.IsNullOrWhiteSpace(_location))
+                {
+                    await Shell.Current.DisplayAlert("Редагування свідка", $"Не вказано місце проживання свідка", "OK");
+                    return;
+                }
+
+                string _work = await Shell.Current.DisplayPromptAsync($"Редагування свідка", $"Введіть місце роботи свідка", initialValue: item.Work);
+                if (String.IsNullOrWhiteSpace(_work))
+                {
+                    await Shell.Current.DisplayAlert("Редагування свідка", $"Не вказано місце роботи свідка", "OK");
+                    return;
+                }
+
+                string _contact = await Shell.Current.DisplayPromptAsync($"Редагування свідка", $"Введіть засоби зв'язку свідка", initialValue: item.Contact);
+                if (String.IsNullOrWhiteSpace(_contact))
+                {
+                    await Shell.Current.DisplayAlert("Редагування свідка", $"Не вказано контакти свідка", "OK");
+                    return;
+                }
+
+                string _description = await Shell.Current.DisplayPromptAsync($"Додати свідка", $"Введіть опис свідка, стислі показання, примітка", initialValue: item.Description);
+                if (String.IsNullOrWhiteSpace(_description))
+                {
+                    await Shell.Current.DisplayAlert("Додати свідка", $"Не вказано опис свідка", "OK");
+                    return;
+                }
+
+                try
+                {
+                    await App.DataBase.UpdateWitnessAsync(
+                        new WitnessClass
+                        {
+                            N = item.N,
+                            Case = CaseId,
+                            Type = _type,
+                            Name = _name,
+                            BirthDate = _birthDate,
+                            Location = _location,
+                            Work = _work,
+                            Contact = _contact,
+                            Description = _description,
+                            Status = true
+                        });
+                    await Shell.Current.DisplayAlert("Редагування свідка", "Успішно", "OK");
+                }
+                catch (Exception ex)
+                {
+                    await Shell.Current.DisplayAlert("Редагування свідка", $"Помилка {ex.Message}", "OK");
+                    return;
+                }
+            }
+
+            if (answer == menu[2])
             {
                 bool _answer = await Shell.Current.DisplayAlert("Видалення", $"Видалити {item.Name}", "Так", "Ні");
                 if (_answer)
@@ -119,7 +190,7 @@ namespace Proviser2.Core.ViewModel
                 return;
             }
 
-            string _name = await Shell.Current.DisplayPromptAsync($"Додати свідка", $"Введіть П.І.Б. свідка", maxLength: 30);
+            string _name = await Shell.Current.DisplayPromptAsync($"Додати свідка", $"Введіть П.І.Б. свідка");
             if (String.IsNullOrWhiteSpace(_name))
             {
                 await Shell.Current.DisplayAlert("Додати свідка", $"Не вказано П.І.Б.", "OK");
@@ -154,6 +225,13 @@ namespace Proviser2.Core.ViewModel
                 return;
             }
 
+            string _description = await Shell.Current.DisplayPromptAsync($"Додати свідка", $"Введіть опис свідка, стислі показання, примітка");
+            if (String.IsNullOrWhiteSpace(_description))
+            {
+                await Shell.Current.DisplayAlert("Додати свідка", $"Не вказано опис свідка", "OK");
+                return;
+            }
+
             try
             {
                 await App.DataBase.SaveWitnessAsync(
@@ -166,6 +244,7 @@ namespace Proviser2.Core.ViewModel
                         Location = _location,
                         Work = _work,
                         Contact = _contact,
+                        Description = _description,
                         Status = true
                     });
                 await Shell.Current.DisplayAlert("Додати свідка", "Свідка додано", "OK");
@@ -179,6 +258,4 @@ namespace Proviser2.Core.ViewModel
             }
         }
     }
-
-
 }

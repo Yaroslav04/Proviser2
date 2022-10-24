@@ -103,7 +103,8 @@ namespace Proviser2.Core.ViewModel
                 if (result == "OK")
                 {
                     await App.DataBase.DeleteCourtAsync(await App.DataBase.GetCourtAsync(item.N));
-                }           
+                }
+                IsBusy = true;
             }
         }
     }

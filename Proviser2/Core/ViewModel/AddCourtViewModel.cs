@@ -65,6 +65,7 @@ namespace Proviser2.Core.ViewModel
             {
                 Date = DateTime.Now;
                 Time = TimeSpan.FromHours(12);
+                IsBusy = true;
             }
         }
 

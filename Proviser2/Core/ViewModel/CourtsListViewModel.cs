@@ -21,6 +21,13 @@ namespace Proviser2.Core.ViewModel
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<CourtSoketClass>(OnItemSelected);
             SearchCommand = new Command(Search);
+            SendCommand = new Command(Send);
+        }
+
+        private async void Send()
+        {
+            await Task.Run(() => MailSender.SendCourtHearings());
+            await Shell.Current.DisplayAlert("Відправка на пошту", "Засідання відправлено", "OK");
         }
 
         private void Search()
@@ -65,6 +72,7 @@ namespace Proviser2.Core.ViewModel
 
         public Command LoadItemsCommand { get; }
         public Command SearchCommand { get; }
+        public Command SendCommand { get; }
         public Command<CourtSoketClass> ItemTapped { get; }
 
         #endregion

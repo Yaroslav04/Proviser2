@@ -160,7 +160,7 @@ namespace Proviser2.Core.ViewModel
         private async void FastAdd()
         {
             List<string> functions = new List<string> {
-                "Додати судове засідання", "Додати дату тримання під вартою", "Додати примітку",
+                "Додати судове засідання", "Додати дату тримання під вартою", "Оновити примітку",
                 "Додати свідка", "Додати судову подію", "Завантажити судові рішення"
             };
             string result = await Shell.Current.DisplayActionSheet("Швидкий доступ", "Відміна", null, functions.ToArray());
@@ -174,7 +174,7 @@ namespace Proviser2.Core.ViewModel
                     await AddPrisonDate();
                     break;
 
-                case "Додати примітку":
+                case "Оновити примітку":
                     await UpdateNote();
                     break;
 
@@ -242,6 +242,13 @@ namespace Proviser2.Core.ViewModel
                 return;
             }
 
+            string _description = await Shell.Current.DisplayPromptAsync($"Додати свідка", $"Введіть опис свідка, стислі показання, примітка");
+            if (String.IsNullOrWhiteSpace(_description))
+            {
+                await Shell.Current.DisplayAlert("Додати свідка", $"Не вказано опис свідка", "OK");
+                return;
+            }
+
             try
             {
                 await App.DataBase.SaveWitnessAsync(
@@ -254,6 +261,7 @@ namespace Proviser2.Core.ViewModel
                         Location = _location,
                         Work = _work,
                         Contact = _contact,
+                        Description = _description,
                         Status = true                       
                     });
                 await Shell.Current.DisplayAlert("Додати свідка", "Свідка додано", "OK");

@@ -21,13 +21,13 @@
 
             <StackLayout Grid.Row="0">
                 
-                <Label Text="Введіть номер судової справи" FontSize="15"/>
+                <Label Text="Пошук: номер судової справи" FontSize="15"/>
                 <Entry Text="{Binding CaseSearchPanel , Mode=TwoWay}" FontSize="Medium"/>
 
-                <Label Text="Введіть учасника судового засідання" FontSize="15" />
+                <Label Text="Пошук: учасник судового засідання" FontSize="15" />
                 <Entry Text="{Binding LittigansSerachPanel, Mode=TwoWay}" FontSize="Medium" />
                 
-                <Label Grid.Column="0" VerticalOptions="Center" Text="Заголовок" FontSize="15"/>
+                <Label Grid.Column="0" VerticalOptions="Center" Text="Заголовок для картки (не пошук)" FontSize="13"/>
                 <Entry Grid.Column="1"  VerticalOptions="Center" Text="{Binding HeaderEditPanel, Mode=TwoWay}" FontSize="Medium"/>
 
             </StackLayout>

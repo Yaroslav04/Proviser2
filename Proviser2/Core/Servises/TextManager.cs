@@ -59,7 +59,7 @@ namespace Proviser2.Core.Servises
             {
                 if ((System.DateTime.Now - _date).TotalDays < 30)
                 {
-                    return $"Дата тримання під вартою: {_date.ToShortDateString()}";
+                    return $"дата тримання під вартою: {_date.ToShortDateString()}";
                 }
                 else
                 {

@@ -20,6 +20,21 @@ namespace Proviser2.Core.Model
         public string Location { get; set; }
         public string Work { get; set; }
         public string Contact { get; set; }
+        public string Description { get; set; }
         public bool Status { get; set; }
+        public string StatusShow
+        {
+            get
+            {
+                if (Status)
+                {
+                    return "Активний";
+                }
+                else
+                {
+                    return "Не активний";
+                }
+            }
+        }
     }
 }

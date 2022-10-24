@@ -59,21 +59,22 @@ namespace Proviser2.Core.Servises
                         $"номер кримінального провадження: {item.CriminalNumber}\n";
                     if (item.PrisonDate != "")
                     {
-                        _text = _text + $"дата тримання під вартою: {item.PrisonDate}\n";
+                        _text = _text + $"{item.PrisonDate}\n";
                     }
                
                     var witness = await App.DataBase.GetWitnessByCaseAsync(item.Case);
                     witness = witness.Where(x => x.Status == true).ToList();
                     if (witness.Count > 0)
                     {
-                        _text = _text + "Необхідно забезпечити явку до судового засідання:\n";
+                        _text = _text + "🚨Необхідно забезпечити явку до судового засідання:\n";
                         int k = 1;
                         foreach (var w in witness)
                         {
                             _text = _text + $"{k}.{w.Type}: {w.Name} {w.BirthDate}\n" +
                                 $"місце мешкання: {w.Location}\n" +
                                 $"місце роботи: {w.Work}\n" +
-                                $"засоби зв'язку: {w.Contact}\n";
+                                $"засоби зв'язку: {w.Contact}\n" +
+                                $"примітка: {w.Description}\n";
                             k++;
                         }
                     }

@@ -7,7 +7,9 @@
              x:DataType="viewmodel:CourtsListViewModel"
              Title="{Binding Title}"           
              BackgroundColor="{StaticResource Heavy}">
-
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="📤" Command="{Binding SendCommand}" />
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
