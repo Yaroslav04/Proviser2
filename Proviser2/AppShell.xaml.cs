@@ -12,6 +12,7 @@ using static Xamarin.Forms.Device;
 using Proviser2.Core.View;
 using Proviser2.Core.Model;
 using Proviser2.Services;
+using System.IO;
 
 namespace Proviser2
 {
@@ -70,7 +71,7 @@ namespace Proviser2
             {
                 IsBusy = false;
             }
-}
+        }
 
         private void ServiseButton_Clicked(object sender, EventArgs e)
         {

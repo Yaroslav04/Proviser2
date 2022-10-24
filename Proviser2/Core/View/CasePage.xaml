@@ -9,14 +9,21 @@
              BackgroundColor="{StaticResource Light}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="(+)" Command="{Binding FastAddCommand}" />
+        <ToolbarItem Text="✨" Command="{Binding FastAddCommand}" />
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Margin="5,5,5,5">
-                
-                <Label Text="{Binding CaseMainPanel}" FontSize="Large"/>
+
+                <Grid Margin="2,2,2,2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="50"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Text="{Binding CaseMainPanel}" FontSize="Large"/>
+                    <Button FontSize="Large" BackgroundColor="{StaticResource Light}" Grid.Column="1" Text="📷" Command="{Binding CaptureCommand}"></Button>
+                </Grid>
                 <Entry Placeholder="Заголовок" Text="{Binding HeaderMainPanel}" FontSize="Medium"/>
                 <Entry Placeholder="Номер кримінального провадження" Text="{Binding CriminalNumberMainPanel}" FontSize="Medium"/>
                 <Entry Placeholder="Головна судова справа" Text="{Binding MainCaseMainPanel}" FontSize="Medium"/>

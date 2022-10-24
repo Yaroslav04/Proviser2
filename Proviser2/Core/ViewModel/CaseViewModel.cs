@@ -26,6 +26,12 @@ namespace Proviser2.Core.ViewModel
             OpenWitnessCommand = new Command(OpenWitness);
             DeleteCommand = new Command(Delete);
             UpdateCommand = new Command(Update);
+            CaptureCommand = new Command(Capture);
+        }
+
+        private async void Capture()
+        {
+            await Task.Run(() => CameraManager.TakePhotoAsync(CaseId));
         }
 
         #region  Properties
@@ -154,6 +160,7 @@ namespace Proviser2.Core.ViewModel
         public Command OpenWitnessCommand { get; }
         public Command DeleteCommand { get; }
         public Command UpdateCommand { get; }
+        public Command CaptureCommand { get; }
 
         #endregion
 
@@ -161,7 +168,7 @@ namespace Proviser2.Core.ViewModel
         {
             List<string> functions = new List<string> {
                 "Додати судове засідання", "Додати дату тримання під вартою", "Оновити примітку",
-                "Додати свідка", "Додати судову подію", "Завантажити судові рішення"
+                "Додати свідка", "Додати судову подію",
             };
             string result = await Shell.Current.DisplayActionSheet("Швидкий доступ", "Відміна", null, functions.ToArray());
             switch (result)
@@ -184,12 +191,7 @@ namespace Proviser2.Core.ViewModel
 
                 case "Додати судову подію":
                     await AddEvent();
-                    break;
-
-                case "Завантажити судові рішення":
-                    await Task.Run(() => ImportDecisions.Import(CaseId));
-                    await Shell.Current.DisplayAlert("Завантаження", "Рішення завантажено", "OK");
-                    break;          
+                    break;     
             }
         }
 

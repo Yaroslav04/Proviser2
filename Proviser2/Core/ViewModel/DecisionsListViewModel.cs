@@ -21,6 +21,14 @@ namespace Proviser2.Core.ViewModel
             Items = new ObservableCollection<DecisionSoketClass>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<DecisionSoketClass>(OnItemSelected);
+            DownloadCommand = new Command(Download);
+        }
+
+        private async void Download()
+        {
+            await Shell.Current.DisplayAlert("Завантаження", "Почати завантаження рішень", "OK");
+            await Task.Run(() => ImportDecisions.Import(CaseId));
+            await Shell.Current.DisplayAlert("Завантаження", "Рішення завантажено", "OK");
         }
 
         public void OnAppearing()
@@ -59,6 +67,7 @@ namespace Proviser2.Core.ViewModel
         #region Commands
 
         public Command LoadItemsCommand { get; }
+        public Command DownloadCommand { get; }
         public Command<DecisionSoketClass> ItemTapped { get; }
 
         #endregion
