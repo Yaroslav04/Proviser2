@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using System.Linq;
 using System.Xml.Linq;
+using Xamarin.Essentials;
 
 namespace Proviser2.Core.ViewModel
 {
@@ -31,7 +32,24 @@ namespace Proviser2.Core.ViewModel
 
         private async void Capture()
         {
-            await Task.Run(() => CameraManager.TakePhotoAsync(CaseId));
+
+            try
+            {
+                Debug.WriteLine("start");
+                await Share.RequestAsync(new ShareMultipleFilesRequest
+                {
+                    Title = "титл",
+                    Files = new List<ShareFile> { new ShareFile(FileManager.GeneralPath("ConfigDataBase.db3")), new ShareFile(FileManager.GeneralPath("WitnessDataBase.db3")) }
+                });
+                Debug.WriteLine("end");
+            }
+            catch (Exception e)
+            {
+                Debug.Write(e.Message);
+            }
+
+
+            //await Task.Run(() => CameraManager.TakePhotoAsync(CaseId));        
         }
 
         #region  Properties

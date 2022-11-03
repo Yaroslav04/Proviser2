@@ -13,6 +13,8 @@ using Proviser2.Core.View;
 using Proviser2.Core.Model;
 using Proviser2.Services;
 using System.IO;
+using Proviser2.Droid;
+using Xamarin.Forms.PlatformConfiguration;
 
 namespace Proviser2
 {
@@ -44,10 +46,16 @@ namespace Proviser2
             await Sniffer.SetNameSniffer();
             await MailManager.SetMail();
 
+            //if (!DependencyService.Resolve<IForegroundService>().IsForeGroundServiceRunning())
+            //{
+            //    DependencyService.Resolve<IForegroundService>().StartMyForegroundService();
+            //}
+
+
             if (FileManager.FirstStart())
             {
                 FileManager.WriteLog("system", "start", "");
-                await RunSnifferFunctions();    
+                await RunSnifferFunctions();
             }
         }
 
@@ -83,7 +91,7 @@ namespace Proviser2
             List<string> functions = new List<string> {
                 "Завантажити засідання", "Завантажити судові рішення","Завантажити стан", "Запуск пошукового сервісу", "Додати дані для пошуку",
                 "Відправити засідання на пошту", "Експорт всіх судових засідань", "Експорт моїх засідань", "Експорт станів",
-                "Пошук учасників"
+                "Пошук учасників", "Запуск служби"
             };
 
             string result = await DisplayActionSheet("Меню", "Відміна", null, functions.ToArray());
@@ -135,6 +143,16 @@ namespace Proviser2
                 case "Пошук учасників":
                     await Sniffer.SearchLittigans();
                     await DisplayAlert("Пошук учасників", "Пошук учасників виконано", "OK");
+                    break;
+                case "Запуск служби":
+                    if (DependencyService.Resolve<IForegroundService>().IsForeGroundServiceRunning())
+                    {
+                        DependencyService.Resolve<IForegroundService>().StopMyForegroundService();
+                    }
+                    else
+                    {
+                        DependencyService.Resolve<IForegroundService>().StartMyForegroundService();
+                    }
                     break;
             }
         }

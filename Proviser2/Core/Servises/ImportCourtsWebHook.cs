@@ -11,8 +11,9 @@ namespace Proviser2.Core.Servises
 {
     public static class ImportCourtsWebHook
     {
-        public static async Task Import()
+        public static async Task<bool> Import()
         {
+            Debug.WriteLine("Start import courts");
             int k = 0;
             List<string> _courts = new List<string>(new string[] { "Заводський районний суд м.Дніпродзержинська", "Дніпровський районний суд м.Дніпродзержинська", "Баглійський районний суд м.Дніпродзержинська", "Дніпровський апеляційний суд", "Касаційний кримінальний суд Верховного Суду" });
 
@@ -67,12 +68,12 @@ namespace Proviser2.Core.Servises
                     }
                 }
 
-                return;
+                return true;
             }
             catch (Exception xx)
             {
                 Debug.WriteLine(xx.Message.ToString());
-                return;
+                return false;
             }
 
         }

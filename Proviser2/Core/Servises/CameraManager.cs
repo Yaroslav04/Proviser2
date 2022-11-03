@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
+using static System.Net.WebRequestMethods;
+using File = System.IO.File;
 
 namespace Proviser2.Core.Servises
 {
@@ -12,6 +15,10 @@ namespace Proviser2.Core.Servises
     {
         public static async Task TakePhotoAsync(string _case)
         {
+
+           
+           
+
             try
             {
                 var photo = await MediaPicker.CapturePhotoAsync();
@@ -50,7 +57,7 @@ namespace Proviser2.Core.Servises
                 {
                     await stream.CopyToAsync(newStream);
                 }
-            }        
+            }       
         }
     }
 }
