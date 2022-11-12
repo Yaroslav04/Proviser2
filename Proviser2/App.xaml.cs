@@ -18,13 +18,14 @@ namespace Proviser2
                     dataBase = new DataBase(FileManager.GeneralPath(), new List<string> {
                         "CourtsDataBase.db3", "CasesDataBase.db3", "DecisionDataBase.db3",
                         "EventDataBase.db3", "ConfigDataBase.db3", "StanDataBase.db3", "WitnessDataBase.db3",
-                        "LogDataBase.db3"
+                        "LogDataBase.db3", "NotificationDataBase.db3"
                     });
                 }
                 return dataBase;
             }
         }
 
+        #region Withes
         public static List<string> WitnessTypes
         {
             get
@@ -39,6 +40,9 @@ namespace Proviser2
             }
         }
 
+        #endregion
+
+        #region Events
         public static List<string> EventsTypes
         {
             get
@@ -48,13 +52,16 @@ namespace Proviser2
                 "перенесено засідання",
                 "допит в суді",
                 "дослідження матеріалів",
-                "проведено підготовче",            
+                "проведено підготовче",
                 "долучено матеріали провадження",
                 "інше",
                 };
             }
         }
 
+        #endregion
+
+        #region Log
         public static List<string> LogTypes
         {
             get
@@ -81,6 +88,26 @@ namespace Proviser2
                 };
             }
         }
+
+        #endregion
+
+        #region Notification
+
+        public static List<string> NotificationType
+        {
+            get
+            {
+                return new List<string>
+                {
+                "courtChannel",
+                "prisonChanel",
+                "sniferChanel",
+                "systemChanel",
+                };
+            }
+        }
+
+        #endregion
 
         public App()
         {

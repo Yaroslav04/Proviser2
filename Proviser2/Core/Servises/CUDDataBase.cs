@@ -10,14 +10,8 @@ namespace Proviser2.Core.Servises
     public class CUDDataBase<T>
     {
         public SQLiteAsyncConnection connection;
-        public CUDDataBase(string _connectionString)
-        {
-            connection = new SQLiteAsyncConnection(_connectionString);
-            connection.CreateTableAsync<LogClass>().Wait();
-        }
-
-        public async Task<int> SaveAsync(LogClass obj) => await CUD<LogClass>.SaveAsync(obj, connection);
-        public async Task<int> UpdateAsync(LogClass obj) => await CUD<LogClass>.UpdateAsync(obj, connection);
-        public async Task<int> DeleteAsync(LogClass obj) => await CUD<LogClass>.DeleteAsync(obj, connection);
+        public async Task<int> SaveAsync(T obj) => await CUD<T>.SaveAsync(obj, connection);
+        public async Task<int> UpdateAsync(T obj) => await CUD<T>.UpdateAsync(obj, connection);
+        public async Task<int> DeleteAsync(T obj) => await CUD<T>.DeleteAsync(obj, connection);
     }
 }

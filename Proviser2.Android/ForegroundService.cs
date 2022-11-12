@@ -25,7 +25,7 @@ namespace Proviser2.Droid
         public static bool IsForegroundServiceRunning;
         public override IBinder OnBind(Intent intent)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         [return: GeneratedEnum]
@@ -35,47 +35,14 @@ namespace Proviser2.Droid
             {
                 while (IsForegroundServiceRunning)
                 {
-                    if (DateTime.Now.Hour >= 1 & DateTime.Now.Hour <= 5)
+                    Thread.Sleep(15000);//15 min 900000
+                    await Task.Run(async () =>
                     {
-                        //stan
-                        if (await App.DataBase.Log.IsDownloadNeed("stan"))
-                        {
-                            Debug.WriteLine("Start download stan");
-                            await ImportStanWebHook.Import();
-                        }
-                        else
-                        {
-                            Debug.WriteLine("No need download stan");
-                        }
+                        await NotificationAgregator.Run();
+                    });
 
-                        //court
-                        if (await App.DataBase.Log.IsDownloadNeed("court"))
-                        {
-                            Debug.WriteLine("Start download court");
-                            await ImportCourtsWebHook.Import();
-                        }
-                        else
-                        {
-                            Debug.WriteLine("No need download court");
-                        }
-
-                        //decision
-                        foreach(var item in await App.DataBase.GetCasesAsync())
-                        {
-                            if (await App.DataBase.Log.IsDownloadDecisionNeed(item.Case))
-                            {
-                                Debug.WriteLine($"Start download decision {item.Case}");
-                                await ImportDecisions.Import(item.Case);
-                            }
-                            else
-                            {
-                                Debug.WriteLine($"No need download decision {item.Case}");
-                            }
-                        }                     
-                    }
-
-                    Thread.Sleep(60000);
-                }          
+                    await ShowNotification();
+                }
             });
 
             string channelID = "Proviser2ForegroundChannel";
@@ -126,17 +93,17 @@ namespace Proviser2.Droid
             return IsForegroundServiceRunning;
         }
 
-        public void SendNotification(string message)
+        public void SendNotification(string _channel, int _id, string _title, string _message)
         {
-            string channelID = "Proviser2NotificationChannel";
+            string channelID = _channel;
             var SnotificationManager = (NotificationManager)GetSystemService(NotificationService);
 
             var notfificationChannel = new NotificationChannel(channelID, channelID, NotificationImportance.High);
             SnotificationManager.CreateNotificationChannel(notfificationChannel);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelID)
-            .SetContentTitle("Proviser2")
-            .SetContentText(message)
+            .SetContentTitle(_title)
+            .SetContentText(_message)
             .SetSmallIcon(Resource.Drawable.abc_ic_arrow_drop_right_black_24dp);
 
             // Build the notification:
@@ -147,9 +114,49 @@ namespace Proviser2.Droid
                 GetSystemService(Context.NotificationService) as NotificationManager;
 
             // Publish the notification:
-            const int notificationId = 0;
-            notificationManager.Notify(notificationId, Snotification);
+            //const int notificationId = 0;
+            notificationManager.Notify(_id, Snotification);
+        }
 
+        async Task ShowNotification()
+        {
+            if (DateTime.Now.DayOfWeek != DayOfWeek.Sunday & DateTime.Now.DayOfWeek != DayOfWeek.Saturday)
+            {
+                if (DateTime.Now.Hour >= 9 & DateTime.Now.Hour <= 18)
+                {
+                    var notifications = await App.DataBase.Notification.GetListAsync();
+                    if (notifications.Count > 0)
+                    {
+                        foreach (var notification in notifications)
+                        {
+                            if (notification.IsExecute == true & notification.IsNotificate == true)
+                            {
+
+                                notification.IsNotificate = false;
+                                await App.DataBase.Notification.UpdateAsync(notification);
+
+                                SendNotification(notification.Type, notification.N,
+                                    GetTitleFromNotificationType(notification.Type), notification.Description);
+                            }
+                        }
+                    }
+                }
+            }
+
+            string GetTitleFromNotificationType(string _value)
+            {
+                if (_value == App.NotificationType[0])
+                {
+                    return "Судове засідання";
+                }
+
+                if (_value == App.NotificationType[1])
+                {
+                    return "Тримання під вартою";
+                }
+
+                return "";
+            }
         }
     }
 }

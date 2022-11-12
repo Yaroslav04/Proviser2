@@ -11,6 +11,6 @@ namespace Proviser2.Droid
         void StartMyForegroundService();
         void StopMyForegroundService();
         bool IsForeGroundServiceRunning();
-        void SendNotification(string message);
+        void SendNotification(string _channel, int _id, string _title, string _message);
     }
 }

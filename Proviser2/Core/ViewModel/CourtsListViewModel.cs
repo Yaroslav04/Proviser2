@@ -26,8 +26,12 @@ namespace Proviser2.Core.ViewModel
 
         private async void Send()
         {
-            await Task.Run(() => MailSender.SendCourtHearings());
-            await Shell.Current.DisplayAlert("Відправка на пошту", "Засідання відправлено", "OK");
+            bool answer = await Shell.Current.DisplayAlert("Відправка на пошту", $"Відправити засідання на пошту", "Так", "Ні");
+            if (answer)
+            {
+                await Task.Run(() => MailSender.SendCourtHearings());
+                await Shell.Current.DisplayAlert("Відправка на пошту", "Засідання відправлено", "OK");
+            }
         }
 
         private void Search()

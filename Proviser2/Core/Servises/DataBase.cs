@@ -25,6 +25,8 @@ namespace Proviser2.Core.Servises
 
         public LogDataBase Log;
 
+        public NotificationDataBase Notification;
+
         public DataBase(string _connectionString, List<string> _dataBaseName)
         {
 
@@ -50,7 +52,8 @@ namespace Proviser2.Core.Servises
             witnessDataBase.CreateTableAsync<WitnessClass>().Wait();
 
             Log = new LogDataBase(Path.Combine(_connectionString, _dataBaseName[7]));
-            
+            Notification = new NotificationDataBase(Path.Combine(_connectionString, _dataBaseName[8]));
+
         }
 
         #region Court
@@ -370,7 +373,7 @@ namespace Proviser2.Core.Servises
             }
             else
             {
-                return string.Empty;
+                return _case;
             }
            
         }

@@ -75,7 +75,7 @@
         <ShellContent Route="NewStanPage" ContentTemplate="{DataTemplate local:NewStanPage}" />
     </FlyoutItem>
 
-    <MenuItem x:Name="ServiseButton"  Text="Функції" StyleClass="MenuItemLayoutStyle" Clicked="ServiseButton_Clicked">
+    <MenuItem x:Name="ServiseButton"  Text="Функції (admin only)" StyleClass="MenuItemLayoutStyle" Clicked="ServiseButton_Clicked">
     </MenuItem>
 
 

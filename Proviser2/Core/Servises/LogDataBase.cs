@@ -10,8 +10,10 @@ namespace Proviser2.Core.Servises
 {
     public class LogDataBase : CUDDataBase<LogClass>
     {
-        public LogDataBase(string _connectionString): base(_connectionString)
+        public LogDataBase(string _connectionString)
         {
+            connection = new SQLiteAsyncConnection(_connectionString);
+            connection.CreateTableAsync<LogClass>().Wait();
         }
 
         public async Task<List<LogClass>> GetListAsync()

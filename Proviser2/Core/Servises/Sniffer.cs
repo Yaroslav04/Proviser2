@@ -164,12 +164,11 @@ namespace Proviser2.Core.Servises
             {
                 foreach (var item in _cases)
                 {
-                    if (item.PrisonDate != DateTime.MinValue)
+                    if ((item.PrisonDate != DateTime.MinValue) & (DateTime.Now > item.PrisonDate)
+                        & (DateTime.Now - item.PrisonDate).TotalDays <= 15)
                     {
-                        if ((DateTime.Now > item.PrisonDate))
-                        {
-                            messages.Add($"Необхідно оновити під вартою:\n{item.Header} {item.Case}\n{item.PrisonDate.ToShortDateString()}");
-                        }
+                        messages.Add($"Необхідно оновити під вартою:\n{item.Header} {item.Case}\n{item.PrisonDate.ToShortDateString()}");
+
                     }
                 }
                 if (messages.Count > 0)
@@ -308,7 +307,6 @@ namespace Proviser2.Core.Servises
         #endregion
 
         #region SerchSniffer
-
         public async static Task SearchLittigans()
         {
             var search = await Shell.Current.DisplayPromptAsync($"Пошук", $"Введіть учасника");
@@ -329,7 +327,7 @@ namespace Proviser2.Core.Servises
                     Debug.WriteLine(item.Case);
                     bool exist = await App.DataBase.IsCaseExist(item.Case);
                     if (!exist)
-                    {     
+                    {
                         bool answer = await Shell.Current.DisplayAlert("Пошук", $"{item.Littigans}\n{item.Court} {item.Judge}\n{item.Date} {item.Case}", "Наступний", "Вихід");
                         if (!answer)
                         {
@@ -338,7 +336,7 @@ namespace Proviser2.Core.Servises
                     }
                 }
             }
-                
+
         }
 
 

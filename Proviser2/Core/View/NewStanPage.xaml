@@ -40,7 +40,17 @@
                                                 TextColor="Gray"
                             Style="{DynamicResource ListItemTextStyle}" 
                             FontSize="15" />
-     
+
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="Завантажено: "                         
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="13" />
+
+                                        <Label Text="{Binding SaveDate}"                       
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="13" />
+                                    </StackLayout>
+
                                     <Label Text="{Binding Decision}"                        
                             Style="{DynamicResource ListItemTextStyle}" 
                             FontSize="15" />
