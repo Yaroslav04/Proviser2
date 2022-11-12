@@ -22,7 +22,6 @@ namespace Proviser2.Droid
     [Service]
     public class ForegroundServices : Service, IForegroundService
     {
-        public bool IsDownload = true;
         public static bool IsForegroundServiceRunning;
         public override IBinder OnBind(Intent intent)
         {
@@ -36,54 +35,47 @@ namespace Proviser2.Droid
             {
                 while (IsForegroundServiceRunning)
                 {
-                    //BODY
-                    Debug.WriteLine("1");
-                    if (DateTime.Now.DayOfWeek == DayOfWeek.Thursday)
+                    if (DateTime.Now.Hour >= 1 & DateTime.Now.Hour <= 5)
                     {
-                        Debug.WriteLine("2");
-
-                        Debug.WriteLine("3");
-                        if (IsDownload)
+                        //stan
+                        if (await App.DataBase.Log.IsDownloadNeed("stan"))
                         {
-                            Debug.WriteLine("4");
-                            IsDownload = false;
-                            try
-                            {
-                                Debug.WriteLine("Start download courts");
-                                await ImportCourtsWebHook.Import();
-                                SendNotification("Завантажено засідання - успішно");
-                            }
-                            catch
-                            {
-                                SendNotification("Завантажено засідання - помилка");
-                            }
-
-                            try
-                            {
-                                Debug.WriteLine("Start download stan");
-                                await ImportStanWebHook.Import();
-                                SendNotification("Завантажено стан - успішно");
-                            }
-                            catch
-                            {
-                                SendNotification("Завантажено стан - помилка");
-                            }
-
-                            try
-                            {
-                                Debug.WriteLine("Start download decision");
-                                await ImportDecisions.Import();
-                                SendNotification("Завантажено рішення - успішно");
-                            }
-                            catch
-                            {
-                                SendNotification("Завантажено рішення - помилка");
-                            }
+                            Debug.WriteLine("Start download stan");
+                            await ImportStanWebHook.Import();
                         }
+                        else
+                        {
+                            Debug.WriteLine("No need download stan");
+                        }
+
+                        //court
+                        if (await App.DataBase.Log.IsDownloadNeed("court"))
+                        {
+                            Debug.WriteLine("Start download court");
+                            await ImportCourtsWebHook.Import();
+                        }
+                        else
+                        {
+                            Debug.WriteLine("No need download court");
+                        }
+
+                        //decision
+                        foreach(var item in await App.DataBase.GetCasesAsync())
+                        {
+                            if (await App.DataBase.Log.IsDownloadDecisionNeed(item.Case))
+                            {
+                                Debug.WriteLine($"Start download decision {item.Case}");
+                                await ImportDecisions.Import(item.Case);
+                            }
+                            else
+                            {
+                                Debug.WriteLine($"No need download decision {item.Case}");
+                            }
+                        }                     
                     }
-                    //BODY
+
                     Thread.Sleep(60000);
-                }
+                }          
             });
 
             string channelID = "Proviser2ForegroundChannel";
@@ -101,7 +93,6 @@ namespace Proviser2.Droid
                                          .SetOngoing(true)
                                          .SetChannelId(channelID)
                                          .SetAutoCancel(true);
-
 
             StartForeground(1001, notificationBuilder.Build());
             return base.OnStartCommand(intent, flags, startId);

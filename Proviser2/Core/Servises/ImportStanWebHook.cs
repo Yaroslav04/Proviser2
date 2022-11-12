@@ -16,10 +16,9 @@ namespace Proviser2.Core.Servises
 
         public static async Task Import()
         {
-            foreach (var url in GetSeparatedUrlListFromLink(@"https://dsa.court.gov.ua/dsa/inshe/oddata/532/"))
+            var result = false;
+            foreach (var url in await GetSeparatedUrlListFromLink(@"https://dsa.court.gov.ua/dsa/inshe/oddata/532/"))
             {
-                Debug.WriteLine($"NEW URL {url}");
-
                 List<string> _courts = new List<string>(new string[] { "Заводський районний суд м.Дніпродзержинська", "Дніпровський районний суд м.Дніпродзержинська", "Баглійський районний суд м.Дніпродзержинська", "Дніпровський апеляційний суд", "Касаційний кримінальний суд", "Велика Палата Верховного Суду" });
 
                 try
@@ -39,49 +38,54 @@ namespace Proviser2.Core.Servises
                                         try
                                         {
                                             await App.DataBase.SaveStanAsync(x);
-                                            Debug.WriteLine("save: " + line);
 
                                         }
-                                        catch(Exception ex)
+                                        catch (Exception ex)
                                         {
-                                            Debug.WriteLine("error: " + ex.Message.ToString());
+
                                         }
                                     }
                                     catch
                                     {
-                                        Debug.WriteLine("transform error");
+
                                     }
                                 }
                             }
                         }
                     }
-
-                   
+                    result= true;
                 }
                 catch (Exception xx)
                 {
-                    Debug.WriteLine(xx.Message.ToString());       
+
                 }
                 finally
                 {
-                    FileManager.WriteLog("system", "stan", url);
+                    await App.DataBase.Log.SaveAsync(new LogClass
+                    {
+                        Date = DateTime.Now,
+                        Type = "download",
+                        Teg = "stan",
+                        Value = url,
+                        Result = result
+                    });
                 }
             }
         }
 
-        public static List<string> GetSeparatedUrlListFromLink(string _url)
+        public static async Task<List<string>> GetSeparatedUrlListFromLink(string _url)
         {
             List<string> list = GetUrlListFromLink(_url);
             List<string> result = new List<string>();
-            var savedStan = FileManager.GetSavedStan();
+            var savedStan = await App.DataBase.Log.GetSavedStanAsync();
             if (savedStan.Count > 0)
             {
-                foreach(var item in list)
+                foreach (var item in list)
                 {
                     if (!savedStan.Contains(item))
                     {
-                        result.Add(item);   
-                    }   
+                        result.Add(item);
+                    }
                 }
             }
             else
@@ -100,7 +104,6 @@ namespace Proviser2.Core.Servises
                 var r = request.GetResponse();
                 if (r != null)
                 {
-                    Debug.WriteLine(r);
                     WebResponse response = r;
                     using (Stream stream = response.GetResponseStream())
                     {

@@ -11,9 +11,9 @@ namespace Proviser2.Core.Servises
 {
     public static class ImportCourtsWebHook
     {
-        public static async Task<bool> Import()
+        public static async Task Import()
         {
-            Debug.WriteLine("Start import courts");
+            bool result = false;
             int k = 0;
             List<string> _courts = new List<string>(new string[] { "Заводський районний суд м.Дніпродзержинська", "Дніпровський районний суд м.Дніпродзержинська", "Баглійський районний суд м.Дніпродзержинська", "Дніпровський апеляційний суд", "Касаційний кримінальний суд Верховного Суду" });
 
@@ -36,7 +36,7 @@ namespace Proviser2.Core.Servises
                                     {
                                         await App.DataBase.SaveCourtAsync(x);
                                         k++;
-                                        Debug.WriteLine("save: " + line);
+                                        
 
                                     }
                                     catch
@@ -61,19 +61,27 @@ namespace Proviser2.Core.Servises
                                 }
                                 catch
                                 {
-                                    Debug.WriteLine("transform error");
                                 }
                             }
                         }
                     }
                 }
 
-                return true;
+                result= true;
             }
             catch (Exception xx)
             {
-                Debug.WriteLine(xx.Message.ToString());
-                return false;
+                
+            }
+            finally
+            {
+                await App.DataBase.Log.SaveAsync(new LogClass
+                {
+                    Date = DateTime.Now,
+                    Type = "download",
+                    Teg = "court",
+                    Result = result
+                });
             }
 
         }

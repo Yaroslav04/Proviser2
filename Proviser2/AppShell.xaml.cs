@@ -46,16 +46,15 @@ namespace Proviser2
             await Sniffer.SetNameSniffer();
             await MailManager.SetMail();
 
-            //if (!DependencyService.Resolve<IForegroundService>().IsForeGroundServiceRunning())
-            //{
-            //    DependencyService.Resolve<IForegroundService>().StartMyForegroundService();
-            //}
-
-
             if (FileManager.FirstStart())
             {
                 FileManager.WriteLog("system", "start", "");
                 await RunSnifferFunctions();
+            }
+
+            if (!DependencyService.Resolve<IForegroundService>().IsForeGroundServiceRunning())
+            {
+                DependencyService.Resolve<IForegroundService>().StartMyForegroundService();
             }
         }
 

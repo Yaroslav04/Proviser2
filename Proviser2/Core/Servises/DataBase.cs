@@ -2,6 +2,7 @@
 using SQLite;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -20,6 +21,9 @@ namespace Proviser2.Core.Servises
         readonly SQLiteAsyncConnection configDataBase;
         readonly SQLiteAsyncConnection stanDataBase;
         readonly SQLiteAsyncConnection witnessDataBase;
+        readonly SQLiteAsyncConnection logDataBase;
+
+        public LogDataBase Log;
 
         public DataBase(string _connectionString, List<string> _dataBaseName)
         {
@@ -45,6 +49,8 @@ namespace Proviser2.Core.Servises
             witnessDataBase = new SQLiteAsyncConnection(Path.Combine(_connectionString, _dataBaseName[6]));
             witnessDataBase.CreateTableAsync<WitnessClass>().Wait();
 
+            Log = new LogDataBase(Path.Combine(_connectionString, _dataBaseName[7]));
+            
         }
 
         #region Court
@@ -661,6 +667,8 @@ namespace Proviser2.Core.Servises
             }
         }
 
+       
+
         public Task<int> DeleteWitnessAsync(WitnessClass _witness)
         {
             try
@@ -702,6 +710,44 @@ namespace Proviser2.Core.Servises
         }
 
         #endregion
+    }
 
+    public static class CUD<T>
+    {
+        public static async Task<int> SaveAsync(T obj, SQLiteAsyncConnection _connection)
+        {
+            try
+            {
+                return await _connection.InsertAsync(obj);
+            }
+            catch
+            {
+                return -1;
+            }
+        }
+
+        public static async Task<int> DeleteAsync(T obj, SQLiteAsyncConnection _connection)
+        {
+            try
+            {
+                return await _connection.DeleteAsync(obj);
+            }
+            catch
+            {
+                return -1;
+            }
+        }
+
+        public static async Task<int> UpdateAsync(T obj, SQLiteAsyncConnection _connection)
+        {
+            try
+            {
+                return await _connection.UpdateAsync(obj);
+            }
+            catch
+            {
+                return -1;
+            }
+        }
     }
 }

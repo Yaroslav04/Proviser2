@@ -18,6 +18,7 @@ namespace Proviser2
                     dataBase = new DataBase(FileManager.GeneralPath(), new List<string> {
                         "CourtsDataBase.db3", "CasesDataBase.db3", "DecisionDataBase.db3",
                         "EventDataBase.db3", "ConfigDataBase.db3", "StanDataBase.db3", "WitnessDataBase.db3",
+                        "LogDataBase.db3"
                     });
                 }
                 return dataBase;
@@ -50,6 +51,33 @@ namespace Proviser2
                 "проведено підготовче",            
                 "долучено матеріали провадження",
                 "інше",
+                };
+            }
+        }
+
+        public static List<string> LogTypes
+        {
+            get
+            {
+                return new List<string>
+                {
+                "system",
+                "download",
+                "sniffer",
+                "event",
+                };
+            }
+        }
+
+        public static List<string> LogDownloadTegs
+        {
+            get
+            {
+                return new List<string>
+                {
+                "court",
+                "stan",
+                "decision",
                 };
             }
         }

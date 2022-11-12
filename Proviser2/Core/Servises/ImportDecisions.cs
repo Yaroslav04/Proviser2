@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static SQLite.SQLite3;
 
 namespace Proviser2.Core.Servises
 {
@@ -19,112 +21,82 @@ namespace Proviser2.Core.Servises
             {
                 foreach (var c in cases)
                 {
-                    ParseERSR parseERSR = new ParseERSR();
-                    parseERSR.AddCaseHeader(c.Case);
-                    var result = await parseERSR.GetERSRCaseList();
-                    if (result.Count > 0)
-                    {
-                        foreach (var item in result)
-                        {
-                            try
-                            {
-                                DecisionClass decisionClass = new DecisionClass();
-                                decisionClass.Case = item.Case;
-                                decisionClass.DecisionDate = item.DecisionDate;
-                                decisionClass.CriminalNumber = item.CriminalNumber;
-                                decisionClass.Court = item.Court;
-                                decisionClass.Id = item.Id;
-                                decisionClass.Category = item.Category;
-                                decisionClass.SaveDate = DateTime.Now;
-                                decisionClass.LegalDate = item.LegalDate;
-                                decisionClass.Content = item.Content;
-                                decisionClass.DecisionType = item.DecisionType;
-                                decisionClass.Judge = item.Judge;
-                                decisionClass.URL = item.URL;
-                                decisionClass.JudiciaryType = item.JudiciaryType;
-                                await App.DataBase.SaveDecisionAsync(decisionClass);
-                                Debug.WriteLine($"save decison {item.URL}");
-                            }
-                            catch
-                            {
-                                try
-                                {
-                                    var existDecision = await App.DataBase.GetDecisionByIdAsync(item.Id);
-                                    if (existDecision != null)
-                                    {
-                                        if (item.LegalDate != existDecision.LegalDate)
-                                        {
-                                            existDecision.LegalDate = item.LegalDate;
-                                            existDecision.SaveDate = DateTime.Now;
-                                            await App.DataBase.UpdateDecisionAsync(existDecision);
-                                            Debug.WriteLine($"exist decision update {item.Case} {item.LegalDate}");
-                                        }
-                                    }
-                                }
-                                catch
-                                {
-
-                                }
-                            }
-                        }
-                    }
+                    await Import(c.Case);
                 }
             }
         }
 
         public static async Task Import(string _case)
         {
-
+            bool res = false;
             ParseERSR parseERSR = new ParseERSR();
             parseERSR.AddCaseHeader(_case);
-            var result = await parseERSR.GetERSRCaseList();
-            if (result.Count > 0)
+            try
             {
-                foreach (var item in result)
+                var result = await parseERSR.GetERSRCaseList();
+                if (result.Count > 0)
                 {
-                    try
-                    {
-                        DecisionClass decisionClass = new DecisionClass();
-                        decisionClass.Case = item.Case;
-                        decisionClass.DecisionDate = item.DecisionDate;
-                        decisionClass.CriminalNumber = item.CriminalNumber;
-                        decisionClass.Court = item.Court;
-                        decisionClass.Id = item.Id;
-                        decisionClass.Category = item.Category;
-                        decisionClass.SaveDate = DateTime.Now;
-                        decisionClass.LegalDate = item.LegalDate;
-                        decisionClass.Content = item.Content;
-                        decisionClass.DecisionType = item.DecisionType;
-                        decisionClass.Judge = item.Judge;
-                        decisionClass.URL = item.URL;
-                        decisionClass.JudiciaryType = item.JudiciaryType;
-                        Debug.WriteLine($"{decisionClass.Case} {decisionClass.URL}");
-                        await App.DataBase.SaveDecisionAsync(decisionClass);
-                        Debug.WriteLine($"save decison");
-                    }
-                    catch
+                    foreach (var item in result)
                     {
                         try
                         {
-                            var existDecision = await App.DataBase.GetDecisionByIdAsync(item.Id);
-                            if (existDecision != null)
-                            {
-                                if (item.LegalDate != existDecision.LegalDate)
-                                {
-                                    existDecision.LegalDate = item.LegalDate;
-                                    existDecision.SaveDate = DateTime.Now;
-                                    await App.DataBase.UpdateDecisionAsync(existDecision);
-                                    Debug.WriteLine($"exist decision update {item.Case} {item.LegalDate}");
-                                }
-                            }
+                            DecisionClass decisionClass = new DecisionClass();
+                            decisionClass.Case = item.Case;
+                            decisionClass.DecisionDate = item.DecisionDate;
+                            decisionClass.CriminalNumber = item.CriminalNumber;
+                            decisionClass.Court = item.Court;
+                            decisionClass.Id = item.Id;
+                            decisionClass.Category = item.Category;
+                            decisionClass.SaveDate = DateTime.Now;
+                            decisionClass.LegalDate = item.LegalDate;
+                            decisionClass.Content = item.Content;
+                            decisionClass.DecisionType = item.DecisionType;
+                            decisionClass.Judge = item.Judge;
+                            decisionClass.URL = item.URL;
+                            decisionClass.JudiciaryType = item.JudiciaryType;
+                            await App.DataBase.SaveDecisionAsync(decisionClass);
+                            Debug.WriteLine($"import decisions: save decision {decisionClass.Case} {decisionClass.URL}");
                         }
                         catch
                         {
+                            try
+                            {
+                                var existDecision = await App.DataBase.GetDecisionByIdAsync(item.Id);
+                                if (existDecision != null)
+                                {
+                                    if (item.LegalDate != existDecision.LegalDate)
+                                    {
+                                        existDecision.LegalDate = item.LegalDate;
+                                        existDecision.SaveDate = DateTime.Now;
+                                        await App.DataBase.UpdateDecisionAsync(existDecision);
+                                        Debug.WriteLine($"import decisions: update decision {existDecision.Case} {existDecision.URL}");
+                                    }
+                                }
+                            }
+                            catch
+                            {
+
+                            }
 
                         }
-
                     }
                 }
+                res = true;     
+            }
+            catch
+            {
+
+            }
+            finally
+            {
+                await App.DataBase.Log.SaveAsync(new LogClass
+                {
+                    Date = DateTime.Now,
+                    Type = "download",
+                    Teg = App.LogDownloadTegs[2],
+                    Value = _case,
+                    Result = res
+                });
             }
         }
 
@@ -159,8 +131,6 @@ namespace Proviser2.Core.Servises
             foreach (var item in _list)
             {
                 result.Add(await GetERSRCase(item));
-                //Delay
-                Debug.WriteLine("stan step");
                 await Task.Delay(3000);
             }
             return result;
