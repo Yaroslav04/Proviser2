@@ -7,56 +7,56 @@
              x:DataType="viewmodel:CasesListViewModel"
              Title="{Binding Title}"
              BackgroundColor="{StaticResource Heavy}">
-    
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="(+)" Command="{Binding AddItemCommand}" />
     </ContentPage.ToolbarItems>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="40"></RowDefinition>
-        </Grid.RowDefinitions>
-        <RefreshView Grid.Row="0" Padding="2,2,2,2" Margin="2,2,2,2" x:DataType="viewmodel:CasesListViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
-        <CollectionView x:Name="ItemsListView"
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+            </Grid.RowDefinitions>
+            <RefreshView Grid.Row="0" Padding="2,2,2,2" Margin="2,2,2,2" x:DataType="viewmodel:CasesListViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+                <CollectionView x:Name="ItemsListView"
                 ItemsSource="{Binding Items}"
                 SelectionMode="None">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <ContentView>
-                        <Frame x:DataType="model:CaseClass" HasShadow="True" CornerRadius="15" Margin="2" Padding="20">
-                            <StackLayout HorizontalOptions="Start">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <ContentView>
+                                <Frame x:DataType="model:CaseClass" HasShadow="True" CornerRadius="15" Margin="2" Padding="20">
+                                    <StackLayout x:DataType="model:CaseClass" HorizontalOptions="Start">
 
-                                <Label Text="{Binding Header}" 
+                                        <Label Text="{Binding Header}" 
                             LineBreakMode="NoWrap" 
                             Style="{DynamicResource ListItemTextStyle}" 
                             FontSize="20" />
 
-                                <Label Text="{Binding Case}"
+                                        <Label Text="{Binding Case}"
                             LineBreakMode="NoWrap"
                                        TextColor="Gray"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="15" />
 
-                                <Label Text="{Binding MainCase}"
+                                        <Label Text="{Binding MainCase}"
                             LineBreakMode="NoWrap"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="12" />
 
-                            </StackLayout>
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer 
+                                    </StackLayout>
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer 
                                 NumberOfTapsRequired="1"
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:CasesListViewModel}}, Path=ItemTapped}"		
                                 CommandParameter="{Binding .}">
-                                </TapGestureRecognizer>
-                            </Frame.GestureRecognizers>
-                        </Frame>
-                    </ContentView>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </RefreshView>
-        <SearchBar TextColor="White" CancelButtonColor="White" Grid.Row="1" VerticalOptions="FillAndExpand"  Text="{Binding SearchText, Mode=TwoWay}" SearchCommand="{Binding SearchCommand}"></SearchBar>
-
-    </Grid>
+                                        </TapGestureRecognizer>
+                                    </Frame.GestureRecognizers>
+                                </Frame>
+                            </ContentView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+            <SearchBar TextColor="White" CancelButtonColor="White" Grid.Row="1" VerticalOptions="FillAndExpand"  Text="{Binding SearchText, Mode=TwoWay}" SearchCommand="{Binding SearchCommand}"></SearchBar>
+        </Grid>
+    </ContentPage.Content>
 </ContentPage>

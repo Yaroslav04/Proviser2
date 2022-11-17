@@ -39,7 +39,6 @@ namespace Proviser2.Core.ViewModel
             set
             {
                 SetProperty(ref _selectedItem, value);
-                OnItemSelected(value);
             }
         }
 

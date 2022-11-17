@@ -35,7 +35,7 @@ namespace Proviser2.Droid
             {
                 while (IsForegroundServiceRunning)
                 {
-                    Thread.Sleep(15000);//15 min 900000
+                    Thread.Sleep(900000);//15 min
                     await Task.Run(async () =>
                     {
                         await NotificationAgregator.Run();

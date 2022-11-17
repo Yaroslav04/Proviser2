@@ -126,8 +126,7 @@ namespace Proviser2.Core.ViewModel
             get => selectedItem;
             set
             {
-                SetProperty(ref selectedItem, value);
-                OnItemSelected(value);
+                SetProperty(ref selectedItem, value); 
             }
         }
 

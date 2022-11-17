@@ -17,7 +17,7 @@ namespace Proviser2.Core.ViewModel
         public CourtsListViewModel()
         {
             Title = "Засідання " + DateTime.Now.ToShortDateString();
-            Items = new ObservableCollection<CourtSoketClass>();      
+            Items = new ObservableCollection<CourtSoketClass>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<CourtSoketClass>(OnItemSelected);
             SearchCommand = new Command(Search);
@@ -54,7 +54,6 @@ namespace Proviser2.Core.ViewModel
             set
             {
                 SetProperty(ref _selectedItem, value);
-                OnItemSelected(value);
             }
         }
 
@@ -134,12 +133,13 @@ namespace Proviser2.Core.ViewModel
                     }
                     catch
                     {
+
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-
+                Debug.WriteLine(ex);
             }
             finally
             {
@@ -148,14 +148,14 @@ namespace Proviser2.Core.ViewModel
         }
 
         async void OnItemSelected(CourtSoketClass item)
-            {
+        {
 
-                if (item == null)
-                    return;
+            if (item == null)
+                return;
 
-                await Shell.Current.GoToAsync($"{nameof(CasePage)}?{nameof(CaseViewModel.CaseId)}={item.Case}");
-            }
-
-            #endregion
+            await Shell.Current.GoToAsync($"{nameof(CasePage)}?{nameof(CaseViewModel.CaseId)}={item.Case}");
         }
+
+        #endregion
     }
+}
