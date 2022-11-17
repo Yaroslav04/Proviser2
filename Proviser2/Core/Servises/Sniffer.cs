@@ -24,7 +24,7 @@ namespace Proviser2.Core.Servises
 
         public static async Task AddNameSniffer()
         {
-            string result = await Shell.Current.DisplayPromptAsync("Реєстрація", "Введіть своє П.І.Б.", maxLength: 60);
+            string result = await Shell.Current.DisplayPromptAsync("Реєстрація", "Введіть своє прізвище та ім'я", maxLength: 60);
             await App.DataBase.SaveConfigAsync(new ConfigClass
             {
                 Type = "sniffer",

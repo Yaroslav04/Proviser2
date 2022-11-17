@@ -9,7 +9,7 @@
              BackgroundColor="{StaticResource Light}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="✨" Command="{Binding FastAddCommand}" />
+        <ToolbarItem Text="Швидкий доступ✨" Command="{Binding FastAddCommand}" />
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>

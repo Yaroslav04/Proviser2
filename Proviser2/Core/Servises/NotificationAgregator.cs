@@ -21,7 +21,8 @@ namespace Proviser2.Core.Servises
 
         static async Task Download()
         {
-            if (DateTime.Now.Hour >= 2 & DateTime.Now.Hour <= 5)
+            Random random = new Random();
+            if (DateTime.Now.Hour >= 1 & DateTime.Now.TimeOfDay > TimeSpan.FromMinutes(random.Next(0, 180)) & DateTime.Now.Hour <= 6)
             {
                 //stan
                 if (await App.DataBase.Log.IsDownloadNeed("stan"))

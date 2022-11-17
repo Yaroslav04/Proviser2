@@ -32,24 +32,7 @@ namespace Proviser2.Core.ViewModel
 
         private async void Capture()
         {
-
-            try
-            {
-                Debug.WriteLine("start");
-                await Share.RequestAsync(new ShareMultipleFilesRequest
-                {
-                    Title = "титл",
-                    Files = new List<ShareFile> { new ShareFile(FileManager.GeneralPath("ConfigDataBase.db3")), new ShareFile(FileManager.GeneralPath("WitnessDataBase.db3")) }
-                });
-                Debug.WriteLine("end");
-            }
-            catch (Exception e)
-            {
-                Debug.Write(e.Message);
-            }
-
-
-            //await Task.Run(() => CameraManager.TakePhotoAsync(CaseId));        
+            await Task.Run(() => CameraManager.TakePhotoAsync(CaseId));
         }
 
         #region  Properties
@@ -402,7 +385,7 @@ namespace Proviser2.Core.ViewModel
         {
             CaseClass item = await App.DataBase.GetCasesByCaseAsync(_case);
 
-            Title = item.Header;
+            Title = "Судова справа";
             HeaderMainPanel = item.Header;
             CaseMainPanel = item.Case;
             NoteMainPanel = item.Note;

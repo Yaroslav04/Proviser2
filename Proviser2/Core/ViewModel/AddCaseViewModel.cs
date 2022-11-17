@@ -21,6 +21,12 @@ namespace Proviser2.Core.ViewModel
             SaveCommand = new Command(Save);
             SearchCommand = new Command(Search);
             ClearCommand = new Command(Clear);
+            Start();
+        }
+
+        private async void Start()
+        {
+            await PromtService.AddCaseStart();
         }
 
         #region Properties

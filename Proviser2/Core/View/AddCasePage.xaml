@@ -20,11 +20,11 @@
             </Grid>
 
             <StackLayout Grid.Row="0">
-                
-                <Label Text="Пошук: номер судової справи" FontSize="15"/>
+
+                <Label Text="🔎Пошук: номер судової справи" FontSize="15"/>
                 <Entry Text="{Binding CaseSearchPanel , Mode=TwoWay}" FontSize="Medium"/>
 
-                <Label Text="Пошук: учасник судового засідання" FontSize="15" />
+                <Label Text="🔎Пошук: учасник судового засідання" FontSize="15" />
                 <Entry Text="{Binding LittigansSerachPanel, Mode=TwoWay}" FontSize="Medium" />
                 
                 <Label Grid.Column="0" VerticalOptions="Center" Text="Заголовок для картки (не пошук)" FontSize="13"/>

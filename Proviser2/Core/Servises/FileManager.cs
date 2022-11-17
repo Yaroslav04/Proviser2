@@ -37,6 +37,12 @@ namespace Proviser2.Core.Servises
                 refresh = true;
             }
 
+            if (!Directory.Exists(GeneralPath("Capture")))
+            {
+                Directory.CreateDirectory(GeneralPath("Capture"));
+                refresh = true;
+            }
+
             if (refresh == true)
             {
                 return true;
