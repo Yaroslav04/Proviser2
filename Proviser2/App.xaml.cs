@@ -101,7 +101,7 @@ namespace Proviser2
                 {
                 "courtChannel",
                 "prisonChanel",
-                "sniferChanel",
+                "nameChanel",
                 "systemChanel",
                 };
             }

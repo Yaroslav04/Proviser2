@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Proviser2.Core.Model;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Proviser2.Core.Servises
 {
@@ -18,7 +20,26 @@ namespace Proviser2.Core.Servises
                 return "Тримання під вартою";
             }
 
+            if (_value == App.NotificationType[2])
+            {
+                return "Пошук по користувачу";
+            }
+
             return "";
+        }
+
+        public static async Task NotificationShowUpdate(NotificationClass notificationClass)
+        {
+            try
+            {
+                notificationClass.IsExecute = false;
+                notificationClass.IsNotificate = false;
+                await App.DataBase.Notification.UpdateAsync(notificationClass);
+            }
+            catch
+            {
+
+            }
         }
     }
 }

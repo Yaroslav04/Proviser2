@@ -44,16 +44,9 @@ namespace Proviser2
         {
             FileManager.FileInit();
 
-            await Sniffer.SetNameSniffer();
+            await PromtService.AddNameSniffer();
             await MailManager.SetMail();
-
-            //DELETE OLD SNIFFER FUNCTIONS
-            //if (FileManager.FirstStart())
-            //{
-            //    FileManager.WriteLog("system", "start", "");
-            //    await RunSnifferFunctions();
-            //}
-
+            await SnifferServise.NameSniffer();
             await AppAgregator.Run();
 
             if (!DependencyService.Resolve<IForegroundService>().IsForeGroundServiceRunning())
@@ -62,35 +55,14 @@ namespace Proviser2
             }
         }
 
-        public async Task RunSnifferFunctions()
-        {
-            try
-            {
-                await Sniffer.ReminderDownload();
-                await Sniffer.RunNameSniffer();
-                await Sniffer.ReminderHeaderRefresh();
-                await Sniffer.ReminderPrisonNew();
-                await Sniffer.ReminderPrisonRefresh();
-                await Sniffer.UpdateCriminalNumberFromDecisions();
-            }
-            catch
-            {
-
-            }
-            finally
-            {
-            }
-        }
-
         private void ServiseButton_Clicked(object sender, EventArgs e)
         {
             ServiseButton_ClickedAsync();
         }
-
         private async void ServiseButton_ClickedAsync()
         {
             List<string> functions = new List<string> {
-                "Завантажити засідання", "Завантажити судові рішення","Завантажити стан", "Запуск пошукового сервісу", "Додати дані для пошуку",
+                "Завантажити засідання", "Завантажити судові рішення","Завантажити стан", "Додати дані для пошуку",
                 "Відправити засідання на пошту", "Експорт всіх судових засідань", "Експорт моїх засідань", "Експорт станів",
                 "Пошук учасників", "Запуск служби"
             };
@@ -111,11 +83,6 @@ namespace Proviser2
                 case "Завантажити стан":
                     await Task.Run(() => ImportStanWebHook.Import());
                     await DisplayAlert("Завантаження", "Стан завантажено", "OK");
-                    break;
-
-                case "Запуск пошукового сервісу":
-                    await RunSnifferFunctions();
-                    await DisplayAlert("Пошуковий сервіс", "Завершено", "OK");
                     break;
 
                 case "Додати дані для пошуку":

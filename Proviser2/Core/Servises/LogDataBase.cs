@@ -80,5 +80,10 @@ namespace Proviser2.Core.Servises
             }
         }
 
+        public async Task<List<LogClass>> GetListSnifferExeption()
+        {
+            return await connection.Table<LogClass>().Where(x => x.Type == "sniffer_exeption").ToListAsync();
+        }
+
     }
 }
