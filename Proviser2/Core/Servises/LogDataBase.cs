@@ -52,7 +52,7 @@ namespace Proviser2.Core.Servises
             }
             else
             {
-                if ((DateTime.Now - items.FirstOrDefault().Date).TotalDays > 3)
+                if ((DateTime.Now - items.FirstOrDefault().Date).TotalDays > 2)
                 {
                     return true;
                 }
@@ -72,7 +72,7 @@ namespace Proviser2.Core.Servises
             }
             else
             {
-                if ((DateTime.Now - items.FirstOrDefault().Date).TotalDays > 3)
+                if ((DateTime.Now - items.FirstOrDefault().Date).TotalDays > 2)
                 {
                     return true;
                 }

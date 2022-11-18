@@ -19,5 +19,16 @@ namespace Proviser2.Core.Servises
         {
             return await connection.Table<NotificationClass>().ToListAsync();
         }
+
+        public async Task<List<NotificationClass>> GetNotificateListAsync()
+        {
+            return await connection.Table<NotificationClass>().Where(x => x.IsNotificate == true).ToListAsync();
+        }
+
+        public async Task<List<NotificationClass>> GetExecuteListAsync(string _type, int _day)
+        {
+            return await connection.Table<NotificationClass>().Where(x => x.Type == _type & x.Day == _day
+            & x.IsExecute == true).ToListAsync();
+        }
     }
 }

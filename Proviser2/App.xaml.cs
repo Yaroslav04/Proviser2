@@ -109,6 +109,14 @@ namespace Proviser2
 
         #endregion
 
+        #region Agregator
+
+        public static bool IsStanDownload = false;
+        public static bool IsCourtDownload = false;
+        public static bool IsDecisionDownload = false;
+
+        #endregion
+
         public App()
         {
             InitializeComponent();

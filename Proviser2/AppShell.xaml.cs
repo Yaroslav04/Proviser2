@@ -15,6 +15,7 @@ using Proviser2.Services;
 using System.IO;
 using Proviser2.Droid;
 using Xamarin.Forms.PlatformConfiguration;
+using System.Data;
 
 namespace Proviser2
 {
@@ -46,11 +47,14 @@ namespace Proviser2
             await Sniffer.SetNameSniffer();
             await MailManager.SetMail();
 
-            if (FileManager.FirstStart())
-            {
-                FileManager.WriteLog("system", "start", "");
-                await RunSnifferFunctions();
-            }
+            //DELETE OLD SNIFFER FUNCTIONS
+            //if (FileManager.FirstStart())
+            //{
+            //    FileManager.WriteLog("system", "start", "");
+            //    await RunSnifferFunctions();
+            //}
+
+            await AppAgregator.Run();
 
             if (!DependencyService.Resolve<IForegroundService>().IsForeGroundServiceRunning())
             {
@@ -60,7 +64,6 @@ namespace Proviser2
 
         public async Task RunSnifferFunctions()
         {
-            IsBusy = true;
             try
             {
                 await Sniffer.ReminderDownload();
@@ -76,7 +79,6 @@ namespace Proviser2
             }
             finally
             {
-                IsBusy = false;
             }
         }
 

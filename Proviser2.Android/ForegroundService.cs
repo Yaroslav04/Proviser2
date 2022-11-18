@@ -36,11 +36,7 @@ namespace Proviser2.Droid
                 while (IsForegroundServiceRunning)
                 {
                     Thread.Sleep(900000);//15 min
-                    await Task.Run(async () =>
-                    {
-                        await NotificationAgregator.Run();
-                    });
-
+                    await Task.Run(async () => await ForegroundAgregator.Run());
                     await ShowNotification();
                 }
             });
@@ -124,7 +120,7 @@ namespace Proviser2.Droid
             {
                 if (DateTime.Now.Hour >= 9 & DateTime.Now.Hour <= 18)
                 {
-                    var notifications = await App.DataBase.Notification.GetListAsync();
+                    var notifications = await  App.DataBase.Notification.GetListAsync();
                     if (notifications.Count > 0)
                     {
                         foreach (var notification in notifications)
@@ -136,26 +132,11 @@ namespace Proviser2.Droid
                                 await App.DataBase.Notification.UpdateAsync(notification);
 
                                 SendNotification(notification.Type, notification.N,
-                                    GetTitleFromNotificationType(notification.Type), notification.Description);
+                                    NotificationServise.GetTitleFromNotificationType(notification.Type), notification.Description);
                             }
                         }
                     }
                 }
-            }
-
-            string GetTitleFromNotificationType(string _value)
-            {
-                if (_value == App.NotificationType[0])
-                {
-                    return "Судове засідання";
-                }
-
-                if (_value == App.NotificationType[1])
-                {
-                    return "Тримання під вартою";
-                }
-
-                return "";
             }
         }
     }

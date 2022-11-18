@@ -11,7 +11,7 @@ using static SQLite.SQLite3;
 
 namespace Proviser2.Core.Servises
 {
-    public static class NotificationAgregator
+    public static class ForegroundAgregator
     {
         public static async Task Run()
         {
@@ -22,26 +22,70 @@ namespace Proviser2.Core.Servises
         static async Task Download()
         {
             Random random = new Random();
-            if (DateTime.Now.Hour >= 1 & DateTime.Now.TimeOfDay > TimeSpan.FromMinutes(random.Next(0, 180)) & DateTime.Now.Hour <= 6)
+            if (DateTime.Now.Hour <= 6 & DateTime.Now.TimeOfDay > TimeSpan.FromMinutes(random.Next(0, 120)))
             {
-                //stan
-                if (await App.DataBase.Log.IsDownloadNeed("stan"))
-                {
-                    await ImportStanWebHook.Import();
-                }
 
-                //court
-                if (await App.DataBase.Log.IsDownloadNeed("court"))
+                if (!App.IsStanDownload)
                 {
-                    await ImportCourtsWebHook.Import();
-                }
-
-                //decision
-                foreach (var item in await App.DataBase.GetCasesAsync())
-                {
-                    if (await App.DataBase.Log.IsDownloadDecisionNeed(item.Case))
+                    App.IsStanDownload = true;
+                    try
                     {
-                        await ImportDecisions.Import(item.Case);
+                        if (await App.DataBase.Log.IsDownloadNeed("stan"))
+                        {
+                            await ImportStanWebHook.Import();
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                    finally
+                    {
+                        App.IsStanDownload = false;
+                    }
+                }
+
+                if (!App.IsCourtDownload)
+                {
+                    App.IsCourtDownload = true;
+                    try
+                    {
+                        if (await App.DataBase.Log.IsDownloadNeed("court"))
+                        {
+                            await ImportCourtsWebHook.Import();
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                    finally
+                    {
+                        App.IsCourtDownload = false;
+                    }
+                }
+                
+
+                if (!App.IsDecisionDownload)
+                {
+                    App.IsDecisionDownload = true;
+                    try
+                    {
+                        foreach (var item in await App.DataBase.GetCasesAsync())
+                        {
+                            if (await App.DataBase.Log.IsDownloadDecisionNeed(item.Case))
+                            {
+                                await ImportDecisions.Import(item.Case);
+                            }
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                    finally
+                    {
+                        App.IsDecisionDownload = false;
                     }
                 }
             }
