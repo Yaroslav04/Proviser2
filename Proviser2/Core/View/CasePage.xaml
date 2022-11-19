@@ -9,7 +9,7 @@
              BackgroundColor="{StaticResource Light}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Швидкий доступ✨" Command="{Binding FastAddCommand}" />
+        <ToolbarItem Text="Додати✨" Command="{Binding FastAddCommand}" />
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
@@ -22,7 +22,6 @@
                         <ColumnDefinition Width="50"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Label Grid.Column="0" Text="{Binding CaseMainPanel}" FontSize="Large"/>
-                    <Button FontSize="Large" BackgroundColor="{StaticResource Light}" Grid.Column="1" Text="📷" Command="{Binding CaptureCommand}"></Button>
                 </Grid>
                 <Entry Placeholder="Заголовок" Text="{Binding HeaderMainPanel}" FontSize="Medium"/>
                 <Entry Placeholder="Номер кримінального провадження" Text="{Binding CriminalNumberMainPanel}" FontSize="Medium"/>
@@ -44,6 +43,8 @@
                     CornerRadius="15" Margin="3,3,3,3" />
                 <Button Text="Свідки" Command="{Binding OpenWitnessCommand}"
                     CornerRadius="15" Margin="3,3,3,3" />
+                <Button Text="📷" Command="{Binding CaptureCommand}"
+                    CornerRadius="15" Margin="3,3,3,3"/>                  
                 <Button Text="Редагувати судову справу" Command="{Binding UpdateCommand}"
                     CornerRadius="15" Margin="3,3,3,3" />
                 <Button Text="Видалити судову справу" Command="{Binding DeleteCommand}"

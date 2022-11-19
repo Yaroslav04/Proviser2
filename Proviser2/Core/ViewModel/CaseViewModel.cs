@@ -385,7 +385,7 @@ namespace Proviser2.Core.ViewModel
         {
             CaseClass item = await App.DataBase.GetCasesByCaseAsync(_case);
 
-            Title = "Судова справа";
+            Title = item.Header;
             HeaderMainPanel = item.Header;
             CaseMainPanel = item.Case;
             NoteMainPanel = item.Note;

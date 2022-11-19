@@ -76,6 +76,7 @@ namespace Proviser2.Core.Servises
                             if (await App.DataBase.Log.IsDownloadDecisionNeed(item.Case))
                             {
                                 await ImportDecisions.Import(item.Case);
+                                await SnifferServise.CriminalNumberSniffer(item.Case);
                             }
                         }
                     }

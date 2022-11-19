@@ -21,21 +21,18 @@ namespace Proviser2.Core.Servises
                 " в поле -🔎Пошук: номер судової справи-";
             await Shell.Current.DisplayAlert("Пошук судових справ", description, "OK");
         }
-
         public static async Task ShowPrisonSniffer(NotificationClass notificationClass)
         {
             string title = NotificationServise.GetTitleFromNotificationType(notificationClass.Type);
             await Shell.Current.DisplayAlert(title, notificationClass.Description, "OK");
             await NotificationServise.NotificationShowUpdate(notificationClass);
         }
-
         public static async Task ShowHearingSniffer(NotificationClass notificationClass)
         {
             string title = NotificationServise.GetTitleFromNotificationType(notificationClass.Type);
             await Shell.Current.DisplayAlert(title, notificationClass.Description, "OK");
             await NotificationServise.NotificationShowUpdate(notificationClass);
         }
-
         public static async Task<bool> IsNameSnifferSave(NotificationClass notificationClass)
         {
             string title = NotificationServise.GetTitleFromNotificationType(notificationClass.Type);
@@ -50,7 +47,6 @@ namespace Proviser2.Core.Servises
                 return false;
             }    
         }
-
         public static async Task AddNameSniffer()
         {
             if (await SnifferServise.IsSetNameSniffer())

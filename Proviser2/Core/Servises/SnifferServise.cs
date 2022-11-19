@@ -133,6 +133,8 @@ namespace Proviser2.Core.Servises
                 }
             }
         }
+
+        #region NameSniffer
         public static async Task NameSniffer()
         {
             List<CourtClass> courtsResult = new List<CourtClass>();
@@ -198,7 +200,7 @@ namespace Proviser2.Core.Servises
                     NotificationClass notificationClass = new NotificationClass
                     {
                         Type = App.NotificationType[2],
-                        Description = $"Знайдено співпадіння: {item.Court}\n{item.Littigans}\n судове засідання {item.Date.ToShortDateString()}\n{item.Case} {item.Category}\nЗареєструвати?",
+                        Description = $"Знайдено співпадіння: {item.Court}\n{item.Littigans}\nсудове засідання {item.Date.ToShortDateString()}\n{item.Case} {item.Category}\nЗареєструвати?",
                         Case = item.Case,
                         SaveDate = DateTime.Now,
                         Day = DateTime.Now.DayOfYear,
@@ -290,7 +292,8 @@ namespace Proviser2.Core.Servises
                 await App.DataBase.Log.SaveAsync(new LogClass
                 {
                     Type = "sniffer_exeption",
-                    Value = _case
+                    Value = _case, 
+                    Date= DateTime.Now
                 });
 
                 return true;
@@ -298,6 +301,36 @@ namespace Proviser2.Core.Servises
             catch
             {
                 return false;
+            }
+        }
+
+        #endregion
+
+        public async static Task CriminalNumberSniffer(string _case)
+        {
+            var cs = await App.DataBase.GetCasesByCaseAsync(_case);
+
+            var decisions = await App.DataBase.GetDecisionsAsync(cs.Case);
+            if (decisions.Count > 0)
+            {
+                decisions = decisions.OrderByDescending(x => x.DecisionDate).ToList();
+
+                var criminalNumber = "";
+
+                foreach (var d in decisions)
+                {
+                    if (!String.IsNullOrWhiteSpace(d.CriminalNumber))
+                    {
+                        criminalNumber = d.CriminalNumber;
+                        break;
+                    }
+                }
+
+                if (criminalNumber != "")
+                {
+                    cs.CriminalNumber = criminalNumber;
+                    await App.DataBase.UpdateCaseAsync(cs);
+                }
             }
         }
     }

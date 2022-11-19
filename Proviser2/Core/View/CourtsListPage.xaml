@@ -87,7 +87,7 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </RefreshView>
-            <SearchBar TextColor="White" CancelButtonColor="White" Grid.Row="1" VerticalOptions="FillAndExpand"  Text="{Binding SearchText, Mode=TwoWay}" SearchCommand="{Binding SearchCommand}"></SearchBar>
+            <SearchBar Placeholder="Пошук" PlaceholderColor="{StaticResource Primary}" TextColor="White" CancelButtonColor="White" Grid.Row="1" VerticalOptions="FillAndExpand"  Text="{Binding SearchText, Mode=TwoWay}" SearchCommand="{Binding SearchCommand}"></SearchBar>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

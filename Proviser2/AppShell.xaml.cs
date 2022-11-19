@@ -86,7 +86,7 @@ namespace Proviser2
                     break;
 
                 case "Додати дані для пошуку":
-                    await Sniffer.AddNameSniffer();
+                    
                     break;
 
                 case "Відправити засідання на пошту":
@@ -109,8 +109,7 @@ namespace Proviser2
                     await DisplayAlert("Експорт", "Експорт станів виконано", "OK");
                     break;
                 case "Пошук учасників":
-                    await Sniffer.SearchLittigans();
-                    await DisplayAlert("Пошук учасників", "Пошук учасників виконано", "OK");
+                    
                     break;
                 case "Запуск служби":
                     if (DependencyService.Resolve<IForegroundService>().IsForeGroundServiceRunning())
