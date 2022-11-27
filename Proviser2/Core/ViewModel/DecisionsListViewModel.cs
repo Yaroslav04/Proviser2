@@ -102,7 +102,18 @@ namespace Proviser2.Core.ViewModel
         {
             if (_item == null)
                 return;
-            await Browser.OpenAsync("https://reyestr.court.gov.ua/Review/" + _item.Id, BrowserLaunchMode.SystemPreferred);
+
+            string[] menu = { "Посилання", "Текст рішення"};
+            string answer = await Shell.Current.DisplayActionSheet("Оберіть дію", "Cancel", null, menu);
+         
+            if (answer == menu[0])
+            {
+                await Browser.OpenAsync("https://reyestr.court.gov.ua/Review/" + _item.Id, BrowserLaunchMode.SystemPreferred);
+            }
+            else if (answer == menu[1])
+            {
+                await Shell.Current.DisplayAlert("Судове рішення", _item.Content, "OK");
+            }
         }
 
     }
