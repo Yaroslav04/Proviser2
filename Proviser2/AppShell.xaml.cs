@@ -123,5 +123,16 @@ namespace Proviser2
                     break;
             }
         }
+
+        private void AboutButton_Clicked(object sender, EventArgs e)
+        {
+            AboutButton_ClickedAsync();
+        }
+        
+        private async void AboutButton_ClickedAsync()
+        {
+            var version = VersionTracking.CurrentVersion;
+            await PromtService.SimpleMessage("Версія застосунку", version);
+        }
     }
 }

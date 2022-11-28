@@ -21,7 +21,9 @@ namespace Proviser2.Core.ViewModel
             Items = new ObservableCollection<CourtSoketClass>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<CourtSoketClass>(OnItemSelected);
+            AddCommand = new Command(Add);
         }
+
         public void OnAppearing()
         {
             IsBusy = true;
@@ -58,6 +60,8 @@ namespace Proviser2.Core.ViewModel
         #region Commands
 
         public Command LoadItemsCommand { get; }
+
+        public Command AddCommand { get; }
         public Command<CourtSoketClass> ItemTapped { get; }
 
         #endregion
@@ -106,6 +110,11 @@ namespace Proviser2.Core.ViewModel
                 }
                 IsBusy = true;
             }
+        }
+
+        private async void Add()
+        {
+            await Shell.Current.GoToAsync($"{nameof(AddCourtPage)}?{nameof(AddCourtViewModel.CaseId)}={CaseId}");
         }
     }
 }

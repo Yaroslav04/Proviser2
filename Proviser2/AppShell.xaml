@@ -59,24 +59,28 @@
         </ResourceDictionary>
     </Shell.Resources>
 
-    <FlyoutItem Title="Засідання">
+    <FlyoutItem Title="📅 Засідання">
         <ShellContent Route="CourtsListPage" ContentTemplate="{DataTemplate local:CourtsListPage}" />
     </FlyoutItem>
-    <FlyoutItem Title="Судові справи">
+    <FlyoutItem Title="🏛Судові справи">
         <ShellContent Route="CasesListPage" ContentTemplate="{DataTemplate local:CasesListPage}" />
     </FlyoutItem>
-    <FlyoutItem Title="Нові засідання">
+    <MenuItem>
+    </MenuItem>
+    <FlyoutItem Title="📥 Нові засідання">
         <ShellContent Route="NewCourtsPage" ContentTemplate="{DataTemplate local:NewCourtsPage}" />
     </FlyoutItem>
-    <FlyoutItem Title="Нові рішення">
+    <FlyoutItem Title="📥 Нові рішення">
         <ShellContent Route="NewDecisionsPage" ContentTemplate="{DataTemplate local:NewDecisionsPage}" />
     </FlyoutItem>
-    <FlyoutItem Title="Новий стан">
+    <FlyoutItem Title="📥 Новий стан">
         <ShellContent Route="NewStanPage" ContentTemplate="{DataTemplate local:NewStanPage}" />
     </FlyoutItem>
-
-    <MenuItem x:Name="ServiseButton"  Text="Функції (admin only)" StyleClass="MenuItemLayoutStyle" Clicked="ServiseButton_Clicked">
+    <MenuItem>
     </MenuItem>
-
+    <MenuItem Text="🔧 Функції (yaric only)" x:Name="ServiseButton" StyleClass="MenuItemLayoutStyle" Clicked="ServiseButton_Clicked">
+    </MenuItem>
+    <MenuItem Text="💡 Version" x:Name="AboutButton" StyleClass="MenuItemLayoutStyle" Clicked="AboutButton_Clicked">
+    </MenuItem>
 
 </Shell>
