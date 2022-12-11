@@ -49,7 +49,7 @@ namespace Proviser2.Core.Servises
                 {
                     if (item.PrisonDate != DateTime.MinValue)
                     {
-                        if ((item.PrisonDate - DateTime.Now).Days < 15 & (item.PrisonDate - DateTime.Now).Days >= 1)
+                        if ((item.PrisonDate - DateTime.Now).Days <= 13 & (item.PrisonDate - DateTime.Now).Days >= 10)
                         {
                             try
                             {
@@ -108,7 +108,7 @@ namespace Proviser2.Core.Servises
                     if (courts.Count > 0)
                     {
                         var lastCourt = courts.OrderByDescending(x => x.Date).FirstOrDefault();
-                        if ((DateTime.Now - lastCourt.Date).TotalDays > 3 & (DateTime.Now - lastCourt.Date).TotalDays < 30)
+                        if ((DateTime.Now > lastCourt.Date) & (DateTime.Now - lastCourt.Date).TotalDays <= 3)
                         {
                             try
                             {
