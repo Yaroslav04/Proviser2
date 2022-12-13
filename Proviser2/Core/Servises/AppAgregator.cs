@@ -38,7 +38,7 @@ namespace Proviser2.Core.Servises
             {
                 foreach (var item in list)
                 {
-                    await PromtService.ShowPrisonSniffer(item);
+                    await PromtService.ShowHearingSniffer(item);
                 }
             }
         }

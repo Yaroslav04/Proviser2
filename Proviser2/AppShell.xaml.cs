@@ -43,7 +43,6 @@ namespace Proviser2
         public async void RunAsync()
         {
             FileManager.FileInit();
-
             await PromtService.AddNameSniffer();
             await MailManager.SetMail();
             await SnifferServise.NameSniffer();

@@ -22,9 +22,8 @@ namespace Proviser2.Core.Servises
         static async Task Download()
         {
             Random random = new Random();
-            if (DateTime.Now.Hour <= 6 & DateTime.Now.TimeOfDay > TimeSpan.FromMinutes(random.Next(0, 120)))
+            if (DateTime.Now.Hour <= 6 & DateTime.Now.TimeOfDay > TimeSpan.FromMinutes(random.Next(0, 60)))
             {
-
                 if (!App.IsStanDownload)
                 {
                     App.IsStanDownload = true;
@@ -95,7 +94,7 @@ namespace Proviser2.Core.Servises
         {
             if (DateTime.Now.DayOfWeek != DayOfWeek.Sunday & DateTime.Now.DayOfWeek != DayOfWeek.Saturday)
             {
-                if (DateTime.Now.Hour >= 10 & DateTime.Now.Hour <= 18)
+                if (DateTime.Now.Hour >= 9 & DateTime.Now.Hour <= 18)
                 {
                     await Task.Run(() => SnifferServise.CourtSniffer());
                     await Task.Run(() => SnifferServise.PrisonSniffer());
