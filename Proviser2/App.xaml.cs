@@ -25,6 +25,8 @@ namespace Proviser2
             }
         }
 
+        public static string Version = "1.3";
+
         #region Withes
         public static List<string> WitnessTypes
         {

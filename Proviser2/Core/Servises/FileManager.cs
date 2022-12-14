@@ -21,6 +21,7 @@ namespace Proviser2.Core.Servises
         {
             return Path.Combine(@"/storage/emulated/0/Proviser2/", _file);
         }
+
         public static bool FileInit()
         {
             bool refresh = false;
@@ -28,12 +29,6 @@ namespace Proviser2.Core.Servises
             if (!Directory.Exists(GeneralPath()))
             {
                 Directory.CreateDirectory(GeneralPath());
-                refresh = true;
-            }
-
-            if (!File.Exists(GeneralPath("log.txt")))
-            {
-                File.Create(GeneralPath("log.txt"));
                 refresh = true;
             }
 
@@ -49,14 +44,6 @@ namespace Proviser2.Core.Servises
             }
 
             return false;
-        }
-
-        public static void WriteLog(string _teg, string _case, string _value)
-        {
-            using (StreamWriter sw = new StreamWriter(GeneralPath("log.txt"), append: true))
-            {
-                sw.WriteLine($"{DateTime.Now}\t{_teg}\t{_case}\t{_value}");
-            }
         }
 
         public static List<string> GetSavedStan()
@@ -75,16 +62,6 @@ namespace Proviser2.Core.Servises
                 }
             }
             return savedStan;
-        }
-
-        public static bool FirstStart()
-        {
-            if (File.GetLastWriteTime(GeneralPath("log.txt")).DayOfYear != DateTime.Now.DayOfYear)
-            {
-                return true;
-            }
-
-            return false;
         }
     }
 }

@@ -21,7 +21,6 @@ namespace Proviser2
 {
     public partial class AppShell : Shell
     {
-
         public AppShell()
         {
             InitializeComponent();
@@ -39,7 +38,6 @@ namespace Proviser2
             RunAsync();
 
         }
-
         public async void RunAsync()
         {
             FileManager.FileInit();
@@ -63,7 +61,7 @@ namespace Proviser2
             List<string> functions = new List<string> {
                 "Завантажити засідання", "Завантажити судові рішення","Завантажити стан", "Додати дані для пошуку",
                 "Відправити засідання на пошту", "Експорт всіх судових засідань", "Експорт моїх засідань", "Експорт станів",
-                "Пошук учасників", "Запуск служби"
+                "Запуск/зупинка служби"
             };
 
             string result = await DisplayActionSheet("Меню", "Відміна", null, functions.ToArray());
@@ -82,10 +80,6 @@ namespace Proviser2
                 case "Завантажити стан":
                     await Task.Run(() => ImportStanWebHook.Import());
                     await DisplayAlert("Завантаження", "Стан завантажено", "OK");
-                    break;
-
-                case "Додати дані для пошуку":
-                    
                     break;
 
                 case "Відправити засідання на пошту":
@@ -107,9 +101,7 @@ namespace Proviser2
                     await Task.Run(() => ExportManager.ExportAllStan());
                     await DisplayAlert("Експорт", "Експорт станів виконано", "OK");
                     break;
-                case "Пошук учасників":
-                    
-                    break;
+
                 case "Запуск служби":
                     if (DependencyService.Resolve<IForegroundService>().IsForeGroundServiceRunning())
                     {
@@ -130,8 +122,7 @@ namespace Proviser2
         
         private async void AboutButton_ClickedAsync()
         {
-            var version = VersionTracking.CurrentVersion;
-            await PromtService.SimpleMessage("Версія застосунку", version);
+            await PromtService.SimpleMessage("Версія застосунку", App.Version);
         }
     }
 }
