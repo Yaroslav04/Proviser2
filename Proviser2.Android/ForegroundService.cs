@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -135,6 +136,55 @@ namespace Proviser2.Droid
                                     NotificationServise.GetTitleFromNotificationType(notification.Type), notification.Description);
                             }
                         }
+                    }
+                }
+            }
+        }
+
+        public async void GetAllSms()
+        {
+            List<string> sms = new List<string>();
+
+            string INBOX = "content://sms/inbox";
+            string[] reqCols = new string[] { "_id", "thread_id", "address", "person", "date", "body", "type" };
+            Android.Net.Uri uri = Android.Net.Uri.Parse(INBOX);
+            var cursor = Android.App.Application.Context.ContentResolver.Query(uri, reqCols, null, null, null);
+
+            if (cursor.MoveToFirst())
+            {
+                do
+                {
+                    String messageId = cursor.GetString(cursor.GetColumnIndex(reqCols[0]));
+                    String threadId = cursor.GetString(cursor.GetColumnIndex(reqCols[1]));
+                    String address = cursor.GetString(cursor.GetColumnIndex(reqCols[2]));
+                    String name = cursor.GetString(cursor.GetColumnIndex(reqCols[3]));
+                    String date = cursor.GetString(cursor.GetColumnIndex(reqCols[4]));
+                    String msg = cursor.GetString(cursor.GetColumnIndex(reqCols[5]));
+                    String type = cursor.GetString(cursor.GetColumnIndex(reqCols[6]));
+
+                    if (address.Contains("SUDPOVISTKA"))
+                    {
+                        string s = "";
+                        Regex regex = new Regex(@"(провадження )\S+(,)");
+                        MatchCollection matches = regex.Matches(msg);
+                        if (matches.Count > 0)
+                        {
+                            s = matches[0].Value.Replace("провадження ", "").Replace(" ", "").Replace(",", "");
+                        }
+                        sms.Add($"{s}");
+                    }               
+
+                } while (cursor.MoveToNext());
+
+            }
+
+            if (sms.Count > 0)
+            {
+                foreach(var s in sms) 
+                {
+                    if (!await App.DataBase.IsCaseExist(s)) 
+                    {
+                        Debug.WriteLine(s);
                     }
                 }
             }

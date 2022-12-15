@@ -71,8 +71,8 @@ namespace Proviser2.Core.Servises
                         }
                     }
 
-                    if ((item.PrisonDate != DateTime.MinValue) & (DateTime.Now > item.PrisonDate)
-                        & (DateTime.Now - item.PrisonDate).TotalDays <= 15)
+                    if ((item.PrisonDate != DateTime.MinValue) & (DateTime.Now - item.PrisonDate).TotalDays >= 1
+                        & (DateTime.Now - item.PrisonDate).TotalDays <= 3)
                     {
                         try
                         {
@@ -109,7 +109,7 @@ namespace Proviser2.Core.Servises
                     if (courts.Count > 0)
                     {
                         var lastCourt = courts.OrderByDescending(x => x.Date).FirstOrDefault();
-                        if ((DateTime.Now > lastCourt.Date) & (DateTime.Now - lastCourt.Date).TotalDays <= 3)
+                        if ((DateTime.Now - lastCourt.Date).TotalDays >= 1 & (DateTime.Now - lastCourt.Date).TotalDays <= 3)
                         {
                             try
                             {
@@ -131,6 +131,33 @@ namespace Proviser2.Core.Servises
 
                         }
                     }
+                }
+            }
+        }
+        public async static Task CriminalNumberSniffer(string _case)
+        {
+            var cs = await App.DataBase.GetCasesByCaseAsync(_case);
+
+            var decisions = await App.DataBase.GetDecisionsAsync(cs.Case);
+            if (decisions.Count > 0)
+            {
+                decisions = decisions.OrderByDescending(x => x.DecisionDate).ToList();
+
+                var criminalNumber = "";
+
+                foreach (var d in decisions)
+                {
+                    if (!String.IsNullOrWhiteSpace(d.CriminalNumber))
+                    {
+                        criminalNumber = d.CriminalNumber;
+                        break;
+                    }
+                }
+
+                if (criminalNumber != "")
+                {
+                    cs.CriminalNumber = criminalNumber;
+                    await App.DataBase.UpdateCaseAsync(cs);
                 }
             }
         }
@@ -306,33 +333,5 @@ namespace Proviser2.Core.Servises
         }
 
         #endregion
-
-        public async static Task CriminalNumberSniffer(string _case)
-        {
-            var cs = await App.DataBase.GetCasesByCaseAsync(_case);
-
-            var decisions = await App.DataBase.GetDecisionsAsync(cs.Case);
-            if (decisions.Count > 0)
-            {
-                decisions = decisions.OrderByDescending(x => x.DecisionDate).ToList();
-
-                var criminalNumber = "";
-
-                foreach (var d in decisions)
-                {
-                    if (!String.IsNullOrWhiteSpace(d.CriminalNumber))
-                    {
-                        criminalNumber = d.CriminalNumber;
-                        break;
-                    }
-                }
-
-                if (criminalNumber != "")
-                {
-                    cs.CriminalNumber = criminalNumber;
-                    await App.DataBase.UpdateCaseAsync(cs);
-                }
-            }
-        }
     }
 }

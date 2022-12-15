@@ -50,6 +50,9 @@ namespace Proviser2
             {
                 DependencyService.Resolve<IForegroundService>().StartMyForegroundService();
             }
+
+            //DependencyService.Resolve<IForegroundService>().GetAllSms();  
+
         }
 
         private void ServiseButton_Clicked(object sender, EventArgs e)
